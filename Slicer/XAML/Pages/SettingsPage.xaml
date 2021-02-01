@@ -1,0 +1,37 @@
+﻿<ui:Page x:Class="Deli_Counter.XAML.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Deli_Counter.XAML.Pages" xmlns:ui="http://schemas.modernwpf.com/2019"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Settings">
+    <ScrollViewer>
+        <ui:SimpleStackPanel Style="{StaticResource ControlPageContentPanelStyle}">
+            <!-- Application settings -->
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Application Settings"/>
+            <CheckBox x:Name="AutoDetectGameLocation" IsChecked="True" Content="Auto-detect game location" Checked="AutoDetectGameLocation_Checked" Unchecked="AutoDetectGameLocation_Checked"/>
+            <TextBox x:Name="GameLocation" ui:ControlHelper.Header="Game Location" IsEnabled="False" ui:ControlHelper.PlaceholderText="Path to folder containing h3vr.exe" Text="(Auto-detected)"/>
+            <CheckBox x:Name="DarkMode" IsChecked="False" Content="Enable dark mode" Checked="DarkMode_Checked" Unchecked="DarkMode_Checked"/>
+
+            <!-- Git settings -->
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Git Settings"/>
+            <TextBox x:Name="GitRepo" ui:ControlHelper.Header="Git Repository"/>
+            <CheckBox x:Name="GitAnonymous" IsChecked="True" Content="Use Git Anonymously" Checked="GitAnonymous_Checked" Unchecked="GitAnonymous_Checked"/>
+            <TextBox x:Name="GitUsername" ui:ControlHelper.Header="Git Username" />
+            <PasswordBox x:Name="GitPassword" ui:ControlHelper.Header="Git Password" />
+            
+            <!-- Save button -->
+            <Button x:Name="SaveButton" Content="Save" Click="SaveButton_Click" Style="{DynamicResource AccentButtonStyle}">
+                <ui:FlyoutService.Flyout>
+                    <ui:Flyout>
+                        <StackPanel>
+                            <TextBlock Text="Saved!"/>
+                        </StackPanel>
+                    </ui:Flyout>
+                </ui:FlyoutService.Flyout>
+            </Button>
+        </ui:SimpleStackPanel>
+    </ScrollViewer>
+</ui:Page>

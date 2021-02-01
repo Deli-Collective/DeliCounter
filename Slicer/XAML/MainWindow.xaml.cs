@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Deli_Counter.XAML;
+using Deli_Counter.XAML.Pages;
 using ModernWpf.Controls;
 
 namespace Slicer
@@ -11,8 +12,11 @@ namespace Slicer
     /// </summary>
     public partial class MainWindow
     {
+        public static MainWindow? Instance;
+
         public MainWindow()
         {
+            Instance = this;
             InitializeComponent();
             
             // Set the page to the home page when we start
@@ -27,7 +31,7 @@ namespace Slicer
         {
             ["home"] = new HomePage(),
             ["installed"] = null,
-            ["settings"] = null,
+            ["settings"] = new SettingsPage(),
             ["mods"] = null,
             ["not_found"] = null
         };

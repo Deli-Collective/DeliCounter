@@ -6,19 +6,36 @@
     <RootNamespace>Deli_Counter</RootNamespace>
     <UseWPF>true</UseWPF>
     <LangVersion>default</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.1.1" />
     <PackageReference Include="ModernWpfUI" Version="0.9.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ApplicationDefinition Remove="App.xaml" />
-    <ApplicationDefinition Include="Pages\App.xaml">
+    <ApplicationDefinition Include="XAML\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>Wpf</XamlRuntime>
     </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
 </Project>
