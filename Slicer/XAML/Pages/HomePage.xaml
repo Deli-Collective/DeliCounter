@@ -17,8 +17,11 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Current Install" Style="{StaticResource SubheaderTextBlockStyle}" Grid.Column="0" Grid.Row="0" />
-        <controls:ModRepository Grid.Column="1" Grid.Row="0" />
+        <TextBlock Text="Current Install" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="0" Grid.Row="0" />
+        <StackPanel Grid.Column="1" Grid.Row="0" >
+            <TextBlock Text="Repository Status" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="0" Grid.Row="0" />
+            <controls:ModRepository />
+        </StackPanel>
 
     </Grid>
 </Page>

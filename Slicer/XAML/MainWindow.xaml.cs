@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deli_Counter.Properties;
 using Deli_Counter.XAML;
 using Deli_Counter.XAML.Pages;
+using ModernWpf;
 using ModernWpf.Controls;
 
 namespace Slicer
@@ -18,10 +20,15 @@ namespace Slicer
         {
             Instance = this;
             InitializeComponent();
-            
+
             // Set the page to the home page when we start
             NavView.SelectedItem = NavView.MenuItems[0];
             ContentFrame.Navigate(_pages["home"]);
+
+            if (Settings.Default.DarkMode)
+                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
+            else
+                ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
         }
 
         /// <summary>
