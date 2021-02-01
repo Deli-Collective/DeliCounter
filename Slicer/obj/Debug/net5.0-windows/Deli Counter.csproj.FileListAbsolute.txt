@@ -1,0 +1,45 @@
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.csprojAssemblyReference.cache
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.exe
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.deps.json
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.runtimeconfig.json
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.runtimeconfig.dev.json
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ref\Deli Counter.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\Deli Counter.pdb
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\WinRT.Runtime.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ModernWpf.Controls.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ModernWpf.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\System.Runtime.WindowsRuntime.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\System.Runtime.WindowsRuntime.UI.Xaml.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\cs\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\de\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\es\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\fa\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\fr\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\it\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ja\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ko\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\pl\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\pt-BR\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\ru\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\tr\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\zh-Hans\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\zh-Hant\ModernWpf.resources.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\runtimes\win\lib\netcoreapp3.0\System.Runtime.WindowsRuntime.dll
+D:\H3VR\Deli Counter\Deli Counter\bin\Debug\net5.0-windows\runtimes\win\lib\netcoreapp3.0\System.Runtime.WindowsRuntime.UI.Xaml.dll
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\MainWindow.g.cs
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\App.g.cs
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter_MarkupCompile.cache
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter_MarkupCompile.lref
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\App.baml
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\MainWindow.baml
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.g.resources
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.GeneratedMSBuildEditorConfig.editorconfig
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.AssemblyInfoInputs.cache
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.AssemblyInfo.cs
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.csproj.CoreCompileInputs.cache
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.csproj.CopyComplete
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.dll
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\ref\Deli Counter.dll
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.pdb
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net5.0-windows\Deli Counter.genruntimeconfig.cache

@@ -1,0 +1,11 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/contentModel.xml
+/.idea.Deli Counter.iml
+/modules.xml
+# Datasource local storage ignored files
+/../../../../../../:\H3VR\Deli Counter\.idea\.idea.Deli Counter\.idea/dataSources/
+/dataSources.local.xml

@@ -1,0 +1,4 @@
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net48\Deli Counter.csprojAssemblyReference.cache
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net48\Deli Counter.AssemblyInfoInputs.cache
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net48\Deli Counter.AssemblyInfo.cs
+D:\H3VR\Deli Counter\Deli Counter\obj\Debug\net48\Deli Counter.csproj.CoreCompileInputs.cache
