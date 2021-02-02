@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ui:ThemeResources RequestedTheme="Light" AccentColor="Red" />
+                <ui:ThemeResources RequestedTheme="Light"/>
                 <ui:XamlControlsResources />
             </ResourceDictionary.MergedDictionaries>
             <Thickness x:Key="ControlPageContentMargin">24,0,24,20</Thickness>

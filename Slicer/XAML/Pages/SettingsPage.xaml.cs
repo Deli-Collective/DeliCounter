@@ -32,6 +32,14 @@ namespace Deli_Counter.XAML.Pages
             SaveFlyout = FlyoutService.GetFlyout(SaveButton) as Flyout;
             _initializing = false;
             LoadSettings();
+
+            LostFocus += SettingsPage_LostFocus;
+        }
+
+        private void SettingsPage_LostFocus(object sender, RoutedEventArgs e)
+        {
+            // TODO: This causes issues with the password box
+            //SaveSettings();
         }
 
         private void AutoDetectGameLocation_Checked(object sender, RoutedEventArgs e)
@@ -69,8 +77,6 @@ namespace Deli_Counter.XAML.Pages
 
             if (GitAnonymous.IsChecked!.Value)
             {
-                GitUsername.Text = "";
-                GitPassword.Password = "";
                 GitUsername.IsEnabled = false;
                 GitPassword.IsEnabled = false;
             } else

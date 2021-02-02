@@ -7,20 +7,27 @@
     <UseWPF>true</UseWPF>
     <LangVersion>default</LangVersion>
     <Nullable>enable</Nullable>
+    <Company>Deli</Company>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LibGit2Sharp" Version="0.26.2" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="1.1.1" />
     <PackageReference Include="ModernWpfUI" Version="0.9.3" />
+    <PackageReference Include="YamlDotNet" Version="9.1.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ApplicationDefinition Remove="App.xaml" />
+    <None Remove="Assets\placeholder.jpg" />
     <ApplicationDefinition Include="XAML\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <XamlRuntime>Wpf</XamlRuntime>
     </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +43,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\placeholder.jpg" />
   </ItemGroup>
 
 </Project>

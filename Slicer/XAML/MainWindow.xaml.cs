@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Deli_Counter.Backend;
 using Deli_Counter.Properties;
 using Deli_Counter.XAML;
 using Deli_Counter.XAML.Pages;
@@ -29,15 +30,30 @@ namespace Slicer
                 ThemeManager.Current.ApplicationTheme = ApplicationTheme.Dark;
             else
                 ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
+
+            var repo = ((HomePage)_pages["home"]).ModRepo;
+            foreach (var category in repo.Categories ?? Array.Empty<ModCategory>())
+            {
+                NavView.MenuItems.Add(new NavigationViewItem
+                {
+                    Tag = "mods",
+                    Content = category.Name,
+                    Icon = new FontIcon
+                    {
+                        FontFamily = new System.Windows.Media.FontFamily("Segoe MDL2 Assets"),
+                        Glyph = category.Icon
+                    }
+                });
+            }
         }
 
         /// <summary>
         ///     This is a dictionary of the pages accessible from the navigation menu
         /// </summary>
-        private readonly Dictionary<string, object> _pages = new()
+        private readonly Dictionary<string, Page> _pages = new()
         {
             ["home"] = new HomePage(),
-            ["installed"] = null,
+            ["installed"] = new InstalledModsPage(),
             ["settings"] = new SettingsPage(),
             ["mods"] = null,
             ["not_found"] = null

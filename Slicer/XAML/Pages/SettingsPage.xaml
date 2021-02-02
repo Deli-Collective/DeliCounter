@@ -19,8 +19,8 @@
             <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" Text="Git Settings"/>
             <TextBox x:Name="GitRepo" ui:ControlHelper.Header="Git Repository"/>
             <CheckBox x:Name="GitAnonymous" IsChecked="True" Content="Use Git Anonymously" Checked="GitAnonymous_Checked" Unchecked="GitAnonymous_Checked"/>
-            <TextBox x:Name="GitUsername" ui:ControlHelper.Header="Git Username" />
-            <PasswordBox x:Name="GitPassword" ui:ControlHelper.Header="Git Password" />
+            <TextBox x:Name="GitUsername" ui:ControlHelper.Header="Git Username" IsEnabled="False"/>
+            <PasswordBox x:Name="GitPassword" ui:ControlHelper.Header="Git Password" IsEnabled="False"/>
             
             <!-- Save button -->
             <Button x:Name="SaveButton" Content="Save" Click="SaveButton_Click" Style="{DynamicResource AccentButtonStyle}">

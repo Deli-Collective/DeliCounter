@@ -21,29 +21,6 @@
                 <!-- Separator and header for categories -->
                 <ui:NavigationViewItemSeparator />
                 <ui:NavigationViewItemHeader x:Name="NavDownloadHeader" Content="Downloadable Mods" />
-                
-                <!-- START OF MOD CATEGORY BUTTONS. TODO: Create these programatically -->
-                <ui:NavigationViewItem Tag="mods" Content="Content Loaders">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE81E;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="mods" Content="Custom Objects">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE74C;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="mods" Content="Custom Levels">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE826;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-                <ui:NavigationViewItem Tag="mods" Content="Custom Characters">
-                    <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE726;" />
-                    </ui:NavigationViewItem.Icon>
-                </ui:NavigationViewItem>
-                <!-- END OF MOD CATEGORY BUTTONS -->
             </ui:NavigationView.MenuItems>
             
             <!-- This is the content frame for the app. This will frame the subpage content -->

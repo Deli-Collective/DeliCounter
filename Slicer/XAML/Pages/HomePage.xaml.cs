@@ -1,8 +1,6 @@
-﻿using System.Windows.Controls;
-
-namespace Deli_Counter.XAML
+﻿namespace Deli_Counter.XAML
 {
-    public partial class HomePage : Page
+    public partial class HomePage : ModernWpf.Controls.Page
     {
         public HomePage()
         {

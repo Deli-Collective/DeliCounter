@@ -5,8 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Deli_Counter.Backend;
 using Deli_Counter.Properties;
 using LibGit2Sharp;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace Deli_Counter.Controls
 {
@@ -15,7 +18,6 @@ namespace Deli_Counter.Controls
         public enum RepositoryState
         {
             UpToDate,
-            Dirty,
             Offline
         }
 
@@ -26,30 +28,39 @@ namespace Deli_Counter.Controls
 
         public RepositoryState State { get; private set; }
 
+        public ModCategory[]? Categories;
+
+        public event Action? Completed;
+
         public ModRepository()
         {
             InitializeComponent();
 
-            var options = new CloneOptions
-            {
-                CredentialsProvider = (url, user, cred) => Settings.Default.GitAnonymous ? null : new UsernamePasswordCredentials
-                {
-                    Username = Settings.Default.GitUsername,
-                    Password = Settings.Default.GitPassword
-                }
-            };
 
             try
             {
                 if (!Directory.Exists(LocalPath))
-                    Repository.Clone(RemotePath, LocalPath, options);
+                    Repository.Clone(RemotePath, LocalPath, new CloneOptions {CredentialsProvider = Settings.Default.GitCredentials});
                 _repo = new Repository(LocalPath);
 
-                UpdateStatus(RepositoryState.UpToDate, "Last Update: " + _repo.Head.Commits.First().Author.When.ToString());
-            } catch (LibGit2SharpException e)
+                var signature = new Signature(new Identity(Settings.Default.GitUsername, "unused@email.com"), DateTimeOffset.Now);
+                var options = new PullOptions
+                {
+                    FetchOptions = new FetchOptions {CredentialsProvider = Settings.Default.GitCredentials}
+                };
+
+                Commands.Pull(_repo, signature, options);
+                
+                UpdateStatus(RepositoryState.UpToDate, "Last Update: " + _repo.Head.Commits.First().Author.When);
+
+                ParseMods();
+            }
+            catch (Exception e)
             {
                 UpdateStatus(RepositoryState.Offline, e.Message);
             }
+
+            Completed?.Invoke();
         }
 
         private void UpdateStatus(RepositoryState state, string message)
@@ -61,21 +72,21 @@ namespace Deli_Counter.Controls
                     StatusText.Text = "Up to date!";
                     StatusIcon.Foreground = new SolidColorBrush(Colors.Green);
                     break;
-                case RepositoryState.Dirty:
-                    StatusIcon.Text = "\uF13C";
-                    StatusText.Text = "Dirty local";
-                    StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
-                    break;
                 case RepositoryState.Offline:
                     StatusIcon.Text = "\uF13D";
                     StatusText.Text = "Offline";
                     StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
                     break;
-
             }
 
             State = state;
             LastUpdateText.Text = message;
+        }
+
+        public void ParseMods()
+        {
+            var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
+            Categories = deserializer.Deserialize<ModCategory[]>(File.ReadAllText(Path.Combine(LocalPath, "index.yaml")));
         }
     }
 }
