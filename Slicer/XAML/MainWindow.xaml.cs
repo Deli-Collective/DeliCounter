@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Deli_Counter.Backend;
+using Deli_Counter.Controls;
 using Deli_Counter.Properties;
 using Deli_Counter.XAML;
 using Deli_Counter.XAML.Pages;
@@ -32,11 +33,11 @@ namespace Slicer
                 ThemeManager.Current.ApplicationTheme = ApplicationTheme.Light;
 
             var repo = ((HomePage)_pages["home"]).ModRepo;
-            foreach (var category in repo.Categories ?? Array.Empty<ModCategory>())
+            foreach (var category in ModRepository.Categories ?? Array.Empty<ModCategory>())
             {
                 NavView.MenuItems.Add(new NavigationViewItem
                 {
-                    Tag = "mods",
+                    Tag = "mods" + category.Path,
                     Content = category.Name,
                     Icon = new FontIcon
                     {
@@ -44,6 +45,8 @@ namespace Slicer
                         Glyph = category.Icon
                     }
                 });
+
+                _pages.Add("mods" + category.Path, new ModListingPage(category));
             }
         }
 
@@ -55,7 +58,6 @@ namespace Slicer
             ["home"] = new HomePage(),
             ["installed"] = new InstalledModsPage(),
             ["settings"] = new SettingsPage(),
-            ["mods"] = null,
             ["not_found"] = null
         };
         

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -28,39 +30,40 @@ namespace Deli_Counter.Controls
 
         public RepositoryState State { get; private set; }
 
-        public ModCategory[]? Categories;
+        public static ModCategory[]? Categories;
 
-        public event Action? Completed;
+        public static Mod[]? Mods;
 
         public ModRepository()
         {
             InitializeComponent();
+            Refresh();
+        }
 
-
+        public void Refresh()
+        {
             try
             {
                 if (!Directory.Exists(LocalPath))
-                    Repository.Clone(RemotePath, LocalPath, new CloneOptions {CredentialsProvider = Settings.Default.GitCredentials});
+                    Repository.Clone(RemotePath, LocalPath, new CloneOptions { CredentialsProvider = Settings.Default.GitCredentials });
                 _repo = new Repository(LocalPath);
 
                 var signature = new Signature(new Identity(Settings.Default.GitUsername, "unused@email.com"), DateTimeOffset.Now);
                 var options = new PullOptions
                 {
-                    FetchOptions = new FetchOptions {CredentialsProvider = Settings.Default.GitCredentials}
+                    FetchOptions = new FetchOptions { CredentialsProvider = Settings.Default.GitCredentials }
                 };
 
                 Commands.Pull(_repo, signature, options);
-                
-                UpdateStatus(RepositoryState.UpToDate, "Last Update: " + _repo.Head.Commits.First().Author.When);
 
                 ParseMods();
+
+                UpdateStatus(RepositoryState.UpToDate, $"Last Update: {_repo.Head.Commits.First().Author.When}\nMods in database: {Mods!.Length}");
             }
             catch (Exception e)
             {
                 UpdateStatus(RepositoryState.Offline, e.Message);
             }
-
-            Completed?.Invoke();
         }
 
         private void UpdateStatus(RepositoryState state, string message)
@@ -87,6 +90,40 @@ namespace Deli_Counter.Controls
         {
             var deserializer = new DeserializerBuilder().WithNamingConvention(PascalCaseNamingConvention.Instance).Build();
             Categories = deserializer.Deserialize<ModCategory[]>(File.ReadAllText(Path.Combine(LocalPath, "index.yaml")));
+
+            // For each category in the index
+            var mods = new List<Mod>();
+            foreach (var category in Categories)
+            {
+                var categoryDir = Path.Combine(LocalPath, category.Path);
+                if (!Directory.Exists(categoryDir)) continue;
+
+                // For each mod folder in the category
+                foreach (var modDir in Directory.GetDirectories(categoryDir))
+                {
+                    var mod = new Mod
+                    {
+                        Guid = Path.GetFileName(modDir),
+                        Category = category
+                    };
+
+
+                    // For each version manifest in the directory
+                    var list = new List<Mod.ModVersion>();
+                    foreach (var manifest in Directory.GetFiles(modDir))
+                    {
+                        var version = deserializer.Deserialize<Mod.ModVersion>(File.ReadAllText(manifest));
+                        version.Mod = mod;
+                        list.Add(version);
+                    }
+
+                    mod.Versions = list.ToArray();
+
+                    if (mod.Versions.Length > 0) mods.Add(mod);
+                }
+            }
+
+            Mods = mods.ToArray();
         }
     }
 }
