@@ -11,7 +11,7 @@ namespace Deli_Counter.Backend
         private static bool scanned = false;
         private static string _gameLocation = "";
 
-        public static string? GameDirectory
+        internal static string GameDirectory
         {
             get
             {
@@ -27,13 +27,14 @@ namespace Deli_Counter.Backend
 
                     // Check main steamapps library folder for h3 manifest.
                     var result = "";
-                    if (File.Exists(Path.Combine(steamDir, @"\steamapps\appmanifest_450540.acf"))) result = Path.Combine(steamDir, @"\steamapps\common\H3VR\");
+                    if (File.Exists(Path.Combine(steamDir, @"steamapps\appmanifest_450540.acf"))) result = Path.Combine(steamDir, @"steamapps\common\H3VR\");
                     else
                     {
                         // We didn't find it, look at other library folders by lazily parsing libraryfolders.
-                        foreach (var ii in File.ReadAllLines(Path.Combine(steamDir, "/steamapps/libraryfolders.vdf")).Skip(4).Where(x => x.Length != 0 && x[0] != '}').Select(x => x.Split('\t')[3].Trim('"').Replace(@"\\", @"\")).Where(ii => File.Exists(ii + @"\steamapps\appmanifest_450540.acf")))
+                        var libraryFolders = Path.Combine(steamDir, @"steamapps\libraryfolders.vdf");
+                        foreach (var ii in File.ReadAllLines(libraryFolders).Skip(4).Where(x => x.Length != 0 && x[0] != '}').Select(x => x.Split('\t')[3].Trim('"').Replace(@"\\", @"\")).Where(ii => File.Exists(ii + @"\steamapps\appmanifest_450540.acf")))
                         {
-                            result = Path.Combine(ii, @"\steamapps\common\H3VR\");
+                            result = Path.Combine(ii, @"steamapps\common\H3VR\");
                             break;
                         }
                     }
@@ -41,13 +42,11 @@ namespace Deli_Counter.Backend
                     _gameLocation = result;
                     if (!string.IsNullOrEmpty(_gameLocation)) return _gameLocation;
                 }
-
-                MessageBox.Show("Could not auto-detect H3VR installation directory. Is your game installed outside Steam or pirated?", "Error");
                 return null;
             }
         }
 
-        public static string? ExecutablePath => string.IsNullOrEmpty(GameDirectory) ? null : Path.Combine(GameDirectory, "h3vr.exe");
-        public static string? ModCache => string.IsNullOrEmpty(GameDirectory) ? null : Path.Combine(GameDirectory, "installed_mods.json");
+        public static string ExecutablePath => string.IsNullOrEmpty(GameDirectory) ? null : Path.Combine(GameDirectory, "h3vr.exe");
+        public static string ModCache => string.IsNullOrEmpty(GameDirectory) ? null : Path.Combine(GameDirectory, "installed_mods.json");
     }
 }

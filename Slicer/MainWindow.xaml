@@ -3,31 +3,30 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Slicer"
-        mc:Ignorable="d"
-        Title="Slicer Mod Manager" Height="600" Width="800"
         xmlns:ui="http://schemas.modernwpf.com/2019"
-        ui:WindowHelper.UseModernWindowStyle="True">
+        ui:WindowHelper.UseModernWindowStyle="True"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="MainWindow"
+        Height="800" Width="1200">
     <Grid>
-        <ui:NavigationView x:Name="NavView"
-                           PaneTitle="Slicer"
-                           IsBackButtonVisible="Collapsed"
+        <ui:NavigationView x:Name="NavView" PaneTitle="Slicer" IsBackButtonVisible="Collapsed"
                            ItemInvoked="NavView_OnItemInvoked">
             <ui:NavigationView.MenuItems>
-                <!-- Home and installed buttons -->
+                <!-- Home and installed mods button -->
+                <ui:NavigationViewItemHeader Content="Local Content" />
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home" />
                 <ui:NavigationViewItem Tag="installed" Icon="Save" Content="Installed Mods" />
 
-                <!-- Separator and header for categories -->
+                <!-- Seperator and header for mod categories -->
                 <ui:NavigationViewItemSeparator />
-                <ui:NavigationViewItemHeader x:Name="NavDownloadHeader" Content="Downloadable Mods" />
+                <ui:NavigationViewItemHeader Content="Downloadable Mods" />
             </ui:NavigationView.MenuItems>
-            
+
             <!-- This is the content frame for the app. This will frame the subpage content -->
             <ui:NavigationView.Content>
-                <Frame x:Name="ContentFrame" Padding="12,0,12,24" NavigationUIVisibility="Hidden"></Frame>
+                <Frame x:Name="NavViewContent" NavigationUIVisibility="Hidden" Padding="12" />
             </ui:NavigationView.Content>
-            
         </ui:NavigationView>
     </Grid>
 </Window>

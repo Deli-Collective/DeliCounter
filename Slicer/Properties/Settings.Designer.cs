@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Deli_Counter.Properties {
+namespace Slicer.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -25,67 +25,7 @@ namespace Deli_Counter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string GitUsername {
-            get {
-                return ((string)(this["GitUsername"]));
-            }
-            set {
-                this["GitUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string GitPassword {
-            get {
-                return ((string)(this["GitPassword"]));
-            }
-            set {
-                this["GitPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/Deli-Collective/Slicer-Database")]
-        public string GitRepository {
-            get {
-                return ((string)(this["GitRepository"]));
-            }
-            set {
-                this["GitRepository"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("main")]
-        public string GitBranch {
-            get {
-                return ((string)(this["GitBranch"]));
-            }
-            set {
-                this["GitBranch"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DarkMode {
-            get {
-                return ((bool)(this["DarkMode"]));
-            }
-            set {
-                this["DarkMode"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool AutoDetectGameLocation {
             get {
                 return ((bool)(this["AutoDetectGameLocation"]));
@@ -109,13 +49,25 @@ namespace Deli_Counter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool GitAnonymous {
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableDarkMode {
             get {
-                return ((bool)(this["GitAnonymous"]));
+                return ((bool)(this["EnableDarkMode"]));
             }
             set {
-                this["GitAnonymous"] = value;
+                this["EnableDarkMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/Deli-Collective/Slicer-Database")]
+        public string GitRepository {
+            get {
+                return ((string)(this["GitRepository"]));
+            }
+            set {
+                this["GitRepository"] = value;
             }
         }
     }
