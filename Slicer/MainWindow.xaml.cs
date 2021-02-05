@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Collections.Generic;
+using ModernWpf.Controls;
+using Slicer.Pages;
 
-namespace WpfApp1
+namespace Slicer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
+        private readonly Dictionary<string, object> _pages = new()
+        {
+            ["home"] = null,
+            ["installed"] = null,
+            ["settings"] = new SettingsPage(),
+        };
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void NavView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+            var tag = args.IsSettingsInvoked ? "settings" : args.InvokedItemContainer.Tag.ToString();
+            NavViewContent.Navigate(tag != null ? _pages[tag] : null);
         }
     }
 }
