@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Data;
 using Deli_Counter.Backend;
 using ModernWpf;
+using Slicer.Controls;
 using Slicer.Properties;
 
 namespace Slicer.Pages
@@ -26,7 +27,12 @@ namespace Slicer.Pages
             _settings.GameLocation = Utilities.GameDirectory;
 
             // If it wasn't set revert since it can't be found automatically
-            if (string.IsNullOrEmpty(_settings.GameLocation)) _settings.AutoDetectGameLocation = false;
+            if (string.IsNullOrEmpty(_settings.GameLocation))
+            {
+                _settings.AutoDetectGameLocation = false;
+                var dialogue = new AlertDialogue("Couldn't detect game folder", "Hey! It seems we couldn't auto-detect your game folder. Please set it manually!");
+                dialogue.ShowAsync();
+            }
         }
 
         private void DarkMode_OnChecked(object sender, RoutedEventArgs e)

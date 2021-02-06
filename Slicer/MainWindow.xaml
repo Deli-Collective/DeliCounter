@@ -7,14 +7,13 @@
         ui:WindowHelper.UseModernWindowStyle="True"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow"
-        Height="800" Width="1200">
+        Title="Slicer Mod Manager"
+        Height="600" Width="800">
     <Grid>
         <ui:NavigationView x:Name="NavView" PaneTitle="Slicer" IsBackButtonVisible="Collapsed"
                            ItemInvoked="NavView_OnItemInvoked">
             <ui:NavigationView.MenuItems>
                 <!-- Home and installed mods button -->
-                <ui:NavigationViewItemHeader Content="Local Content" />
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home" />
                 <ui:NavigationViewItem Tag="installed" Icon="Save" Content="Installed Mods" />
 
