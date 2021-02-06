@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ModernWpf.Controls;
 using Slicer.Pages;
 
@@ -8,7 +9,7 @@ namespace Slicer
     {
         private readonly Dictionary<string, object> _pages = new()
         {
-            ["home"] = null,
+            ["home"] = new HomePage(),
             ["installed"] = null,
             ["settings"] = new SettingsPage(),
         };
@@ -16,6 +17,8 @@ namespace Slicer
         public MainWindow()
         {
             InitializeComponent();
+            NavView.SelectedItem = NavView.MenuItems[1];
+            NavViewContent.Navigate(_pages["home"]);
         }
 
         private void NavView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
