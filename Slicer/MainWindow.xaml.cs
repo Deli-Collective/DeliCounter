@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using System.Windows;
 using ModernWpf.Controls;
 using Slicer.Pages;
 
@@ -7,7 +7,7 @@ namespace Slicer
 {
     public partial class MainWindow
     {
-        private readonly Dictionary<string, object> _pages = new()
+        private readonly Dictionary<string, UIElement> _pages = new()
         {
             ["home"] = new HomePage(),
             ["installed"] = new ModListing(),
