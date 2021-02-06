@@ -26,6 +26,10 @@
                        Grid.Row="0" />
             <controls:ModRepositoryStatus x:Name="ModRepo" />
         </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1">
+            <TextBlock Text="Slicer Build Info" Style="{StaticResource HeaderTextBlockStyle}" />
+            <controls:ApplicationGitInfo />
+        </StackPanel>
 
     </Grid>
 </ui:Page>

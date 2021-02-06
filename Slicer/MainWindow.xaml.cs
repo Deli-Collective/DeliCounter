@@ -17,7 +17,7 @@ namespace Slicer
         public MainWindow()
         {
             InitializeComponent();
-            NavView.SelectedItem = NavView.MenuItems[1];
+            NavView.SelectedItem = NavView.MenuItems[0];
             NavViewContent.Navigate(_pages["home"]);
         }
 
