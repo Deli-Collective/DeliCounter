@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Data;
-using Deli_Counter.Backend;
+using Slicer.Backend;
 using ModernWpf;
 using Slicer.Controls;
 using Slicer.Properties;
@@ -30,14 +30,16 @@ namespace Slicer.Pages
             if (string.IsNullOrEmpty(_settings.GameLocation))
             {
                 _settings.AutoDetectGameLocation = false;
-                var dialogue = new AlertDialogue("Couldn't detect game folder", "Hey! It seems we couldn't auto-detect your game folder. Please set it manually!");
+                var dialogue = new AlertDialogue("Couldn't detect game folder",
+                    "Hey! It seems we couldn't auto-detect your game folder. Please set it manually!");
                 dialogue.ShowAsync();
             }
         }
 
         private void DarkMode_OnChecked(object sender, RoutedEventArgs e)
         {
-            ThemeManager.Current.ApplicationTheme = _settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            ThemeManager.Current.ApplicationTheme =
+                _settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
     }
 
@@ -50,7 +52,7 @@ namespace Slicer.Pages
             if (targetType != typeof(bool))
                 throw new InvalidOperationException("The target must be a boolean");
 
-            return !(bool)value;
+            return !(bool) value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

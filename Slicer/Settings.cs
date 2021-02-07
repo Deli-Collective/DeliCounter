@@ -1,8 +1,9 @@
 ﻿using ModernWpf;
 
-namespace Slicer.Properties {
-    internal sealed partial class Settings {
-        
+namespace Slicer.Properties
+{
+    internal sealed partial class Settings
+    {
         public Settings()
         {
             PropertyChanged += Settings_PropertyChanged;

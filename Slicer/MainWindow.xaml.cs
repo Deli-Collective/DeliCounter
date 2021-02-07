@@ -11,7 +11,7 @@ namespace Slicer
         {
             ["home"] = new HomePage(),
             ["installed"] = null,
-            ["settings"] = new SettingsPage(),
+            ["settings"] = new SettingsPage()
         };
 
         public MainWindow()

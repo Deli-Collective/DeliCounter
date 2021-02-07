@@ -3,7 +3,6 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-         xmlns:local="clr-namespace:Slicer.Pages"
          xmlns:ui="http://schemas.modernwpf.com/2019"
          xmlns:controls="clr-namespace:Slicer.Controls"
          mc:Ignorable="d"
@@ -22,8 +21,7 @@
 
         <TextBlock Text="Current Install" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="0" Grid.Row="0" />
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="Repository Status" Style="{StaticResource HeaderTextBlockStyle}" Grid.Column="0"
-                       Grid.Row="0" />
+            <TextBlock Text="Repository Status" Style="{StaticResource HeaderTextBlockStyle}" />
             <controls:ModRepositoryStatus x:Name="ModRepo" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1">

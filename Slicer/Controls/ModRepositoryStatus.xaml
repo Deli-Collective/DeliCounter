@@ -7,9 +7,10 @@
              d:DesignHeight="100" d:DesignWidth="300">
     <StackPanel>
         <StackPanel Orientation="Horizontal">
-            <TextBlock x:Name="StatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xF13E;" FontSize="75" FontWeight="UltraBold" Foreground="Green"/>
+            <TextBlock x:Name="StatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xF13E;" FontSize="75"
+                       FontWeight="UltraBold" Foreground="Green" />
             <StackPanel Width="auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <TextBlock x:Name="StatusText" Text="Up to date!" Style="{DynamicResource SubheaderTextBlockStyle}"/>
+                <TextBlock x:Name="StatusText" Text="Up to date!" Style="{DynamicResource SubheaderTextBlockStyle}" />
             </StackPanel>
         </StackPanel>
         <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText">
