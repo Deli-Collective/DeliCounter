@@ -32,7 +32,7 @@ namespace Slicer.Controls
             switch (state)
             {
                 case ModRepository.State.Error:
-                    StatusIcon.Text = "\uF13D";
+                    StatusIcon.Text = SegoeGlyphs.X;
                     StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
                     LastUpdateText.Text = e.Message;
                     StatusText.Text = "Error";
@@ -44,7 +44,7 @@ namespace Slicer.Controls
                     StatusText.Text = "Offline";
                     break;
                 case ModRepository.State.UpToDate:
-                    StatusIcon.Text = "\uF13E";
+                    StatusIcon.Text = SegoeGlyphs.Checkmark;
                     StatusIcon.Foreground = new SolidColorBrush(Colors.Green);
                     LastUpdateText.Text = $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When.ToString()}";
                     StatusText.Text = "Up to date!";

@@ -11,10 +11,6 @@ namespace Slicer.Controls
     /// </summary>
     public partial class ModListItem
     {
-        public ModListItem() : this(SampleData.SampleMod1, true)
-        {
-        }
-        
         public ModListItem(Mod mod, bool displayInstalled = false)
         {
             InitializeComponent();

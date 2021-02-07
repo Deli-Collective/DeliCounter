@@ -6,12 +6,13 @@ using System.Threading.Tasks;
 
 namespace Slicer.Backend
 {
-    class ModCategory
+    public class ModCategory
     {
         public string Name { get; set; }
         public string Description { get; set; }
         public string Icon { get; set; }
         public string Path { get; set; }
+        public bool IsLocal { get; set; } = false;
         public IEnumerable<Mod> Mods { get; set; }
     }
 }

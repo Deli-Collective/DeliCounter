@@ -5,7 +5,9 @@
         // If you need to add more there's a list here
         // http://modernicons.io/segoe-mdl2/cheatsheet/
 
-        public static string Checkmark = "\uE8FB";
-        public static string Repeat = "\uE8EE";
+        public const string Checkmark = "\uE8FB";
+        public const string Repeat = "\uE8EE";
+        public const string X = "\uF13D";
+        public const string Save = "\uE74E";
     }
 }

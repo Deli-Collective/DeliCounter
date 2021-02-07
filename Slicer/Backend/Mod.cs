@@ -44,6 +44,11 @@ namespace Slicer.Backend
             /// </summary>
             public string SourceUrl { get; }
             
+            /// <summary>
+            ///     Authors
+            /// </summary>
+            public string[] Authors { get; }
+            
             // TODO: Installation and removal data for each version
         }
 
@@ -55,7 +60,7 @@ namespace Slicer.Backend
         /// <summary>
         ///     All versions of the mod found in the database
         /// </summary>
-        public Dictionary<SemVersion, ModVersion> Versions;
+        public Dictionary<SemVersion, ModVersion> Versions = new();
 
         /// <summary>
         ///     Retrieves the latest version number from the database

@@ -8,18 +8,18 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         Title="Slicer Mod Manager"
-        Height="600" Width="800">
+        Height="600" Width="800"
+        Loaded="MainWindow_OnLoaded">
     <Grid>
         <ui:NavigationView x:Name="NavView" PaneTitle="Slicer" IsBackButtonVisible="Collapsed"
-                           ItemInvoked="NavView_OnItemInvoked">
+                           ItemInvoked="NavView_OnItemInvoked" PaneOpening="NavView_PaneToggled" PaneClosing="NavView_PaneToggled">
             <ui:NavigationView.MenuItems>
                 <!-- Home and installed mods button -->
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home" />
-                <ui:NavigationViewItem Tag="installed" Icon="Save" Content="Installed Mods" />
 
                 <!-- Seperator and header for mod categories -->
-                <ui:NavigationViewItemSeparator />
-                <ui:NavigationViewItemHeader Content="Downloadable Mods" />
+                <ui:NavigationViewItemSeparator Tag="separator" />
+                <ui:NavigationViewItemHeader Tag="header" Content="Downloadable Mods" x:Name="DownloadableHeader" Visibility="Collapsed"/>
             </ui:NavigationView.MenuItems>
 
             <!-- This is the content frame for the app. This will frame the subpage content -->

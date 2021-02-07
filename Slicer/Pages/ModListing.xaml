@@ -10,8 +10,6 @@
 
     <ScrollViewer>
         <StackPanel x:Name="ModList">
-            <controls:ModListItem />
-            <controls:ModListItem />
         </StackPanel>
     </ScrollViewer>
 </ui:Page>
