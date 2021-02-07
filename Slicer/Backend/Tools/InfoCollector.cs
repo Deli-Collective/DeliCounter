@@ -74,12 +74,12 @@ namespace Slicer.Backend
             var skip = false;
             foreach (var line in output.Split("\r\n"))
             {
-                if (line == "\\---h3vr_Data")
+                if (line.Contains("h3vr_Data"))
                 {
                     skip = true;
                     sb.AppendLine(line + " (TRUNCATED)");
                 }
-                else if (skip && line.StartsWith("\\---")) skip = false;
+                else if (skip && line.Trim() == "|") skip = false;
 
                 if (!skip) sb.AppendLine(line);
             }
