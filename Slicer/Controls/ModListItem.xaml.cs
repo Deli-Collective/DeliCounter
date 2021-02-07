@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using Slicer.Backend;
 
 namespace Slicer.Controls
@@ -12,6 +11,10 @@ namespace Slicer.Controls
     /// </summary>
     public partial class ModListItem
     {
+        public ModListItem() : this(SampleData.SampleMod1, true)
+        {
+        }
+        
         public ModListItem(Mod mod, bool displayInstalled = false)
         {
             InitializeComponent();
@@ -35,7 +38,7 @@ namespace Slicer.Controls
             // Set the icon
             var bi = new BitmapImage();
             bi.BeginInit();
-            bi.UriSource = new Uri(version.IconUrl, UriKind.Relative);
+            bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
             bi.EndInit();
             ModImage.Source = bi;
         }

@@ -10,7 +10,7 @@ namespace Slicer
         private readonly Dictionary<string, object> _pages = new()
         {
             ["home"] = new HomePage(),
-            ["installed"] = null,
+            ["installed"] = new ModListing(),
             ["settings"] = new SettingsPage()
         };
 

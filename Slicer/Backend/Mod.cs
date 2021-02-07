@@ -17,22 +17,22 @@ namespace Slicer.Backend
             /// <summary>
             ///     Name of the mod
             /// </summary>
-            public string Name { get; }
+            public string Name { get; set; }
 
             /// <summary>
             ///     Long description for the mod page which supports formatting
             /// </summary>
-            public string Description { get; }
+            public string Description { get; set; }
 
             /// <summary>
             ///     Short description to be used in lists
             /// </summary>
-            public string ShortDescription { get; }
+            public string ShortDescription { get; set; }
 
             /// <summary>
             ///     URL for the mod's icon
             /// </summary>
-            public string IconUrl { get; }
+            public string IconUrl { get; set; }
 
             // TODO: Installation and removal data for each version
         }
@@ -65,12 +65,12 @@ namespace Slicer.Backend
         /// <summary>
         ///     True if the mod is installed locally
         /// </summary>
-        public bool IsInstalled { get; set; }
+        public bool IsInstalled => InstalledVersion is not null;
 
         /// <summary>
         ///     True if the local version matches the latest version
         /// </summary>
-        public bool UpToDate => IsInstalled && InstalledVersion == LatestVersion;
+        public bool UpToDate => IsInstalled && SemVersion.Equals(InstalledVersion, LatestVersion);
 
         /// <summary>
         ///     Retrieves the installed mod version number
