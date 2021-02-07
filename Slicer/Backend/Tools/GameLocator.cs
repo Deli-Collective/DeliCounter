@@ -6,9 +6,9 @@ using System.Windows;
 
 namespace Slicer.Backend
 {
-    internal class Utilities
+    internal static class GameLocator
     {
-        private static bool scanned = false;
+        private static bool _scanned;
         private static string _gameLocation = "";
 
         internal static string GameDirectory
@@ -16,8 +16,8 @@ namespace Slicer.Backend
             get
             {
                 // If the game isn't found, return null
-                if (scanned) return string.IsNullOrEmpty(_gameLocation) ? null : _gameLocation;
-                scanned = true;
+                if (_scanned) return string.IsNullOrEmpty(_gameLocation) ? null : _gameLocation;
+                _scanned = true;
 
                 // Get the main steam installation location via registry.
                 var steamDir =

@@ -20,6 +20,9 @@
                      IsEnabled="{Binding AutoDetectGameLocation, Converter={StaticResource InverseBooleanConverter}}" />
             <TextBox x:Name="GitRepository" ui:ControlHelper.Header="Mod Repository"
                      ui:ControlHelper.PlaceholderText="https://github.com/..." Text="{Binding GitRepository}" />
+            
+            <!-- Tools -->
+            <Button Content="Generate Diagnostic File" Click="GenerateDiagnosticFile"/>
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </ui:Page>

@@ -24,7 +24,7 @@ namespace Slicer.Pages
 
         private void AutoDetectGameLocation_OnChecked(object sender, RoutedEventArgs e)
         {
-            _settings.GameLocation = Utilities.GameDirectory;
+            _settings.GameLocation = GameLocator.GameDirectory;
 
             // If it wasn't set revert since it can't be found automatically
             if (string.IsNullOrEmpty(_settings.GameLocation))
@@ -41,6 +41,8 @@ namespace Slicer.Pages
             ThemeManager.Current.ApplicationTheme =
                 _settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
+
+        private void GenerateDiagnosticFile(object sender, RoutedEventArgs e) => InfoCollector.CollectAll();
     }
 
     [ValueConversion(typeof(bool), typeof(bool))]
