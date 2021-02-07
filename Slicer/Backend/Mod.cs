@@ -15,6 +15,11 @@ namespace Slicer.Backend
         public class ModVersion
         {
             /// <summary>
+            ///     Semantic Version number of this version of the mod
+            /// </summary>
+            public SemVersion VersionNumber { get; set; }
+            
+            /// <summary>
             ///     Name of the mod
             /// </summary>
             public string Name { get; set; }
@@ -34,6 +39,11 @@ namespace Slicer.Backend
             /// </summary>
             public string IconUrl { get; set; }
 
+            /// <summary>
+            ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
+            /// </summary>
+            public string SourceUrl { get; }
+            
             // TODO: Installation and removal data for each version
         }
 
@@ -41,11 +51,6 @@ namespace Slicer.Backend
         ///     Mod GUID.
         /// </summary>
         public string Guid { get; set; }
-
-        /// <summary>
-        ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
-        /// </summary>
-        public string SourceUrl { get; }
 
         /// <summary>
         ///     All versions of the mod found in the database
