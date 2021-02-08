@@ -1,4 +1,5 @@
-﻿using Slicer.Backend;
+﻿using System.Windows;
+using Slicer.Backend;
 using Slicer.Controls;
 
 namespace Slicer.Pages
@@ -11,13 +12,16 @@ namespace Slicer.Pages
             InitializeComponent();
             ModRepository.Instance.RepositoryUpdated += (state, exception) => Update();
             _category = category;
+            CategoryTitle.Text = category.Name;
+            CategoryDescription.Text = category.Description;
+            Update();
         }
 
         private void Update()
         {
-            ModList.Children.Clear();
-            foreach (var mod in ModRepository.Instance.Mods.Values)
-                ModList.Children.Add(new ModListItem(mod, mod.IsInstalled));
+            ModList.Items.Clear();
+            foreach (var mod in _category.Mods)
+                ModList.Items.Add(new ModListItem(mod, mod.IsInstalled));
         }
     }
 }

@@ -49,6 +49,10 @@ namespace Slicer.Backend
             /// </summary>
             public string[] Authors { get; }
             
+            /// <summary>
+            ///     URL to the file that will be downloaded
+            /// </summary>
+            public string DownloadUrl { get; }
             // TODO: Installation and removal data for each version
         }
 
@@ -56,6 +60,11 @@ namespace Slicer.Backend
         ///     Mod GUID.
         /// </summary>
         public string Guid { get; set; }
+
+        /// <summary>
+        ///     Category this mod is in
+        /// </summary>
+        public ModCategory Category { get; set; }
 
         /// <summary>
         ///     All versions of the mod found in the database

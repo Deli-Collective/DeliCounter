@@ -43,7 +43,7 @@ namespace Slicer
                 {
                     Tag = "mods" + category.Path,
                     Content = category.Name,
-                    Icon = new FontIcon
+                    Icon = new FontIcon()
                     {
                         FontFamily = new System.Windows.Media.FontFamily("Segoe MDL2 Assets"),
                         Glyph = category.Icon

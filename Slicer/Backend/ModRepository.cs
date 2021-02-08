@@ -108,17 +108,13 @@ namespace Slicer.Backend
                 // Iterate over each category
                 foreach (var category in Categories)
                 {
-                    // Make a new list to store the mods in this category
-                    var categoryMods = new List<Mod>();
-                    category.Mods = categoryMods;
-
                     // Enumerate over the directories in this category path (mods)
                     var categoryPath = Path.Combine(RepoPath, category.Path);
                     foreach (var directory in Directory.EnumerateDirectories(categoryPath))
                     {
                         // Get the GUID from the directory filename
                         var guid = Path.GetFileName(directory);
-                        var mod = new Mod {Guid = guid};
+                        var mod = new Mod {Guid = guid, Category = category};
 
                         // Enumerate over each version of the mod
                         foreach (var versionFile in Directory.EnumerateFiles(directory))
@@ -132,7 +128,6 @@ namespace Slicer.Backend
                         // If there are 0 versions for this mod pretend it doesn't exist
                         if (mod.Versions.Count == 0) continue;
                         Mods.Add(guid, mod);
-                        categoryMods.Add(mod);
                     }
                 }
 

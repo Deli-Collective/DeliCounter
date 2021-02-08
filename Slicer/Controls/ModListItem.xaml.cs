@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using ModernWpf;
 using Slicer.Backend;
 
 namespace Slicer.Controls
@@ -11,8 +12,11 @@ namespace Slicer.Controls
     /// </summary>
     public partial class ModListItem
     {
+        public Mod Mod;
+
         public ModListItem(Mod mod, bool displayInstalled = false)
         {
+            Mod = mod;
             InitializeComponent();
 
             // Get the version to display and edit the name and short description
@@ -28,7 +32,8 @@ namespace Slicer.Controls
             }
             else
             {
-                LocalStatusIcon.Visibility = Visibility.Collapsed;
+                LocalStatusIcon.Text = SegoeGlyphs.Download;
+                LocalStatusIcon.Style = (Style) Application.Current.Resources["BaseTextBlockStyle"];
             }
 
             // Set the icon
@@ -37,6 +42,11 @@ namespace Slicer.Controls
             bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
             bi.EndInit();
             ModImage.Source = bi;
+        }
+
+        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

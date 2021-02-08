@@ -9,5 +9,6 @@
         public const string Repeat = "\uE8EE";
         public const string X = "\uF13D";
         public const string Save = "\uE74E";
+        public const string Download = "\uE896";
     }
 }
