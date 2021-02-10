@@ -12,19 +12,26 @@
         Loaded="MainWindow_OnLoaded">
     <Grid>
         <ui:NavigationView x:Name="NavView" PaneTitle="Slicer" IsBackButtonVisible="Collapsed"
-                           ItemInvoked="NavView_OnItemInvoked" PaneOpening="NavView_PaneToggled" PaneClosing="NavView_PaneToggled">
+                           ItemInvoked="NavView_OnItemInvoked" PaneOpening="NavView_PaneToggled"
+                           PaneClosing="NavView_PaneToggled">
             <ui:NavigationView.MenuItems>
                 <!-- Home and installed mods button -->
                 <ui:NavigationViewItem Tag="home" Icon="Home" Content="Home" />
 
                 <!-- Seperator and header for mod categories -->
                 <ui:NavigationViewItemSeparator Tag="separator" />
-                <ui:NavigationViewItemHeader Tag="header" Content="Downloadable Mods" x:Name="DownloadableHeader" Visibility="Collapsed"/>
+                <ui:NavigationViewItemHeader Tag="header" Content="Downloadable Mods" x:Name="DownloadableHeader"
+                                             Visibility="Collapsed" />
             </ui:NavigationView.MenuItems>
 
             <!-- This is the content frame for the app. This will frame the subpage content -->
             <ui:NavigationView.Content>
-                <Frame x:Name="NavViewContent" NavigationUIVisibility="Hidden" Padding="12" />
+                <ui:SplitView x:Name="Drawer"
+                    IsPaneOpen="False"
+                    DisplayMode="Inline"
+                    PanePlacement="Right">
+                    <Frame x:Name="NavViewContent" NavigationUIVisibility="Hidden" />
+                </ui:SplitView>
             </ui:NavigationView.Content>
         </ui:NavigationView>
     </Grid>

@@ -10,20 +10,19 @@
              mc:Ignorable="d"
              d:DesignWidth="600"
              Height="50">
-    <DockPanel>
+    <DockPanel HorizontalAlignment="Stretch">
         <Image x:Name="ModImage" Source="/Assets/placeholder.jpg" Margin="0 2 2 2" Stretch="Uniform"
                DockPanel.Dock="Left" />
         <ui:HyperlinkButton DockPanel.Dock="Right" Padding="0 0 8 0" Click="HyperlinkButton_Click">
             <ui:FontIcon Glyph="&#xE76C;"/>
         </ui:HyperlinkButton>
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="0 0 16 0">
+            <TextBlock x:Name="LocalStatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8FB;" FontSize="24" FontWeight="UltraBold" />
+        </StackPanel>
         <StackPanel>
             <TextBlock x:Name="ModTitle" Text="Placeholder Mod name" Style="{StaticResource SubtitleTextBlockStyle}" />
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name="ModShortDescription" Text="Short description of the mod." TextWrapping="Wrap"
-                           Style="{StaticResource BaseTextBlockStyle}" Padding="0 0 8 0" />
-                <TextBlock x:Name="LocalStatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8FB;" FontSize="20"
-                           FontWeight="UltraBold" />
+            <TextBlock x:Name="ModShortDescription" Text="Short description of the mod." TextWrapping="Wrap"
+                       Style="{StaticResource BaseTextBlockStyle}" Padding="0 0 8 0" />
             </StackPanel>
-        </StackPanel>
     </DockPanel>
 </UserControl>

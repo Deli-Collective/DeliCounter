@@ -11,10 +11,10 @@ namespace Slicer
 {
     public partial class MainWindow
     {
-        private readonly Dictionary<string, UIElement> _pages = new()
+        private readonly Dictionary<string, (UIElement, bool)> _pages = new()
         {
-            ["home"] = new HomePage(),
-            ["settings"] = new SettingsPage()
+            ["home"] = (new HomePage(), false),
+            ["settings"] = (new SettingsPage(), false)
         };
 
         public MainWindow()
@@ -49,7 +49,7 @@ namespace Slicer
                         Glyph = category.Icon
                     }
                 });
-                _pages.Add("mods" + category.Path, new ModListing(category));
+                _pages.Add("mods" + category.Path, (new ModListing(category), true));
             }
             
             AddCategory(new ModCategory
@@ -66,7 +66,8 @@ namespace Slicer
         private void NavView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var tag = args.IsSettingsInvoked ? "settings" : args.InvokedItemContainer.Tag.ToString();
-            NavViewContent.Navigate(tag != null ? _pages[tag] : null);
+            NavViewContent.Navigate(tag != null ? _pages[tag].Item1 : null);
+            Drawer.IsPaneOpen = _pages[tag].Item2;
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
@@ -76,9 +77,7 @@ namespace Slicer
 
         private void NavView_PaneToggled(NavigationView sender, object args)
         {
-            if (NavView.IsPaneOpen)
-                DownloadableHeader.Visibility = Visibility.Visible;
-            else DownloadableHeader.Visibility = Visibility.Collapsed;
+            DownloadableHeader.Visibility = NavView.IsPaneOpen ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
