@@ -70,6 +70,9 @@ namespace Slicer
             var tag = args.IsSettingsInvoked ? "settings" : args.InvokedItemContainer.Tag.ToString();
             NavViewContent.Navigate(tag != null ? _pages[tag].Item1 : null);
             Drawer.IsPaneOpen = _pages[tag].Item2;
+
+            ModManagementDrawer.SelectedMods.Clear();
+            ModManagementDrawer.UpdateDisplay();
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)

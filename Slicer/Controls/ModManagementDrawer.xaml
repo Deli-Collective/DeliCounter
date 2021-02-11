@@ -4,13 +4,17 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Slicer.Controls"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d"
              d:DesignHeight="800" d:DesignWidth="450">
     <DockPanel>
             <!-- Action buttons -->
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
-                <Button x:Name="ButtonInstall" Content="Install" />
-            </StackPanel>
+            <ui:SimpleStackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="16">
+            <Button x:Name="ButtonInstall" Content="Install" Style="{DynamicResource AccentButtonStyle}" IsEnabled="False"/>
+            <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}" IsEnabled="False"/>
+            <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False"/>
+
+            </ui:SimpleStackPanel>
 
             <!-- Mod information -->
             <StackPanel>
