@@ -1,8 +1,6 @@
-﻿using Microsoft.Win32;
-using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Windows;
+using Microsoft.Win32;
 
 namespace Slicer.Backend
 {

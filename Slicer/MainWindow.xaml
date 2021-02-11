@@ -35,7 +35,7 @@
 
                     <ui:SplitView.Pane>
                         <Border CornerRadius="8" Margin="8">
-                            <controls:ModManagementDrawer x:Name="ModManagementDrawer"/>
+                            <controls:ModManagementDrawer x:Name="ModManagementDrawer" />
                         </Border>
                     </ui:SplitView.Pane>
                 </ui:SplitView>

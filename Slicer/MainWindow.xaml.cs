@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
 using ModernWpf.Controls;
 using Slicer.Backend;
 using Slicer.Pages;
@@ -10,8 +11,6 @@ namespace Slicer
 {
     public partial class MainWindow
     {
-        public static MainWindow Instance { get; set; }
-
         private readonly Dictionary<string, (UIElement, bool)> _pages = new()
         {
             ["home"] = (new HomePage(), false),
@@ -27,11 +26,15 @@ namespace Slicer
             ModRepository.Instance.RepositoryUpdated += ModRepoUpdated;
         }
 
+        public static MainWindow Instance { get; set; }
+
         private void ModRepoUpdated(ModRepository.State state, Exception e)
         {
             // Remove the existing mod tabs
             var toRemove = from NavigationViewItemBase navViewMenuItem in NavView.MenuItems
-                let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods") where foo.HasValue && foo.Value select navViewMenuItem;
+                let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods")
+                where foo.HasValue && foo.Value
+                select navViewMenuItem;
             foreach (var remove in toRemove)
             {
                 NavView.MenuItems.Remove(remove);
@@ -45,15 +48,15 @@ namespace Slicer
                 {
                     Tag = "mods" + category.Path,
                     Content = category.Name,
-                    Icon = new FontIcon()
+                    Icon = new FontIcon
                     {
-                        FontFamily = new System.Windows.Media.FontFamily("Segoe MDL2 Assets"),
+                        FontFamily = new FontFamily("Segoe MDL2 Assets"),
                         Glyph = category.Icon
                     }
                 });
                 _pages.Add("mods" + category.Path, (new ModListing(category), true));
             }
-            
+
             AddCategory(new ModCategory
             {
                 IsLocal = true,

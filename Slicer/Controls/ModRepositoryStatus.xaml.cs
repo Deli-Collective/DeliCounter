@@ -1,23 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Slicer.Backend;
 
 namespace Slicer.Controls
 {
     /// <summary>
-    /// Interaction logic for RepositoryStatus.xaml
+    ///     Interaction logic for RepositoryStatus.xaml
     /// </summary>
     public partial class ModRepositoryStatus : UserControl
     {
@@ -46,7 +36,8 @@ namespace Slicer.Controls
                 case ModRepository.State.UpToDate:
                     StatusIcon.Text = SegoeGlyphs.Checkmark;
                     StatusIcon.Foreground = new SolidColorBrush(Colors.Green);
-                    LastUpdateText.Text = $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When.ToString()}";
+                    LastUpdateText.Text =
+                        $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When.ToString()}";
                     StatusText.Text = "Up to date!";
                     break;
             }

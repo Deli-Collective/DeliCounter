@@ -42,15 +42,12 @@ namespace Slicer.Backend
         }
 
         /// <summary>
-        /// Runs the tree command on the H3 directory for additional debugging
+        ///     Runs the tree command on the H3 directory for additional debugging
         /// </summary>
         public static string GenerateTree()
         {
             // If the H3 folder isn't found, just return
-            if (string.IsNullOrEmpty(GameLocator.GameDirectory))
-            {
-                return "";
-            }
+            if (string.IsNullOrEmpty(GameLocator.GameDirectory)) return "";
 
             // Create a string builder and output the current time
             var sb = new StringBuilder();
@@ -79,7 +76,10 @@ namespace Slicer.Backend
                     skip = true;
                     sb.AppendLine(line + " (TRUNCATED)");
                 }
-                else if (skip && line.Trim() == "|") skip = false;
+                else if (skip && line.Trim() == "|")
+                {
+                    skip = false;
+                }
 
                 if (!skip) sb.AppendLine(line);
             }

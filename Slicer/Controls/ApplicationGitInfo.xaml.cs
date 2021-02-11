@@ -5,6 +5,12 @@ namespace Slicer.Controls
 {
     public partial class ApplicationGitInfo : UserControl
     {
+        public ApplicationGitInfo()
+        {
+            InitializeComponent();
+            BuildInfo.Text = Text;
+        }
+
         public static string Text
         {
             get
@@ -14,12 +20,6 @@ namespace Slicer.Controls
                        $"Branch: {ThisAssembly.Git.Branch}{(ThisAssembly.Git.IsDirty ? "-dirty" : "")} ({ThisAssembly.Git.Commit})\n" +
                        $"Commit Date: {commitDate}";
             }
-        }
-
-        public ApplicationGitInfo()
-        {
-            InitializeComponent();
-            BuildInfo.Text = Text;
         }
     }
 }

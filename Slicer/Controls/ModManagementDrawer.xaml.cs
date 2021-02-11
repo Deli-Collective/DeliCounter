@@ -1,12 +1,13 @@
-﻿using Slicer.Backend;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Slicer.Backend;
 
 namespace Slicer.Controls
 {
     /// <summary>
-    /// Interaction logic for ModManagementDrawer.xaml
+    ///     Interaction logic for ModManagementDrawer.xaml
     /// </summary>
     public partial class ModManagementDrawer : UserControl
     {
@@ -33,6 +34,7 @@ namespace Slicer.Controls
             TextBlockLatestWrapper.Visibility = Visibility.Collapsed;
             TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
             TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
+            TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
 
             // Enable and make the buttons visible
             ButtonInstall.IsEnabled = true;
@@ -54,6 +56,7 @@ namespace Slicer.Controls
             TextBlockLatestWrapper.Visibility = Visibility.Visible;
             TextBlockInstalledWrapper.Visibility = Visibility.Visible;
             TextBlockAuthorsWrapper.Visibility = Visibility.Visible;
+            TextBlockDependenciesWrapper.Visibility = Visibility.Visible;
 
             // Update the text values
             TextBlockTitle.Text = version.Name;
@@ -61,6 +64,7 @@ namespace Slicer.Controls
             TextBlockAuthors.Text = string.Join(", ", version.Authors);
             TextBlockLatest.Text = version.VersionNumber.ToString();
             TextBlockInstalled.Text = mod.IsInstalled ? mod.Installed.VersionNumber.ToString() : "No";
+            TextBlockDependencies.Text = string.Join(", ", version.Dependencies.Select(x => x.Key + " " + x.Value));
 
             // Update the action button visibility
             if (mod.IsInstalled)

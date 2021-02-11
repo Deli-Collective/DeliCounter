@@ -1,19 +1,20 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using Slicer.Backend;
 using ModernWpf;
+using Slicer.Backend;
 using Slicer.Controls;
 using Slicer.Properties;
 
 namespace Slicer.Pages
 {
     /// <summary>
-    /// Interaction logic for SettingsPage.xaml
+    ///     Interaction logic for SettingsPage.xaml
     /// </summary>
     public partial class SettingsPage
     {
-        private Settings _settings;
+        private readonly Settings _settings;
 
         public SettingsPage()
         {
@@ -42,14 +43,17 @@ namespace Slicer.Pages
                 _settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
 
-        private void GenerateDiagnosticFile(object sender, RoutedEventArgs e) => InfoCollector.CollectAll();
+        private void GenerateDiagnosticFile(object sender, RoutedEventArgs e)
+        {
+            InfoCollector.CollectAll();
+        }
     }
 
     [ValueConversion(typeof(bool), typeof(bool))]
     public class InverseBooleanConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter,
-            System.Globalization.CultureInfo culture)
+            CultureInfo culture)
         {
             if (targetType != typeof(bool))
                 throw new InvalidOperationException("The target must be a boolean");
@@ -58,7 +62,7 @@ namespace Slicer.Pages
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,
-            System.Globalization.CultureInfo culture)
+            CultureInfo culture)
         {
             throw new NotSupportedException();
         }

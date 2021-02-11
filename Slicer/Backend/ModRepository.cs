@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using LibGit2Sharp;
 using Newtonsoft.Json;
 using Slicer.Properties;
@@ -9,8 +8,10 @@ using JsonException = System.Text.Json.JsonException;
 
 namespace Slicer.Backend
 {
-    class ModRepository
+    internal class ModRepository
     {
+        public delegate void RepositoryUpdatedDelegate(State state, Exception e);
+
         public enum State
         {
             Error,
@@ -18,21 +19,19 @@ namespace Slicer.Backend
             UpToDate
         }
 
-        private static ModRepository _instance;
-
-        public static ModRepository Instance => _instance ??= new ModRepository();
-
-        public delegate void RepositoryUpdatedDelegate(State state, Exception e);
-
-        public event RepositoryUpdatedDelegate RepositoryUpdated;
-
         private const string RepoPath = "ModRepository";
+
+        private static ModRepository _instance;
 
         public ModCategory[] Categories;
         public Dictionary<string, Mod> Mods = new();
         public Repository Repo;
 
         public State Status;
+
+        public static ModRepository Instance => _instance ??= new ModRepository();
+
+        public event RepositoryUpdatedDelegate RepositoryUpdated;
 
         public void Refresh()
         {
@@ -85,13 +84,10 @@ namespace Slicer.Backend
         private Exception ScanMods()
         {
             Mods.Clear();
-            
+
             // Fetch a list of all the categories in the repo
             var categoriesPath = Path.Combine(RepoPath, "categories.json");
-            if (!File.Exists(categoriesPath))
-            {
-                return new FileNotFoundException("Categories file can not be found!");
-            }
+            if (!File.Exists(categoriesPath)) return new FileNotFoundException("Categories file can not be found!");
 
             try
             {

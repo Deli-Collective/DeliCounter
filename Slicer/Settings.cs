@@ -1,4 +1,6 @@
-﻿using ModernWpf;
+﻿using System.ComponentModel;
+using System.Configuration;
+using ModernWpf;
 
 namespace Slicer.Properties
 {
@@ -10,12 +12,12 @@ namespace Slicer.Properties
             SettingsLoaded += Settings_SettingsLoaded;
         }
 
-        private void Settings_SettingsLoaded(object sender, System.Configuration.SettingsLoadedEventArgs e)
+        private void Settings_SettingsLoaded(object sender, SettingsLoadedEventArgs e)
         {
             ThemeManager.Current.ApplicationTheme = EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
 
-        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             Save();
         }

@@ -8,7 +8,7 @@
     <StackPanel>
         <StackPanel Orientation="Horizontal">
             <TextBlock x:Name="StatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xF13E;" FontSize="50"
-                       FontWeight="UltraBold" Foreground="Green" Padding="0 0 8 0"/>
+                       FontWeight="UltraBold" Foreground="Green" Padding="0 0 8 0" />
             <StackPanel Width="auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <TextBlock x:Name="StatusText" Text="Up to date!" Style="{DynamicResource SubheaderTextBlockStyle}" />
             </StackPanel>

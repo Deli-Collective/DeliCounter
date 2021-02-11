@@ -2,13 +2,12 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using ModernWpf;
 using Slicer.Backend;
 
 namespace Slicer.Controls
 {
     /// <summary>
-    /// Interaction logic for ModListItem.xaml
+    ///     Interaction logic for ModListItem.xaml
     /// </summary>
     public partial class ModListItem
     {
@@ -46,7 +45,6 @@ namespace Slicer.Controls
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
     }
 }

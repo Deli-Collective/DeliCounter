@@ -1,7 +1,7 @@
 ﻿namespace Slicer.Pages
 {
     /// <summary>
-    /// Interaction logic for HomePage.xaml
+    ///     Interaction logic for HomePage.xaml
     /// </summary>
     public partial class HomePage
     {

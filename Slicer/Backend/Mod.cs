@@ -10,51 +10,9 @@ namespace Slicer.Backend
     public class Mod
     {
         /// <summary>
-        ///     Represents a specific version of a mod
+        ///     All versions of the mod found in the database
         /// </summary>
-        public class ModVersion
-        {
-            /// <summary>
-            ///     Semantic Version number of this version of the mod
-            /// </summary>
-            public SemVersion VersionNumber { get; set; }
-            
-            /// <summary>
-            ///     Name of the mod
-            /// </summary>
-            public string Name { get; set; }
-
-            /// <summary>
-            ///     Long description for the mod page which supports formatting
-            /// </summary>
-            public string Description { get; set; }
-
-            /// <summary>
-            ///     Short description to be used in lists
-            /// </summary>
-            public string ShortDescription { get; set; }
-
-            /// <summary>
-            ///     URL for the mod's icon
-            /// </summary>
-            public string IconUrl { get; set; }
-
-            /// <summary>
-            ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
-            /// </summary>
-            public string SourceUrl { get; set; }
-            
-            /// <summary>
-            ///     Authors
-            /// </summary>
-            public string[] Authors { get; set; }
-            
-            /// <summary>
-            ///     URL to the file that will be downloaded
-            /// </summary>
-            public string DownloadUrl { get; set; }
-            // TODO: Installation and removal data for each version
-        }
+        public Dictionary<SemVersion, ModVersion> Versions = new();
 
         /// <summary>
         ///     Mod GUID.
@@ -65,11 +23,6 @@ namespace Slicer.Backend
         ///     Category this mod is in
         /// </summary>
         public ModCategory Category { get; set; }
-
-        /// <summary>
-        ///     All versions of the mod found in the database
-        /// </summary>
-        public Dictionary<SemVersion, ModVersion> Versions = new();
 
         /// <summary>
         ///     Retrieves the latest version number from the database
@@ -100,5 +53,58 @@ namespace Slicer.Backend
         ///     Retrieves the installed version
         /// </summary>
         public ModVersion Installed => Versions[InstalledVersion];
+
+        /// <summary>
+        ///     Represents a specific version of a mod
+        /// </summary>
+        public class ModVersion
+        {
+            /// <summary>
+            ///     Semantic Version number of this version of the mod
+            /// </summary>
+            public SemVersion VersionNumber { get; set; }
+
+            /// <summary>
+            ///     Name of the mod
+            /// </summary>
+            public string Name { get; set; }
+
+            /// <summary>
+            ///     Long description for the mod page which supports formatting
+            /// </summary>
+            public string Description { get; set; }
+
+            /// <summary>
+            ///     Short description to be used in lists
+            /// </summary>
+            public string ShortDescription { get; set; }
+
+            /// <summary>
+            ///     URL for the mod's icon
+            /// </summary>
+            public string IconUrl { get; set; }
+
+            /// <summary>
+            ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
+            /// </summary>
+            public string SourceUrl { get; set; }
+
+            /// <summary>
+            ///     Authors
+            /// </summary>
+            public string[] Authors { get; set; }
+
+            /// <summary>
+            ///     URL to the file that will be downloaded
+            /// </summary>
+            public string DownloadUrl { get; set; }
+
+            /// <summary>
+            ///     List of GUID dependencies for this mod.
+            /// </summary>
+            public Dictionary<string, SemVersion> Dependencies { get; set; }
+
+            // TODO: Installation and removal data for each version
+        }
     }
 }
