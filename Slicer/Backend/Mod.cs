@@ -42,17 +42,17 @@ namespace Slicer.Backend
             /// <summary>
             ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
             /// </summary>
-            public string SourceUrl { get; }
+            public string SourceUrl { get; set; }
             
             /// <summary>
             ///     Authors
             /// </summary>
-            public string[] Authors { get; }
+            public string[] Authors { get; set; }
             
             /// <summary>
             ///     URL to the file that will be downloaded
             /// </summary>
-            public string DownloadUrl { get; }
+            public string DownloadUrl { get; set; }
             // TODO: Installation and removal data for each version
         }
 

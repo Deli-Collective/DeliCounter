@@ -19,7 +19,8 @@
                              BorderThickness="1"
                              SelectionMode="Extended"
                              IsSelectionEnabled="True"
-                             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" />
+                             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}" 
+                             SelectionChanged="ModList_SelectionChanged"/>
             </DockPanel>
         </ScrollViewer>
 </UserControl>

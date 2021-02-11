@@ -1,0 +1,53 @@
+﻿<UserControl x:Class="Slicer.Controls.ModManagementDrawer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Slicer.Controls"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="450">
+    <DockPanel>
+            <!-- Action buttons -->
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <Button x:Name="ButtonInstall" Content="Install" />
+            </StackPanel>
+
+            <!-- Mod information -->
+            <StackPanel>
+                <TextBlock x:Name="TextBlockTitle" Text="Mod title here"
+                           Style="{StaticResource SubheaderTextBlockStyle}" />
+
+                <!-- Description -->
+                <TextBlock x:Name="TextBlockDescriptionWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                    Description:
+                    <TextBlock x:Name="TextBlockDescription" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        Lorem itprum something something idk I don't know lorem text that well. I just need to fill some lines.
+                    </TextBlock>
+                </TextBlock>
+
+                <!-- Authors -->
+            <TextBlock x:Name="TextBlockAuthorsWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                    Authors:
+                    <TextBlock x:Name="TextBlockAuthors" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        person 1, other guy 2
+                    </TextBlock>
+                </TextBlock>
+
+                <!-- Latest Version -->
+            <TextBlock x:Name="TextBlockLatestWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                    Latest Version:
+                    <TextBlock x:Name="TextBlockLatest" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        1.2.3
+                    </TextBlock>
+                </TextBlock>
+
+                <!-- Installed -->
+            <TextBlock x:Name="TextBlockInstalledWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                    Installed:
+                    <TextBlock x:Name="TextBlockInstalled" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        No
+                    </TextBlock>
+                </TextBlock>
+            </StackPanel>
+        </DockPanel>
+</UserControl>

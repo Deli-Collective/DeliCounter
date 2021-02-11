@@ -13,9 +13,6 @@
     <DockPanel HorizontalAlignment="Stretch">
         <Image x:Name="ModImage" Source="/Assets/placeholder.jpg" Margin="0 2 2 2" Stretch="Uniform"
                DockPanel.Dock="Left" />
-        <ui:HyperlinkButton DockPanel.Dock="Right" Padding="0 0 8 0" Click="HyperlinkButton_Click">
-            <ui:FontIcon Glyph="&#xE76C;"/>
-        </ui:HyperlinkButton>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="0 0 16 0">
             <TextBlock x:Name="LocalStatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8FB;" FontSize="24" FontWeight="UltraBold" />
         </StackPanel>

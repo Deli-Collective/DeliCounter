@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using ModernWpf.Controls;
 using Slicer.Backend;
@@ -11,6 +10,8 @@ namespace Slicer
 {
     public partial class MainWindow
     {
+        public static MainWindow Instance { get; set; }
+
         private readonly Dictionary<string, (UIElement, bool)> _pages = new()
         {
             ["home"] = (new HomePage(), false),
@@ -19,9 +20,10 @@ namespace Slicer
 
         public MainWindow()
         {
+            Instance = this;
             InitializeComponent();
             NavView.SelectedItem = NavView.MenuItems[0];
-            NavViewContent.Navigate(_pages["home"]);
+            NavViewContent.Navigate(_pages["home"].Item1);
             ModRepository.Instance.RepositoryUpdated += ModRepoUpdated;
         }
 
