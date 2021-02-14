@@ -25,9 +25,18 @@ namespace Slicer.Controls
 
         public void UpdateDisplay()
         {
-            if (SelectedMods.Count != 1)
-                UpdateShowMultiple();
-            else UpdateShowOne();
+            switch (SelectedMods.Count)
+            {
+                case 0:
+                    UpdateShowNone();
+                    break;
+                case 1:
+                    UpdateShowOne();
+                    break;
+                default:
+                    UpdateShowMultiple();
+                    break;
+            }
         }
 
         private void UpdateShowNone()
