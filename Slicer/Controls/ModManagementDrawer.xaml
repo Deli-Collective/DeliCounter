@@ -10,7 +10,7 @@
         <!-- Action buttons -->
         <ui:SimpleStackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="16">
             <Button x:Name="ButtonInstall" Content="Install" Style="{DynamicResource AccentButtonStyle}"
-                    IsEnabled="False" />
+                    IsEnabled="False" Click="ButtonInstall_Click" />
             <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}"
                     IsEnabled="False" />
             <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" />
@@ -62,6 +62,17 @@
                 <TextBlock x:Name="TextBlockDependencies" TextWrapping="WrapWithOverflow" FontWeight="Normal">
                     BepInEx 5.4.5, Deli 0.2.5
                 </TextBlock>
+            </TextBlock>
+
+            <!-- Source -->
+            <TextBlock x:Name="TextBlockSourceWrapper" Style="{StaticResource BaseTextBlockStyle}"
+                       Padding="0 8 0 0">
+                Source:
+                <Hyperlink x:Name="HyperlinkSource" RequestNavigate="HyperlinkSource_OnRequestNavigate">
+                    <TextBlock x:Name="TextBlockSource" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        https://somewebsite.com
+                    </TextBlock>
+                </Hyperlink>
             </TextBlock>
         </StackPanel>
     </DockPanel>

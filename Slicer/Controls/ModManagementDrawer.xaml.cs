@@ -1,7 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Navigation;
 using Slicer.Backend;
 
 namespace Slicer.Controls
@@ -35,6 +39,7 @@ namespace Slicer.Controls
             TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
             TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
             TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
+            TextBlockSourceWrapper.Visibility = Visibility.Collapsed;
 
             // Enable and make the buttons visible
             ButtonInstall.IsEnabled = true;
@@ -57,6 +62,7 @@ namespace Slicer.Controls
             TextBlockInstalledWrapper.Visibility = Visibility.Visible;
             TextBlockAuthorsWrapper.Visibility = Visibility.Visible;
             TextBlockDependenciesWrapper.Visibility = Visibility.Visible;
+            TextBlockSourceWrapper.Visibility = Visibility.Visible;
 
             // Update the text values
             TextBlockTitle.Text = version.Name;
@@ -65,6 +71,8 @@ namespace Slicer.Controls
             TextBlockLatest.Text = version.VersionNumber.ToString();
             TextBlockInstalled.Text = mod.IsInstalled ? mod.Installed.VersionNumber.ToString() : "No";
             TextBlockDependencies.Text = string.Join(", ", version.Dependencies.Select(x => x.Key + " " + x.Value));
+            TextBlockSource.Text = version.SourceUrl;
+            HyperlinkSource.NavigateUri = new Uri(version.SourceUrl, UriKind.Absolute);
 
             // Update the action button visibility
             if (mod.IsInstalled)
@@ -85,6 +93,21 @@ namespace Slicer.Controls
                 ButtonUpdate.IsEnabled = false;
                 ButtonUpdate.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void HyperlinkSource_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            var proc = new ProcessStartInfo("cmd", "/C start " + e.Uri.AbsoluteUri)
+            {
+                CreateNoWindow = true
+            };
+            Process.Start(proc);
+            e.Handled = true;
+        }
+
+        private void ButtonInstall_Click(object sender, RoutedEventArgs e)
+        {
+            ModRepository.Instance.InstallMod(SelectedMods.Where(m => !m.IsInstalled));
         }
     }
 }

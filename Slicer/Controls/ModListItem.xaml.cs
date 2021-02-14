@@ -27,7 +27,7 @@ namespace Slicer.Controls
             if (mod.IsInstalled)
             {
                 LocalStatusIcon.Text = mod.UpToDate ? SegoeGlyphs.Checkmark : SegoeGlyphs.Repeat;
-                LocalStatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
+                LocalStatusIcon.Foreground = new SolidColorBrush(mod.UpToDate ? Colors.Green : Colors.DarkOrange);
             }
             else
             {

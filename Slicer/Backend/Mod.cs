@@ -104,7 +104,27 @@ namespace Slicer.Backend
             /// </summary>
             public Dictionary<string, SemVersion> Dependencies { get; set; }
 
-            // TODO: Installation and removal data for each version
+            /// <summary>
+            ///     List of steps required for installing this mod
+            /// </summary>
+            public string[] InstallationSteps { get; set; }
+
+            /// <summary>
+            ///     List of paths to remove when removing this mod
+            /// </summary>
+            public string[] RemovalPaths { get; set; }
         }
+    }
+
+    /// <summary>
+    ///     Represents a mod in the cache
+    /// </summary>
+    public class CachedMod
+    {
+        public string Guid { get; set; }
+        public SemVersion Version { get; set; }
+        public string[] RemovalPaths { get; set; }
+        public string[] Dependants { get; set; }
+        public string[] Dependencies { get; set; }
     }
 }

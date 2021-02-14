@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using LibGit2Sharp;
 using Newtonsoft.Json;
+using Semver;
 using Slicer.Properties;
 using JsonException = System.Text.Json.JsonException;
 
@@ -25,18 +27,34 @@ namespace Slicer.Backend
 
         public ModCategory[] Categories;
         public Dictionary<string, Mod> Mods = new();
+        public List<CachedMod> InstalledMods = new();
         public Repository Repo;
-
-        public State Status;
 
         public static ModRepository Instance => _instance ??= new ModRepository();
 
         public event RepositoryUpdatedDelegate RepositoryUpdated;
 
+        public State Status;
+
+        public string ModCachePath
+        {
+            get
+            {
+                var path = Settings.Default.GameLocationOrError;
+                return path is null ? null : Path.Join(path, "installed_mods.json");
+            }
+        }
+
+        public ModRepository()
+        {
+            Settings.Default.GameLocationChanged += LoadModCache;
+        }
+
         public void Refresh()
         {
             var updateResult = UpdateRepo();
             var scanResult = ScanMods();
+            LoadModCache();
 
             // Check the results
             if (updateResult is null && scanResult is null)
@@ -133,6 +151,72 @@ namespace Slicer.Backend
             {
                 return e;
             }
+        }
+
+        private void LoadModCache()
+        {
+            // Clear the installed flag of any mod that has it
+            foreach (var mod in Mods.Values) mod.InstalledVersion = null;
+
+            // If the game folder is not set don't do anything
+            var path = ModCachePath;
+            if (path is null) return;
+
+            // Read the mod cache (Or create it if it does not exist)
+            if (!File.Exists(path))
+            {
+                InstalledMods = new List<CachedMod>();
+                WriteCache();
+            }
+            else InstalledMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
+
+            if (InstalledMods is null) return;
+
+            // Set the installed version on the installed mods
+            foreach (var cached in InstalledMods)
+                Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
+        }
+
+        public void WriteCache()
+        {
+            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(InstalledMods));
+        }
+
+        public bool InstallMod(Mod mod, SemVersion version = null)
+        {
+            // Get the version downloaded
+            if (version is null) version = mod.LatestVersion;
+            else if (!mod.Versions.ContainsKey(version)) return false; // TODO: Better error handling?
+
+            // Download the dependencies
+            var downloadVersion = mod.Versions[version];
+            foreach (var dep in downloadVersion.Dependencies)
+            {
+                var result = InstallMod(Mods[dep.Key], dep.Value);
+                if (!result) return false;
+            }
+
+            // Download the correct file to a temp path
+            var tempPath = Path.GetTempPath();
+            var downloadedFile = Path.Combine(tempPath, mod.Guid + ".tmp");
+
+            // Keep a list of the variables used for installation
+            var vars = new Dictionary<string, string>
+            {
+                ["DOWNLOADED_FILE"] = downloadedFile
+            };
+
+            // Perform the installations
+            foreach (var step in downloadVersion.InstallationSteps)
+            {
+                
+            }
+
+            return true;
+        }
+
+        public void RemoveMod(Mod mod)
+        {
         }
     }
 }
