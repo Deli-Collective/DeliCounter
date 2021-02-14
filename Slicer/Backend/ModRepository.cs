@@ -181,42 +181,5 @@ namespace Slicer.Backend
         {
             File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(InstalledMods));
         }
-
-        public bool InstallMod(Mod mod, SemVersion version = null)
-        {
-            // Get the version downloaded
-            if (version is null) version = mod.LatestVersion;
-            else if (!mod.Versions.ContainsKey(version)) return false; // TODO: Better error handling?
-
-            // Download the dependencies
-            var downloadVersion = mod.Versions[version];
-            foreach (var dep in downloadVersion.Dependencies)
-            {
-                var result = InstallMod(Mods[dep.Key], dep.Value);
-                if (!result) return false;
-            }
-
-            // Download the correct file to a temp path
-            var tempPath = Path.GetTempPath();
-            var downloadedFile = Path.Combine(tempPath, mod.Guid + ".tmp");
-
-            // Keep a list of the variables used for installation
-            var vars = new Dictionary<string, string>
-            {
-                ["DOWNLOADED_FILE"] = downloadedFile
-            };
-
-            // Perform the installations
-            foreach (var step in downloadVersion.InstallationSteps)
-            {
-                
-            }
-
-            return true;
-        }
-
-        public void RemoveMod(Mod mod)
-        {
-        }
     }
 }
