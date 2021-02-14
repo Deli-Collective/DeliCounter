@@ -53,7 +53,7 @@ namespace Slicer.Backend.ModOperation
                     case "extract":
                         Extract(args);
                         break;
-                    case "copy":
+                    case "move":
                         Move(args);
                         break;
                     case "mkdir":

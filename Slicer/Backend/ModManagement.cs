@@ -13,17 +13,21 @@ namespace Slicer.Backend
             App.RunInBackgroundThread(() =>
             {
                 ExecuteOperations(EnumerateInstallDependencies(mod)
-                    .Concat(new []{new InstallModOperation(mod)}));
+                    .Concat(new[] {new InstallModOperation(mod)}));
             });
         }
 
         internal static void UninstallMod(Mod mod)
         {
-            App.RunInBackgroundThread(() =>
+            var toUninstall = EnumerateUninstallDependencies(mod)
+                .Concat(new[] {new UninstallModOperation(mod)}).ToArray();
+
+            if (toUninstall.Length > 1)
             {
-                ExecuteOperations(EnumerateUninstallDependencies(mod)
-                    .Concat(new[] { new UninstallModOperation(mod) }));
-            });
+                // TODO: Warn the user that this will uninstall multiple mods!
+            }
+
+            App.RunInBackgroundThread(() => { ExecuteOperations(toUninstall); });
         }
 
         private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod)
@@ -49,7 +53,11 @@ namespace Slicer.Backend
             foreach (var dependent in ModRepository.Instance.Mods.Values.Where(m => m.IsInstalled))
             {
                 if (dependent.Installed.Dependencies.Any(x => x.Key == mod.Guid))
+                {
+                    foreach (var yield in EnumerateUninstallDependencies(dependent))
+                        yield return yield;
                     yield return new UninstallModOperation(dependent);
+                }
             }
         }
 
@@ -60,7 +68,7 @@ namespace Slicer.Backend
             ProgressDialogue progressDialogue = null;
             App.RunInMainThread(() =>
             {
-                progressDialogue = new ProgressDialogue { Title = "Executing operations" };
+                progressDialogue = new ProgressDialogue {Title = "Executing operations"};
                 progressDialogue.ShowAsync();
             });
             for (int i = 0; i < ops.Length; i++)
