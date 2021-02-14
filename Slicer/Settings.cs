@@ -23,8 +23,9 @@ namespace Slicer.Properties
             get
             {
                 if (!string.IsNullOrWhiteSpace(GameLocation)) return GameLocation;
-                new AlertDialogue("Game location missing",
-                    "Your game location is not set! Please set it in the settings menu.").ShowAsync();
+                App.RunInMainThread(() =>
+                    new AlertDialogue("Game location missing",
+                        "Your game location is not set! Please set it in the settings menu.").ShowAsync());
                 return null;
             }
         }

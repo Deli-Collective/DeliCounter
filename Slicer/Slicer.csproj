@@ -38,4 +38,8 @@
     <Folder Include="Assets\" />
   </ItemGroup>
 
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="rmdir /S /Q $(OutDir)\cs&#xD;&#xA;rmdir /S /Q $(OutDir)\de&#xD;&#xA;rmdir /S /Q $(OutDir)\es&#xD;&#xA;rmdir /S /Q $(OutDir)\fa&#xD;&#xA;rmdir /S /Q $(OutDir)\fr&#xD;&#xA;rmdir /S /Q $(OutDir)\it&#xD;&#xA;rmdir /S /Q $(OutDir)\ja&#xD;&#xA;rmdir /S /Q $(OutDir)\ko&#xD;&#xA;rmdir /S /Q $(OutDir)\pl&#xD;&#xA;rmdir /S /Q $(OutDir)\pt-BR&#xD;&#xA;rmdir /S /Q $(OutDir)\ru&#xD;&#xA;rmdir /S /Q $(OutDir)\tr&#xD;&#xA;rmdir /S /Q $(OutDir)\zh-Hans&#xD;&#xA;rmdir /S /Q $(OutDir)\zh-Hant&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\alpine.3.9-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\alpine-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\debian.9-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\debian-arm64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\fedora-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\linux-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\osx&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\rhel-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\ubuntu.16.04-arm64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\ubuntu.18.04-x64&#xD;&#xA;rmdir /S /Q $(OutDir)\runtimes\win-x86" />
+  </Target>
+
 </Project>

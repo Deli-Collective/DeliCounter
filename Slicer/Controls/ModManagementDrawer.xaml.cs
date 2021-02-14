@@ -30,6 +30,26 @@ namespace Slicer.Controls
             else UpdateShowOne();
         }
 
+        private void UpdateShowNone()
+        {
+            // Hide all the text blocks
+            TextBlockTitle.Text = "No mod selected";
+            TextBlockDescriptionWrapper.Visibility = Visibility.Collapsed;
+            TextBlockLatestWrapper.Visibility = Visibility.Collapsed;
+            TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
+            TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
+            TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
+            TextBlockSourceWrapper.Visibility = Visibility.Collapsed;
+
+            // Enable and make the buttons visible
+            ButtonInstall.IsEnabled = false;
+            ButtonInstall.Visibility = Visibility.Collapsed;
+            ButtonUpdate.IsEnabled = false;
+            ButtonUpdate.Visibility = Visibility.Collapsed;
+            ButtonUninstall.IsEnabled = false;
+            ButtonUninstall.Visibility = Visibility.Collapsed;
+        }
+
         private void UpdateShowMultiple()
         {
             // Hide all the text blocks
