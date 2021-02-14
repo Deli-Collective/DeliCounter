@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using ModernWpf.Controls;
@@ -30,49 +31,56 @@ namespace Slicer
 
         private void ModRepoUpdated(ModRepository.State state, Exception e)
         {
-            // Remove the existing mod tabs
-            var toRemove = from NavigationViewItemBase navViewMenuItem in NavView.MenuItems
-                let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods")
-                where foo.HasValue && foo.Value
-                select navViewMenuItem;
-            foreach (var remove in toRemove)
+            App.RunInMainThread(() =>
             {
-                NavView.MenuItems.Remove(remove);
-                _pages.Remove(remove.Tag.ToString() ?? string.Empty);
-            }
-
-            // Add new ones for each category (Including a local one)
-            void AddCategory(ModCategory category)
-            {
-                NavView.MenuItems.Add(new NavigationViewItem
+                // Remove the existing mod tabs
+                var toRemove = (from NavigationViewItemBase navViewMenuItem in NavView.MenuItems
+                    let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods")
+                    where foo.HasValue && foo.Value
+                    select navViewMenuItem).ToArray();
+                foreach (var remove in toRemove)
                 {
-                    Tag = "mods" + category.Path,
-                    Content = category.Name,
-                    Icon = new FontIcon
-                    {
-                        FontFamily = new FontFamily("Segoe MDL2 Assets"),
-                        Glyph = category.Icon
-                    }
-                });
-                _pages.Add("mods" + category.Path, (new ModListing(category), true));
-            }
+                    NavView.MenuItems.Remove(remove);
+                    _pages.Remove(remove.Tag.ToString() ?? string.Empty);
+                }
 
-            AddCategory(new ModCategory
-            {
-                IsLocal = true,
-                Name = "Installed Mods",
-                Description = "List of all your installed mods",
-                Icon = SegoeGlyphs.Save,
-                Path = "Installed"
+                // Add new ones for each category (Including a local one)
+                void AddCategory(ModCategory category)
+                {
+                    NavView.MenuItems.Add(new NavigationViewItem
+                    {
+                        Tag = "mods" + category.Path,
+                        Content = category.Name,
+                        Icon = new FontIcon
+                        {
+                            FontFamily = new FontFamily("Segoe MDL2 Assets"),
+                            Glyph = category.Icon
+                        }
+                    });
+                    _pages.Add("mods" + category.Path, (new ModListing(category), true));
+                }
+
+                AddCategory(new ModCategory
+                {
+                    IsLocal = true,
+                    Name = "Installed Mods",
+                    Description = "List of all your installed mods",
+                    Icon = SegoeGlyphs.Save,
+                    Path = "Installed"
+                });
+                foreach (var category in ModRepository.Instance.Categories) AddCategory(category);
             });
-            foreach (var category in ModRepository.Instance.Categories) AddCategory(category);
         }
 
         private void NavView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var tag = args.IsSettingsInvoked ? "settings" : args.InvokedItemContainer.Tag.ToString();
-            NavViewContent.Navigate(tag != null ? _pages[tag].Item1 : null);
+            var page = _pages[tag].Item1;
+            NavViewContent.Navigate(page);
             Drawer.IsPaneOpen = _pages[tag].Item2;
+
+            if (page is ModListing listPage)
+                listPage.ModList.SelectedItem = null;
 
             ModManagementDrawer.SelectedMods.Clear();
             ModManagementDrawer.UpdateDisplay();
@@ -80,7 +88,7 @@ namespace Slicer
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ModRepository.Instance.Refresh();
+            ThreadPool.QueueUserWorkItem((_) => ModRepository.Instance.Refresh());
         }
 
         private void NavView_PaneToggled(NavigationView sender, object args)

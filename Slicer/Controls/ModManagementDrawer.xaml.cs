@@ -107,7 +107,7 @@ namespace Slicer.Controls
 
         private void ButtonInstall_Click(object sender, RoutedEventArgs e)
         {
-            ModRepository.Instance.InstallMod(SelectedMods.Where(m => !m.IsInstalled));
+            //ModRepository.Instance.InstallMod(SelectedMods.Where(m => !m.IsInstalled));
         }
     }
 }

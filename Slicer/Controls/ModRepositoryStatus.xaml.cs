@@ -19,28 +19,42 @@ namespace Slicer.Controls
 
         private void Update(ModRepository.State state, Exception e)
         {
-            switch (state)
+            App.RunInMainThread(() =>
             {
-                case ModRepository.State.Error:
-                    StatusIcon.Text = SegoeGlyphs.X;
-                    StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
-                    LastUpdateText.Text = e.Message;
-                    StatusText.Text = "Error";
-                    break;
-                case ModRepository.State.CantUpdate:
-                    StatusIcon.Text = "\uF13C";
-                    StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
-                    LastUpdateText.Text = e.Message;
-                    StatusText.Text = "Offline";
-                    break;
-                case ModRepository.State.UpToDate:
-                    StatusIcon.Text = SegoeGlyphs.Checkmark;
-                    StatusIcon.Foreground = new SolidColorBrush(Colors.Green);
-                    LastUpdateText.Text =
-                        $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When.ToString()}";
-                    StatusText.Text = "Up to date!";
-                    break;
-            }
+                ButtonRefresh.IsEnabled = true;
+                switch (state)
+                {
+                    case ModRepository.State.Error:
+                        StatusIcon.Text = SegoeGlyphs.X;
+                        StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
+                        LastUpdateText.Text = e.Message;
+                        StatusText.Text = "Error";
+                        break;
+                    case ModRepository.State.CantUpdate:
+                        StatusIcon.Text = "\uF13C";
+                        StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
+                        LastUpdateText.Text = e.Message;
+                        StatusText.Text = "Offline";
+                        break;
+                    case ModRepository.State.UpToDate:
+                        StatusIcon.Text = SegoeGlyphs.Checkmark;
+                        StatusIcon.Foreground = new SolidColorBrush(Colors.Green);
+                        LastUpdateText.Text =
+                            $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When}";
+                        StatusText.Text = "Up to date!";
+                        break;
+                }
+            });
+        }
+
+        private void ButtonRefresh_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            StatusIcon.Text = SegoeGlyphs.Repeat;
+            StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
+            LastUpdateText.Text = "Please wait...";
+            StatusText.Text = "Fetching data...";
+            ButtonRefresh.IsEnabled = false;
+            App.RunInBackgroundThread(ModRepository.Instance.Refresh);
         }
     }
 }
