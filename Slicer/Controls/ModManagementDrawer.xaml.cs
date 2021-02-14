@@ -110,5 +110,11 @@ namespace Slicer.Controls
             if (SelectedMods.Count == 1)
                 ModManagement.InstallMod(SelectedMods[0]);
         }
+
+        private void ButtonUninstall_Click(object sender, RoutedEventArgs e)
+        {
+            if (SelectedMods.Count == 1)
+                ModManagement.UninstallMod(SelectedMods[0]);
+        }
     }
 }

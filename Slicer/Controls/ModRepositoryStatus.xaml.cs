@@ -19,23 +19,23 @@ namespace Slicer.Controls
             ModRepository.Instance.RepositoryUpdated += Update;
         }
 
-        private void Update(ModRepository.State state, Exception e)
+        private void Update()
         {
             App.RunInMainThread(() =>
             {
                 ButtonRefresh.IsEnabled = true;
-                switch (state)
+                switch (ModRepository.Instance.Status)
                 {
                     case ModRepository.State.Error:
                         StatusIcon.Text = SegoeGlyphs.X;
                         StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
-                        LastUpdateText.Text = e.Message;
+                        LastUpdateText.Text = ModRepository.Instance.Exception.Message;
                         StatusText.Text = "Error";
                         break;
                     case ModRepository.State.CantUpdate:
                         StatusIcon.Text = "\uF13C";
                         StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
-                        LastUpdateText.Text = e.Message;
+                        LastUpdateText.Text = ModRepository.Instance.Exception.Message;
                         StatusText.Text = "Offline";
                         break;
                     case ModRepository.State.UpToDate:

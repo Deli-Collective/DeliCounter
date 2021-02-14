@@ -16,7 +16,7 @@
             <ui:ListView DockPanel.Dock="Bottom"
                          x:Name="ModList"
                          BorderThickness="1"
-                         SelectionMode="Extended"
+                         SelectionMode="Single"
                          IsSelectionEnabled="True"
                          BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                          SelectionChanged="ModList_SelectionChanged" />

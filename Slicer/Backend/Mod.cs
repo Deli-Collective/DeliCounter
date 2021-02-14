@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using Semver;
 
 namespace Slicer.Backend
@@ -100,6 +101,11 @@ namespace Slicer.Backend
             public string DownloadUrl { get; set; }
 
             /// <summary>
+            ///     The filename to use after downloading
+            /// </summary>
+            public string DownloadFilename { get; set; }
+
+            /// <summary>
             ///     List of GUID dependencies for this mod.
             /// </summary>
             public Dictionary<string, SemVersion> Dependencies { get; set; }
@@ -122,9 +128,9 @@ namespace Slicer.Backend
     public class CachedMod
     {
         public string Guid { get; set; }
-        public SemVersion Version { get; set; }
-        public string[] RemovalPaths { get; set; }
-        public string[] Dependants { get; set; }
-        public string[] Dependencies { get; set; }
+        public string VersionString { get; set; }
+
+        [JsonIgnore]
+        public SemVersion Version => SemVersion.Parse(VersionString);
     }
 }

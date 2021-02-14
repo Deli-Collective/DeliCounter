@@ -13,7 +13,7 @@
                     IsEnabled="False" Click="ButtonInstall_Click" />
             <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}"
                     IsEnabled="False" />
-            <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" />
+            <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" Click="ButtonUninstall_Click" />
 
         </ui:SimpleStackPanel>
 

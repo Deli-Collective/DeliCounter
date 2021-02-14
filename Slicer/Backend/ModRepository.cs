@@ -12,7 +12,7 @@ namespace Slicer.Backend
 {
     internal class ModRepository
     {
-        public delegate void RepositoryUpdatedDelegate(State state, Exception e);
+        public delegate void RepositoryUpdatedDelegate();
 
         public enum State
         {
@@ -27,14 +27,14 @@ namespace Slicer.Backend
 
         public ModCategory[] Categories;
         public Dictionary<string, Mod> Mods = new();
-        public List<CachedMod> InstalledMods = new();
         public Repository Repo;
 
         public static ModRepository Instance => _instance ??= new ModRepository();
 
         public event RepositoryUpdatedDelegate RepositoryUpdated;
 
-        public State Status;
+        public State Status { get; set; }
+        public Exception Exception { get; set; }
 
         public string ModCachePath
         {
@@ -54,7 +54,6 @@ namespace Slicer.Backend
         {
             var updateResult = UpdateRepo();
             var scanResult = ScanMods();
-            LoadModCache();
 
             // Check the results
             if (updateResult is null && scanResult is null)
@@ -67,7 +66,9 @@ namespace Slicer.Backend
                 // Both failed
                 Status = State.Error;
 
-            RepositoryUpdated?.Invoke(Status, updateResult ?? scanResult);
+            LoadModCache();
+            Exception = updateResult ?? scanResult;
+            RepositoryUpdated?.Invoke();
         }
 
         /// <summary>
@@ -155,6 +156,9 @@ namespace Slicer.Backend
 
         private void LoadModCache()
         {
+            // Make sure we've initialized first
+            if (Status == State.Error) return;
+
             // Clear the installed flag of any mod that has it
             foreach (var mod in Mods.Values) mod.InstalledVersion = null;
 
@@ -163,23 +167,28 @@ namespace Slicer.Backend
             if (path is null) return;
 
             // Read the mod cache (Or create it if it does not exist)
+            List<CachedMod> installedMods;
             if (!File.Exists(path))
             {
-                InstalledMods = new List<CachedMod>();
+                installedMods = new List<CachedMod>();
                 WriteCache();
             }
-            else InstalledMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
+            else installedMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
 
-            if (InstalledMods is null) return;
+            if (installedMods is null) return;
 
             // Set the installed version on the installed mods
-            foreach (var cached in InstalledMods)
+            foreach (var cached in installedMods)
                 Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
         }
 
         public void WriteCache()
         {
-            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(InstalledMods));
+            var installedMods = Mods.Values.Where(x => x.IsInstalled)
+                .Select(mod => new CachedMod {Guid = mod.Guid, VersionString = mod.InstalledVersion.ToString()})
+                .ToList();
+            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods));
+            RepositoryUpdated?.Invoke();
         }
     }
 }

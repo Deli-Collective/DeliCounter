@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ABI.Windows.ApplicationModel.AppExtensions;
 using Slicer.Backend.ModOperation;
 using Slicer.Controls;
 
@@ -13,6 +14,15 @@ namespace Slicer.Backend
             {
                 ExecuteOperations(EnumerateInstallDependencies(mod)
                     .Concat(new []{new InstallModOperation(mod)}));
+            });
+        }
+
+        internal static void UninstallMod(Mod mod)
+        {
+            App.RunInBackgroundThread(() =>
+            {
+                ExecuteOperations(EnumerateUninstallDependencies(mod)
+                    .Concat(new[] { new UninstallModOperation(mod) }));
             });
         }
 
@@ -31,6 +41,15 @@ namespace Slicer.Backend
                     yield return new UninstallModOperation(depMod);
                     yield return new InstallModOperation(depMod);
                 }
+            }
+        }
+
+        private static IEnumerable<ModOperation.ModOperation> EnumerateUninstallDependencies(Mod mod)
+        {
+            foreach (var dependent in ModRepository.Instance.Mods.Values.Where(m => m.IsInstalled))
+            {
+                if (dependent.Installed.Dependencies.Any(x => x.Key == mod.Guid))
+                    yield return new UninstallModOperation(dependent);
             }
         }
 
@@ -62,6 +81,8 @@ namespace Slicer.Backend
                 progressDialogue.ProgressBar.Value = 1;
                 progressDialogue.IsPrimaryButtonEnabled = true;
             });
+
+            ModRepository.Instance.WriteCache();
         }
     }
 }

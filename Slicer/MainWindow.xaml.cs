@@ -29,7 +29,7 @@ namespace Slicer
 
         public static MainWindow Instance { get; set; }
 
-        private void ModRepoUpdated(ModRepository.State state, Exception e)
+        private void ModRepoUpdated()
         {
             App.RunInMainThread(() =>
             {

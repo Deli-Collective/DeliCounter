@@ -12,7 +12,7 @@ namespace Slicer.Pages
         public ModListing(ModCategory category)
         {
             InitializeComponent();
-            ModRepository.Instance.RepositoryUpdated += (state, exception) => App.RunInMainThread(Update);
+            ModRepository.Instance.RepositoryUpdated += () => App.RunInMainThread(Update);
             _category = category;
             CategoryTitle.Text = category.Name;
             CategoryDescription.Text = category.Description;
