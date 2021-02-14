@@ -46,6 +46,7 @@ namespace Slicer.Pages
         private void GenerateDiagnosticFile(object sender, RoutedEventArgs e)
         {
             InfoCollector.CollectAll();
+            new AlertDialogue("Complete", "The diagnostic file has been saved to the desktop!").ShowAsync();
         }
     }
 

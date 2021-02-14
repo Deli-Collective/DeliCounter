@@ -59,7 +59,8 @@ namespace Slicer.Backend
                 StartInfo = new ProcessStartInfo("cmd.exe", $"/C tree /F /A {GameLocator.GameDirectory}")
                 {
                     UseShellExecute = false,
-                    RedirectStandardOutput = true
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
             };
             proc.Start();

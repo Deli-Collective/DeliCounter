@@ -19,15 +19,11 @@ namespace Slicer.Backend
 
         internal static void UninstallMod(Mod mod)
         {
-            var toUninstall = EnumerateUninstallDependencies(mod)
-                .Concat(new[] {new UninstallModOperation(mod)}).ToArray();
-
-            if (toUninstall.Length > 1)
+            App.RunInBackgroundThread(() =>
             {
-                // TODO: Warn the user that this will uninstall multiple mods!
-            }
-
-            App.RunInBackgroundThread(() => { ExecuteOperations(toUninstall); });
+                ExecuteOperations(EnumerateUninstallDependencies(mod)
+                    .Concat(new[] {new UninstallModOperation(mod)}));
+            });
         }
 
         private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod)

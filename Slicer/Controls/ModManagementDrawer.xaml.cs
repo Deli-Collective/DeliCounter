@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Navigation;
+using ModernWpf.Controls;
 using Slicer.Backend;
 
 namespace Slicer.Controls
@@ -140,10 +141,29 @@ namespace Slicer.Controls
                 ModManagement.InstallMod(SelectedMods[0]);
         }
 
-        private void ButtonUninstall_Click(object sender, RoutedEventArgs e)
+        private async void ButtonUninstall_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedMods.Count == 1)
-                ModManagement.UninstallMod(SelectedMods[0]);
+            if (SelectedMods.Count != 1) return;
+            var mod = SelectedMods[0];
+
+            var dependentCount = ModRepository.Instance.Mods.Values.Count(x => x.IsInstalled && x.Installed.Dependencies.ContainsKey(mod.Guid));
+            if (dependentCount > 0)
+            {
+                // Confirm they want to do this
+                var alert = new AlertDialogue("Are you sure?", $"You have {dependentCount} mod(s) installed which directly depend on this one, they will also be uninstalled. This operation is cascading.")
+                {
+                    DefaultButton = ContentDialogButton.Primary,
+                    PrimaryButtonText = "Ok",
+                    SecondaryButtonText = "Cancel"
+                    
+
+                };
+                var result = await alert.ShowAsync();
+                if (result != ContentDialogResult.Primary) return;
+            }
+
+            // Uninstall
+            ModManagement.UninstallMod(mod);
         }
     }
 }
