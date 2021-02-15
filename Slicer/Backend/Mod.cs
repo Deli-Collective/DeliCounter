@@ -123,7 +123,7 @@ namespace Slicer.Backend
     }
 
     /// <summary>
-    ///     Represents a mod in the cache
+    ///     Represents a mod in the cache. It's just a couple fields since we can then pull the rest of the data from the actual database
     /// </summary>
     public class CachedMod
     {

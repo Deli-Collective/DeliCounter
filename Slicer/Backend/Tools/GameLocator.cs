@@ -9,6 +9,9 @@ namespace Slicer.Backend
         private static bool _scanned;
         private static string _gameLocation = "";
 
+        /// <summary>
+        ///     Returns the path to the H3 game directory (or null if not found)
+        /// </summary>
         internal static string GameDirectory
         {
             get
@@ -53,9 +56,15 @@ namespace Slicer.Backend
             }
         }
 
+        /// <summary>
+        ///     Returns the path to the game executable (or null if not found)
+        /// </summary>
         public static string ExecutablePath =>
             string.IsNullOrEmpty(GameDirectory) ? null : Path.Combine(GameDirectory, "h3vr.exe");
 
+        /// <summary>
+        ///     Returns the path to the mod cache (or null if not found)
+        /// </summary>
         public static string ModCache => string.IsNullOrEmpty(GameDirectory)
             ? null
             : Path.Combine(GameDirectory, "installed_mods.json");

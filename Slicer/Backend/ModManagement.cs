@@ -57,7 +57,10 @@ namespace Slicer.Backend
             }
         }
 
-        internal static void ExecuteOperations(IEnumerable<ModOperation.ModOperation> operations)
+        /// <summary>
+        ///     Executes a series of mod operations (unisntall, install)
+        /// </summary>
+        private static void ExecuteOperations(IEnumerable<ModOperation.ModOperation> operations)
         {
             var ops = operations.ToArray();
 

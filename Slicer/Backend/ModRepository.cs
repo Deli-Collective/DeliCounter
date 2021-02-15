@@ -155,6 +155,9 @@ namespace Slicer.Backend
             }
         }
 
+        /// <summary>
+        ///     Reads the installed mods cache
+        /// </summary>
         private void LoadModCache()
         {
             try
@@ -184,6 +187,7 @@ namespace Slicer.Backend
                 foreach (var cached in installedMods)
                     Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
             }
+            // If the mod cache is invalid let the user know. 
             catch (Exception e)
             {
                 App.RunInMainThread(() =>
@@ -194,6 +198,9 @@ namespace Slicer.Backend
             }
         }
 
+        /// <summary>
+        ///     Writes the installed mods cache to the game folder
+        /// </summary>
         public void WriteCache()
         {
             var installedMods = Mods.Values.Where(x => x.IsInstalled)
