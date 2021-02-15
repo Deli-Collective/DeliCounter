@@ -12,6 +12,8 @@ namespace DeliCounter
 {
     public partial class MainWindow
     {
+        public string CurrentPage { get; private set; }
+
         private readonly Dictionary<string, (UIElement, bool)> _pages = new()
         {
             ["home"] = (new HomePage(), false),
@@ -24,6 +26,7 @@ namespace DeliCounter
             InitializeComponent();
             NavView.SelectedItem = NavView.MenuItems[0];
             NavViewContent.Navigate(_pages["home"].Item1);
+            CurrentPage = "home";
             ModRepository.Instance.RepositoryUpdated += ModRepoUpdated;
         }
 
@@ -81,6 +84,7 @@ namespace DeliCounter
         private void NavView_OnItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
             var tag = args.IsSettingsInvoked ? "settings" : args.InvokedItemContainer.Tag.ToString();
+            CurrentPage = tag;
             var page = _pages[tag].Item1;
             NavViewContent.Navigate(page);
             Drawer.IsPaneOpen = _pages[tag].Item2;

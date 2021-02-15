@@ -204,6 +204,7 @@ namespace DeliCounter.Backend
         /// </summary>
         public void WriteCache()
         {
+            if (ModCachePath is null) return;
             var installedMods = Mods.Values.Where(x => x.IsInstalled)
                 .Select(mod => new CachedMod {Guid = mod.Guid, VersionString = mod.InstalledVersion.ToString()})
                 .ToList();

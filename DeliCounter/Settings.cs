@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Configuration;
+using System.Windows;
 using DeliCounter.Controls;
 using ModernWpf;
 
@@ -23,9 +24,15 @@ namespace DeliCounter.Properties
             get
             {
                 if (!string.IsNullOrWhiteSpace(GameLocation)) return GameLocation;
+
                 App.RunInMainThread(() =>
-                    new AlertDialogue("Game location missing",
-                        "Your game location is not set! Please set it in the settings menu.").ShowAsync());
+                {
+                    var mainWindow = (MainWindow) ((App) Application.Current).MainWindow;
+                    if (mainWindow.CurrentPage != "settings")
+                        App.RunInMainThread(() =>
+                            new AlertDialogue("Game location missing",
+                                "Your game location is not set! Please set it in the settings menu.").ShowAsync());
+                });
                 return null;
             }
         }

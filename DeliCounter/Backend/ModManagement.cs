@@ -5,6 +5,7 @@ using System.Windows;
 using ABI.Windows.ApplicationModel.AppExtensions;
 using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
+using DeliCounter.Properties;
 
 namespace DeliCounter.Backend
 {
@@ -64,6 +65,8 @@ namespace DeliCounter.Backend
         /// </summary>
         private static void ExecuteOperations(IEnumerable<ModOperation.ModOperation> operations)
         {
+            if (Settings.Default.GameLocationOrError is null) return;
+
             var ops = operations.ToArray();
 
             ProgressDialogue progressDialogue = null;
