@@ -61,7 +61,7 @@ namespace DeliCounter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/Deli-Collective/DeliCounter-Database")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/Deli-Collective/Deli-Counter-Database")]
         public string GitRepository {
             get {
                 return ((string)(this["GitRepository"]));
