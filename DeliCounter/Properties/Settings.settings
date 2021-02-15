@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Slicer.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
@@ -12,7 +12,8 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="GitRepository" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://github.com/Deli-Collective/Slicer-Database</Value>
+      <Value Profile="(Default)">https://github.com/Deli-Collective/Deli-Counter-Database</Value>
     </Setting>
   </Settings>
 </SettingsFile>
+
