@@ -2,7 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Reflection;
 using System.Text;
+using System.Windows;
 using DeliCounter.Controls;
 using Microsoft.VisualBasic.FileIO;
 
@@ -30,6 +32,11 @@ namespace DeliCounter.Backend
                                  $"Game Directory: {GameLocator.GameDirectory}\n" +
                                  "\n== DeliCounter Git Info ==\n" + ApplicationGitInfo.Text;
             WriteToArchiveFile("SlicerDiagnostics.txt", diagnosticText);
+
+            // Any exception files in the application folder are also fair game
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            foreach (var file in Directory.EnumerateFiles(path, "Exception_*.txt"))
+                WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
 
             // If we don't know where the game is that's fine just skip the rest
             if (string.IsNullOrEmpty(GameLocator.GameDirectory)) return;
@@ -92,6 +99,14 @@ namespace DeliCounter.Backend
         {
             var filename = $"Exception_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
             File.WriteAllText(filename, e.ToString());
+        }
+
+        public static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            WriteExceptionToDisk((Exception) e.ExceptionObject);
+
+            if (e.IsTerminating)
+                MessageBox.Show("Something went wrong and the application needs to exit. An exception file has been saved to the application folder, please send it to the developers.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 }
