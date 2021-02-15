@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="DeliCounter.Controls.ModManagementDrawer"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="http://schemas.modernwpf.com/2019"
+             mc:Ignorable="d"
+             d:DesignHeight="800" d:DesignWidth="450">
+    <DockPanel>
+        <!-- Action buttons -->
+        <ui:SimpleStackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="16">
+            <Button x:Name="ButtonInstall" Content="Install" Style="{DynamicResource AccentButtonStyle}"
+                    IsEnabled="False" Click="ButtonInstall_Click" />
+            <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}"
+                    IsEnabled="False" />
+            <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" Click="ButtonUninstall_Click" />
+
+        </ui:SimpleStackPanel>
+
+        <!-- Mod information -->
+        <StackPanel>
+            <TextBlock x:Name="TextBlockTitle" Text="Mod title here"
+                       Style="{StaticResource SubheaderTextBlockStyle}" />
+
+            <!-- Description -->
+            <TextBlock x:Name="TextBlockDescriptionWrapper" Style="{StaticResource BaseTextBlockStyle}"
+                       Padding="0 8 0 0">
+                Description:
+                <TextBlock x:Name="TextBlockDescription" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                    Lorem itprum something something idk I don't know lorem text that well. I just need to fill some lines.
+                </TextBlock>
+            </TextBlock>
+
+            <!-- Authors -->
+            <TextBlock x:Name="TextBlockAuthorsWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                Authors:
+                <TextBlock x:Name="TextBlockAuthors" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                    person 1, other guy 2
+                </TextBlock>
+            </TextBlock>
+
+            <!-- Latest Version -->
+            <TextBlock x:Name="TextBlockLatestWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                Latest Version:
+                <TextBlock x:Name="TextBlockLatest" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                    1.2.3
+                </TextBlock>
+            </TextBlock>
+
+            <!-- Installed -->
+            <TextBlock x:Name="TextBlockInstalledWrapper" Style="{StaticResource BaseTextBlockStyle}" Padding="0 8 0 0">
+                Installed:
+                <TextBlock x:Name="TextBlockInstalled" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                    No
+                </TextBlock>
+            </TextBlock>
+
+            <!-- Dependencies -->
+            <TextBlock x:Name="TextBlockDependenciesWrapper" Style="{StaticResource BaseTextBlockStyle}"
+                       Padding="0 8 0 0">
+                Dependencies:
+                <TextBlock x:Name="TextBlockDependencies" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                    BepInEx 5.4.5, Deli 0.2.5
+                </TextBlock>
+            </TextBlock>
+
+            <!-- Source -->
+            <TextBlock x:Name="TextBlockSourceWrapper" Style="{StaticResource BaseTextBlockStyle}"
+                       Padding="0 8 0 0">
+                Source:
+                <Hyperlink x:Name="HyperlinkSource" RequestNavigate="HyperlinkSource_OnRequestNavigate">
+                    <TextBlock x:Name="TextBlockSource" TextWrapping="WrapWithOverflow" FontWeight="Normal">
+                        https://somewebsite.com
+                    </TextBlock>
+                </Hyperlink>
+            </TextBlock>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

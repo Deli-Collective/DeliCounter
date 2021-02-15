@@ -1,0 +1,21 @@
+﻿<UserControl x:Class="DeliCounter.Controls.ModRepositoryStatus"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="150" d:DesignWidth="300">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <TextBlock x:Name="StatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8EE;" FontSize="50"
+                       FontWeight="UltraBold" Foreground="Orange" Padding="0 0 8 0" />
+            <StackPanel Width="auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <TextBlock x:Name="StatusText" Style="{DynamicResource SubheaderTextBlockStyle}" ><Run Language="en-ca" Text="Fetching data"/></TextBlock>
+            </StackPanel>
+        </StackPanel>
+        <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText">
+            Please wait...
+        </TextBlock>
+        <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click"/>
+    </StackPanel>
+</UserControl>
