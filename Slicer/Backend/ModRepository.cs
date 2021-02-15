@@ -5,6 +5,7 @@ using System.Linq;
 using LibGit2Sharp;
 using Newtonsoft.Json;
 using Semver;
+using Slicer.Controls;
 using Slicer.Properties;
 using JsonException = System.Text.Json.JsonException;
 
@@ -156,30 +157,41 @@ namespace Slicer.Backend
 
         private void LoadModCache()
         {
-            // Make sure we've initialized first
-            if (Status == State.Error) return;
-
-            // Clear the installed flag of any mod that has it
-            foreach (var mod in Mods.Values) mod.InstalledVersion = null;
-
-            // If the game folder is not set don't do anything
-            var path = ModCachePath;
-            if (path is null) return;
-
-            // Read the mod cache (Or create it if it does not exist)
-            List<CachedMod> installedMods;
-            if (!File.Exists(path))
+            try
             {
-                installedMods = new List<CachedMod>();
-                WriteCache();
+                // Make sure we've initialized first
+                if (Status == State.Error) return;
+
+                // Clear the installed flag of any mod that has it
+                foreach (var mod in Mods.Values) mod.InstalledVersion = null;
+
+                // If the game folder is not set don't do anything
+                var path = ModCachePath;
+                if (path is null) return;
+
+                // Read the mod cache (Or create it if it does not exist)
+                List<CachedMod> installedMods;
+                if (!File.Exists(path))
+                {
+                    installedMods = new List<CachedMod>();
+                    WriteCache();
+                }
+                else installedMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
+
+                if (installedMods is null) return;
+
+                // Set the installed version on the installed mods
+                foreach (var cached in installedMods)
+                    Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
             }
-            else installedMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
-
-            if (installedMods is null) return;
-
-            // Set the installed version on the installed mods
-            foreach (var cached in installedMods)
-                Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
+            catch (Exception e)
+            {
+                App.RunInMainThread(() =>
+                {
+                    new AlertDialogue("Error",
+                        "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.").ShowAsync();
+                });
+            }
         }
 
         public void WriteCache()
