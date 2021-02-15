@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
 using ABI.Windows.ApplicationModel.AppExtensions;
 using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
@@ -65,6 +67,7 @@ namespace DeliCounter.Backend
             var ops = operations.ToArray();
 
             ProgressDialogue progressDialogue = null;
+            var error = false;
             App.RunInMainThread(() =>
             {
                 progressDialogue = new ProgressDialogue {Title = "Executing operations"};
@@ -79,14 +82,34 @@ namespace DeliCounter.Backend
                     progressDialogue.ProgressBar.Value = oneOp * i + oneOp * progress;
                     progressDialogue.Message.Text = message;
                 });
-                op.Run();
+
+                try
+                {
+                    op.Run();
+                }
+                catch (Exception e)
+                {
+                    error = true;
+                    InfoCollector.WriteExceptionToDisk(e);
+                    break;
+                }
+
             }
 
             App.RunInMainThread(() =>
             {
-                progressDialogue.Message.Text = $"{ops.Length} operation(s) completed successfully!";
-                progressDialogue.ProgressBar.Value = 1;
                 progressDialogue.IsPrimaryButtonEnabled = true;
+                progressDialogue.ProgressBar.Visibility = Visibility.Collapsed;
+                if (error)
+                {
+                    progressDialogue.Title = "Error";
+                    progressDialogue.Message.Text = "An exception has occured and the operation was not completed. An exception file was saved to the application's folder. Please submit it to the developers.";
+                }
+                else
+                {
+                    progressDialogue.Message.Text = $"{ops.Length} operation(s) completed successfully!";
+                    progressDialogue.ProgressBar.Value = 1;
+                }
             });
 
             ModRepository.Instance.WriteCache();

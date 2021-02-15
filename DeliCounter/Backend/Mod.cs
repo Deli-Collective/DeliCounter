@@ -101,11 +101,6 @@ namespace DeliCounter.Backend
             public string DownloadUrl { get; set; }
 
             /// <summary>
-            ///     The filename to use after downloading
-            /// </summary>
-            public string DownloadFilename { get; set; }
-
-            /// <summary>
             ///     List of GUID dependencies for this mod.
             /// </summary>
             public Dictionary<string, SemVersion> Dependencies { get; set; }

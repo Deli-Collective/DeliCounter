@@ -31,7 +31,7 @@ namespace DeliCounter.Backend.ModOperation
             // Download the file
             var version = Mod.Latest;
             ProgressDialogueCallback(0, $"Downloading {version.Name}...");
-            var downloadedPath = Path.Combine(Path.GetTempPath(), version.DownloadFilename);
+            var downloadedPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
             WebClient.DownloadFile(version.DownloadUrl, downloadedPath);
 
             // Execute the install steps

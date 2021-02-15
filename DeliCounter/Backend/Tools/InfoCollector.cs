@@ -87,5 +87,11 @@ namespace DeliCounter.Backend
 
             return sb.ToString();
         }
+
+        public static void WriteExceptionToDisk(Exception e)
+        {
+            var filename = $"Exception_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
+            File.WriteAllText(filename, e.ToString());
+        }
     }
 }

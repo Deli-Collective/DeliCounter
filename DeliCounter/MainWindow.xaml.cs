@@ -33,15 +33,22 @@ namespace DeliCounter
         {
             App.RunInMainThread(() =>
             {
-                // Remove the existing mod tabs
-                var toRemove = (from NavigationViewItemBase navViewMenuItem in NavView.MenuItems
-                    let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods")
-                    where foo.HasValue && foo.Value
-                    select navViewMenuItem).ToArray();
-                foreach (var remove in toRemove)
+                try
                 {
-                    NavView.MenuItems.Remove(remove);
-                    _pages.Remove(remove.Tag.ToString() ?? string.Empty);
+                    // Remove the existing mod tabs
+                    var toRemove = (from NavigationViewItemBase navViewMenuItem in NavView.MenuItems
+                        let foo = navViewMenuItem.Tag.ToString()?.StartsWith("mods")
+                        where foo.HasValue && foo.Value
+                        select navViewMenuItem).ToArray();
+                    foreach (var remove in toRemove)
+                    {
+                        NavView.MenuItems.Remove(remove);
+                        _pages.Remove(remove.Tag.ToString() ?? string.Empty);
+                    }
+                }
+                catch (Exception e)
+                {
+                    InfoCollector.WriteExceptionToDisk(e);
                 }
 
                 // Add new ones for each category (Including a local one)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.IO;
 using DeliCounter.Properties;
 
 namespace DeliCounter.Backend.ModOperation
@@ -27,7 +21,8 @@ namespace DeliCounter.Backend.ModOperation
                 if (string.IsNullOrWhiteSpace(gameLocation) || string.IsNullOrWhiteSpace(item) ||
                     !path.Contains(gameLocation)) return;
 
-                ProgressDialogueCallback((1d / version.RemovalPaths.Length) * i, $"Uninstalling {version.Name}: {item}");
+                ProgressDialogueCallback((1d / version.RemovalPaths.Length) * i,
+                    $"Uninstalling {version.Name}: {item}");
 
                 if (File.Exists(path)) File.Delete(path);
                 else if (Directory.Exists(path)) Directory.Delete(path, true);
