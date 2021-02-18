@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using ABI.Windows.ApplicationModel.AppExtensions;
 using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
@@ -61,13 +60,13 @@ namespace DeliCounter.Backend
         }
 
         /// <summary>
-        ///     Executes a series of mod operations (unisntall, install)
+        ///     Executes a series of mod operations (uninstall, install)
         /// </summary>
         private static void ExecuteOperations(IEnumerable<ModOperation.ModOperation> operations)
         {
             if (Settings.Default.GameLocationOrError is null) return;
 
-            var ops = operations.ToArray();
+            var ops = operations.Distinct(new ModOperationEqualityComparer()).ToArray();
 
             ProgressDialogue progressDialogue = null;
             var error = false;
@@ -116,6 +115,22 @@ namespace DeliCounter.Backend
             });
 
             ModRepository.Instance.WriteCache();
+        }
+
+        private class ModOperationEqualityComparer : IEqualityComparer<ModOperation.ModOperation>
+        {
+            public bool Equals(ModOperation.ModOperation x, ModOperation.ModOperation y)
+            {
+                if (ReferenceEquals(x, y)) return true;
+                if (ReferenceEquals(x, null)) return false;
+                if (ReferenceEquals(y, null)) return false;
+                return x.GetType() == y.GetType() && x.Mod.Equals(y.Mod);
+            }
+
+            public int GetHashCode(ModOperation.ModOperation obj)
+            {
+                return obj.Mod.GetHashCode();
+            }
         }
     }
 }
