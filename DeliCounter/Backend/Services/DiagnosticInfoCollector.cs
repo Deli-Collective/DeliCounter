@@ -10,16 +10,25 @@ using Microsoft.VisualBasic.FileIO;
 
 namespace DeliCounter.Backend
 {
-    public static class InfoCollector
+    public class DiagnosticInfoCollector
     {
-        public static void CollectAll()
+        private SteamAppLocator SteamAppLocator { get; }
+
+        public DiagnosticInfoCollector(SteamAppLocator appLocator)
+        {
+            SteamAppLocator = appLocator;
+
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+        }
+
+        public void CollectAll()
         {
             // Create the new zip archive
             var archiveFileName = $"SlicerDiagnostics_{DateTime.Now:yy-MM-dd_hh-mm-ss}.zip";
-            using var fileStream =
-                new FileStream(Path.Combine(SpecialDirectories.Desktop, archiveFileName), FileMode.Create);
+            using var fileStream = new FileStream(Path.Combine(SpecialDirectories.Desktop, archiveFileName), FileMode.Create);
             using var zip = new ZipArchive(fileStream, ZipArchiveMode.Create);
 
+            // Local method to reduce code repetition
             void WriteToArchiveFile(string fileName, string text)
             {
                 var entry = zip.CreateEntry(fileName);
@@ -29,7 +38,7 @@ namespace DeliCounter.Backend
 
             var diagnosticText = "== Diagnostic Info ==\n" +
                                  $"Generated at: {DateTime.Now}\n" +
-                                 $"Game Directory: {SteamAppLocator.GameDirectory}\n" +
+                                 $"Game Directory: {SteamAppLocator.AppLocation}\n" +
                                  "\n== DeliCounter Git Info ==\n" + ApplicationGitInfo.Text;
             WriteToArchiveFile("SlicerDiagnostics.txt", diagnosticText);
 
@@ -39,22 +48,24 @@ namespace DeliCounter.Backend
                 WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
 
             // If we don't know where the game is that's fine just skip the rest
-            if (string.IsNullOrEmpty(SteamAppLocator.GameDirectory)) return;
+            if (string.IsNullOrEmpty(SteamAppLocator.AppLocation)) return;
+
+            // Do a tree and write the installed mods file into the archive
             WriteToArchiveFile("tree.txt", GenerateTree());
-            WriteToArchiveFile("installed_mods.json", File.ReadAllText(SteamAppLocator.ModCache));
+            WriteToArchiveFile("installed_mods.json", File.ReadAllText(Path.Combine(SteamAppLocator.AppLocation, Constants.InstalledModsCache)));
 
             // If the BepInEx log file exists, include that too
-            var logPath = Path.Combine(SteamAppLocator.GameDirectory, "BepInEx", "LogOutput.log");
+            var logPath = Path.Combine(SteamAppLocator.AppLocation, "BepInEx", "LogOutput.log");
             if (File.Exists(logPath)) WriteToArchiveFile("LogOutput.log", File.ReadAllText(logPath));
         }
 
         /// <summary>
         ///     Runs the tree command on the H3 directory for additional debugging
         /// </summary>
-        public static string GenerateTree()
+        public string GenerateTree()
         {
             // If the H3 folder isn't found, just return
-            if (string.IsNullOrEmpty(SteamAppLocator.GameDirectory)) return "";
+            if (string.IsNullOrEmpty(SteamAppLocator.AppLocation)) return "";
 
             // Create a string builder and output the current time
             var sb = new StringBuilder();
@@ -63,7 +74,7 @@ namespace DeliCounter.Backend
             // Start the tree command and wait for it to exit
             var proc = new Process
             {
-                StartInfo = new ProcessStartInfo("cmd.exe", $"/C tree /F /A {SteamAppLocator.GameDirectory}")
+                StartInfo = new ProcessStartInfo("cmd.exe", $"/C tree /F /A {SteamAppLocator.AppLocation}")
                 {
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
@@ -101,7 +112,7 @@ namespace DeliCounter.Backend
             File.WriteAllText(filename, e.ToString());
         }
 
-        public static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             WriteExceptionToDisk((Exception) e.ExceptionObject);
 
