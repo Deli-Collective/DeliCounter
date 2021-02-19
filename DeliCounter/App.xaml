@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:ui="http://schemas.modernwpf.com/2019"
              xmlns:pages="clr-namespace:DeliCounter.Pages"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MainWindow.xaml"
+             LoadCompleted="App_OnLoadCompleted">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
