@@ -9,11 +9,18 @@ namespace DeliCounter
     {
         public App()
         {
-            AppDomain.CurrentDomain.UnhandledException += InfoCollector.CurrentDomainOnUnhandledException;
+            SteamAppLocator = new SteamAppLocator(0, "H3VR", "h3vr.exe");
+            DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
         }
+        
+        public SteamAppLocator SteamAppLocator { get; }
+        
+        public DiagnosticInfoCollector DiagnosticInfoCollector { get; }
 
-        public static void RunInBackgroundThread(Action action) => ThreadPool.QueueUserWorkItem((_) => action());
+        public static void RunInBackgroundThread(Action action) => ThreadPool.QueueUserWorkItem(_ => action());
 
-        public static void RunInMainThread(Action action) => Application.Current.Dispatcher.Invoke(action);
+        public static void RunInMainThread(Action action) => Current.Dispatcher.Invoke(action);
+
+        public static new App Current => (App) Application.Current;
     }
 }

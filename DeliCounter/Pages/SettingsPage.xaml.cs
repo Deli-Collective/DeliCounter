@@ -25,7 +25,7 @@ namespace DeliCounter.Pages
 
         private void AutoDetectGameLocation_OnChecked(object sender, RoutedEventArgs e)
         {
-            _settings.GameLocation = GameLocator.GameDirectory;
+            _settings.GameLocation = App.Current.SteamAppLocator.AppLocation;
 
             // If it wasn't set revert since it can't be found automatically
             if (string.IsNullOrEmpty(_settings.GameLocation))
@@ -45,7 +45,7 @@ namespace DeliCounter.Pages
 
         private void GenerateDiagnosticFile(object sender, RoutedEventArgs e)
         {
-            InfoCollector.CollectAll();
+            App.Current.DiagnosticInfoCollector.CollectAll();
             new AlertDialogue("Complete", "The diagnostic file has been saved to the desktop!").ShowAsync();
         }
     }

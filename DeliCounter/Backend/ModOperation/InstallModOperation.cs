@@ -14,12 +14,15 @@ namespace DeliCounter.Backend.ModOperation
 {
     internal class InstallModOperation : ModOperation
     {
-        private static readonly WebClient WebClient = new();
+        private readonly WebClient _webClient = new();
 
-        private Dictionary<string, string> _vars = new();
+        private readonly Dictionary<string, string> _vars = new();
+
+        private readonly Mod.ModVersion _version;
 
         public InstallModOperation(Mod mod) : base(mod)
         {
+            _version = mod.Latest;
         }
 
         internal override void Run()
@@ -28,14 +31,16 @@ namespace DeliCounter.Backend.ModOperation
             var gameDir = Settings.Default.GameLocationOrError;
             if (gameDir is null) return;
 
+            // Set some things up
+            ProgressDialogueCallback(0, $"Downloading {_version.Name}...");
+            _webClient.DownloadProgressChanged += (sender, args) => ProgressDialogueCallback(args.ProgressPercentage / 200d, $"Downloading {_version.Name}...");
+
             // Download the file
-            var version = Mod.Latest;
-            ProgressDialogueCallback(0, $"Downloading {version.Name}...");
             var downloadedPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-            WebClient.DownloadFile(version.DownloadUrl, downloadedPath);
+            _webClient.DownloadFile(_version.DownloadUrl, downloadedPath);
 
             // Execute the install steps
-            ProgressDialogueCallback(0.5, $"Installing {version.Name}");
+            ProgressDialogueCallback(0.5, $"Installing {_version.Name}");
 
             // Set the starting arguments
             _vars["IMPLICIT"] = downloadedPath;
@@ -43,7 +48,7 @@ namespace DeliCounter.Backend.ModOperation
             _vars["GAME_DIR"] = gameDir;
 
             // Execute the installation steps
-            foreach (var step in version.InstallationSteps)
+            foreach (var step in _version.InstallationSteps)
             {
                 var args = step.Split(" ");
                 for (var i = 1; i < args.Length; i++) args[i] = ExpandArgs(args[i]);
@@ -63,7 +68,7 @@ namespace DeliCounter.Backend.ModOperation
             }
 
             // Update the repo
-            Mod.InstalledVersion = version.VersionNumber;
+            Mod.InstalledVersion = _version.VersionNumber;
         }
 
         string ExpandArgs(string arg) =>
@@ -72,8 +77,8 @@ namespace DeliCounter.Backend.ModOperation
         private void Extract(string[] args)
         {
             var archive = ArchiveFactory.Open(_vars["IMPLICIT"]);
-            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
-                entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
+            var entries = archive.Entries.Where(entry => !entry.IsDirectory).ToArray();
+            foreach (var entry in entries) entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
         }
 
         private void Move(string[] args)

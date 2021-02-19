@@ -92,7 +92,7 @@ namespace DeliCounter.Backend
                 catch (Exception e)
                 {
                     error = true;
-                    InfoCollector.WriteExceptionToDisk(e);
+                    DiagnosticInfoCollector.WriteExceptionToDisk(e);
                     break;
                 }
 

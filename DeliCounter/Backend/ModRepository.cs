@@ -195,7 +195,7 @@ namespace DeliCounter.Backend
                     new AlertDialogue("Error",
                         "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.").ShowAsync();
                 });
-                InfoCollector.WriteExceptionToDisk(e);
+                DiagnosticInfoCollector.WriteExceptionToDisk(e);
             }
         }
 
