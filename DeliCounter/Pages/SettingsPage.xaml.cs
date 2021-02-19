@@ -25,7 +25,7 @@ namespace DeliCounter.Pages
 
         private void AutoDetectGameLocation_OnChecked(object sender, RoutedEventArgs e)
         {
-            _settings.GameLocation = GameLocator.GameDirectory;
+            _settings.GameLocation = SteamAppLocator.GameDirectory;
 
             // If it wasn't set revert since it can't be found automatically
             if (string.IsNullOrEmpty(_settings.GameLocation))
