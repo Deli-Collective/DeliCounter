@@ -8,10 +8,12 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <ScrollViewer Padding="4">
         <DockPanel>
+            <TextBlock Text="Search" Style="{StaticResource HeaderTextBlockStyle}" DockPanel.Dock="Top" />
             <TextBox x:Name="TextBoxSearch"
-                     ui:ControlHelper.PlaceholderText="Search..."
+                     ui:ControlHelper.PlaceholderText="Search names, descriptions, authors..."
                      DockPanel.Dock="Top"
-                     TextChanged="TextBoxSearch_OnTextChanged"/>
+                     TextChanged="TextBoxSearch_OnTextChanged"
+                     Margin="0 0 0 8"/>
             <ui:ListView DockPanel.Dock="Bottom"
                          x:Name="ModList"
                          BorderThickness="1"
