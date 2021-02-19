@@ -17,7 +17,8 @@ namespace DeliCounter
         private readonly Dictionary<string, (UIElement, bool)> _pages = new()
         {
             ["home"] = (new HomePage(), false),
-            ["settings"] = (new SettingsPage(), false)
+            ["settings"] = (new SettingsPage(), false),
+            ["search"] = (new SearchPage(), true)
         };
 
         public MainWindow()

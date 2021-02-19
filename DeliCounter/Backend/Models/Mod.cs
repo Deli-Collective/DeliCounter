@@ -114,6 +114,20 @@ namespace DeliCounter.Backend
             ///     List of paths to remove when removing this mod
             /// </summary>
             public string[] RemovalPaths { get; set; }
+
+            public bool MatchesQuery(string query)
+            {
+                return Name.ToLower().Contains(query) ||
+                       Description.ToLower().Contains(query) ||
+                       ShortDescription.ToLower().Contains(query) ||
+                       Authors.Any(x => x.ToLower().Contains(query));
+            }
+        }
+
+        public bool MatchesQuery(string query)
+        {
+            return Guid.ToLower().Contains(query) ||
+                   Latest.MatchesQuery(query);
         }
     }
 
