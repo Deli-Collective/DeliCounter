@@ -179,7 +179,10 @@ namespace DeliCounter.Backend
                     installedMods = new List<CachedMod>();
                     WriteCache();
                 }
-                else installedMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
+                else
+                {
+                    installedMods = JsonConvert.DeserializeObject<List<CachedMod>>(File.ReadAllText(path));
+                }
 
                 if (installedMods is null) return;
 

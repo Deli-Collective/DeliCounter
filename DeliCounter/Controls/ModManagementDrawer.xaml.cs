@@ -155,8 +155,6 @@ namespace DeliCounter.Controls
                     DefaultButton = ContentDialogButton.Primary,
                     PrimaryButtonText = "Ok",
                     SecondaryButtonText = "Cancel"
-                    
-
                 };
                 var result = await alert.ShowAsync();
                 if (result != ContentDialogResult.Primary) return;

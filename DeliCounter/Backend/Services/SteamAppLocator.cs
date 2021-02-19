@@ -11,17 +11,17 @@ namespace DeliCounter.Backend
         ///     Steam application id
         /// </summary>
         public int AppId { get; }
-        
+
         /// <summary>
         ///     Steam application folder name
         /// </summary>
         public string AppFolderName { get; }
-        
+
         /// <summary>
         ///     Application executable name
         /// </summary>
         public string AppExecutableName { get; }
-        
+
         /// <summary>
         ///     Returns the path to the H3 game directory (or null if not found)
         /// </summary>
@@ -39,7 +39,7 @@ namespace DeliCounter.Backend
             AppExecutableName = executableName;
             Locate();
         }
-        
+
         /// <summary>
         ///     Attempts to locate the game
         /// </summary>
@@ -47,18 +47,18 @@ namespace DeliCounter.Backend
         {
             // Get the main steam installation location via registry.
             var steamDir = (
-                Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", "") ??
-                Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", ""))
+                    Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Valve\Steam", "InstallPath", "") ??
+                    Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Valve\Steam", "InstallPath", ""))
                 as string;
-            
+
             // If we can't find it, return. This should really only happen if Steam isn't installed.
             if (string.IsNullOrEmpty(steamDir))
             {
                 AppLocation = null;
                 return;
             }
-            
-            
+
+
             // Check main steamapps library folder for h3 manifest.
             var result = "";
             if (File.Exists(Path.Combine(steamDir, @$"steamapps\appmanifest_{AppId}.acf")))

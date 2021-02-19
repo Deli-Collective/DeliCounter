@@ -10,12 +10,14 @@
             <TextBlock x:Name="StatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8EE;" FontSize="50"
                        FontWeight="UltraBold" Foreground="Orange" Padding="0 0 8 0" />
             <StackPanel Width="auto" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <TextBlock x:Name="StatusText" Style="{DynamicResource SubheaderTextBlockStyle}" ><Run Language="en-ca" Text="Fetching data"/></TextBlock>
+                <TextBlock x:Name="StatusText" Style="{DynamicResource SubheaderTextBlockStyle}">
+                    <Run Language="en-ca" Text="Fetching data" />
+                </TextBlock>
             </StackPanel>
         </StackPanel>
         <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText">
             Please wait...
         </TextBlock>
-        <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click"/>
+        <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click" />
     </StackPanel>
 </UserControl>

@@ -9,8 +9,9 @@
 
     <DockPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
         <!-- Content body -->
-        <TextBlock x:Name="Message" TextWrapping="Wrap" DockPanel.Dock="Top" Text="This is some example text. Doo dee da dee wop"/>
-        <ui:ProgressBar x:Name="ProgressBar"  DockPanel.Dock="Bottom" Minimum="0" Maximum="1"/>
+        <TextBlock x:Name="Message" TextWrapping="Wrap" DockPanel.Dock="Top"
+                   Text="This is some example text. Doo dee da dee wop" />
+        <ui:ProgressBar x:Name="ProgressBar" DockPanel.Dock="Bottom" Minimum="0" Maximum="1" />
     </DockPanel>
 
 </ui:ContentDialog>

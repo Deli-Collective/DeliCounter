@@ -3,7 +3,7 @@ using DeliCounter.Properties;
 
 namespace DeliCounter.Backend.ModOperation
 {
-    class UninstallModOperation : ModOperation
+    internal class UninstallModOperation : ModOperation
     {
         public UninstallModOperation(Mod mod) : base(mod)
         {
@@ -21,7 +21,7 @@ namespace DeliCounter.Backend.ModOperation
                 if (string.IsNullOrWhiteSpace(gameLocation) || string.IsNullOrWhiteSpace(item) ||
                     !path.Contains(gameLocation)) return;
 
-                ProgressDialogueCallback((1d / version.RemovalPaths.Length) * i,
+                ProgressDialogueCallback(1d / version.RemovalPaths.Length * i,
                     $"Uninstalling {version.Name}: {item}");
 
                 if (File.Exists(path)) File.Delete(path);

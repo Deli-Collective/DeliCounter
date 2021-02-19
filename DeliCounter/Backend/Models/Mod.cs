@@ -139,7 +139,6 @@ namespace DeliCounter.Backend
         public string Guid { get; set; }
         public string VersionString { get; set; }
 
-        [JsonIgnore]
-        public SemVersion Version => SemVersion.Parse(VersionString);
+        [JsonIgnore] public SemVersion Version => SemVersion.Parse(VersionString);
     }
 }

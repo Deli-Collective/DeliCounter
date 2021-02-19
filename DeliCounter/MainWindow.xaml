@@ -25,7 +25,7 @@
                                              Visibility="Collapsed" />
                 <ui:NavigationViewItem Tag="search" Content="Search">
                     <ui:NavigationViewItem.Icon>
-                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE721;"/>
+                        <ui:FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE721;" />
                     </ui:NavigationViewItem.Icon>
                 </ui:NavigationViewItem>
             </ui:NavigationView.MenuItems>

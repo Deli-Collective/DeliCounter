@@ -16,16 +16,22 @@ namespace DeliCounter
             SteamAppLocator = new SteamAppLocator(0, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
         }
-        
+
         public SteamAppLocator SteamAppLocator { get; }
-        
+
         public DiagnosticInfoCollector DiagnosticInfoCollector { get; }
 
-        public static void RunInBackgroundThread(Action action) => ThreadPool.QueueUserWorkItem(_ => action());
+        public static void RunInBackgroundThread(Action action)
+        {
+            ThreadPool.QueueUserWorkItem(_ => action());
+        }
 
-        public static void RunInMainThread(Action action) => Current.Dispatcher.Invoke(action);
+        public static void RunInMainThread(Action action)
+        {
+            Current.Dispatcher.Invoke(action);
+        }
 
-        public static new App Current => (App) Application.Current;
+        public new static App Current => (App) Application.Current;
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {

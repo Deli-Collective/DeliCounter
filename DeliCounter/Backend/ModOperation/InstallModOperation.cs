@@ -71,8 +71,10 @@ namespace DeliCounter.Backend.ModOperation
             Mod.InstalledVersion = _version.VersionNumber;
         }
 
-        string ExpandArgs(string arg) =>
-            _vars.Aggregate(arg, (current, var) => current.Replace("$" + var.Key, var.Value));
+        private string ExpandArgs(string arg)
+        {
+            return _vars.Aggregate(arg, (current, var) => current.Replace("$" + var.Key, var.Value));
+        }
 
         private void Extract(string[] args)
         {
@@ -105,6 +107,9 @@ namespace DeliCounter.Backend.ModOperation
                 File.Move(source, destination);
         }
 
-        private void Mkdir(string[] args) => Directory.CreateDirectory(args[1]);
+        private void Mkdir(string[] args)
+        {
+            Directory.CreateDirectory(args[1]);
+        }
     }
 }

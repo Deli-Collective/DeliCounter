@@ -11,7 +11,7 @@ namespace DeliCounter.Pages
         {
             InitializeComponent();
         }
-        
+
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var drawer = MainWindow.Instance.ModManagementDrawer;

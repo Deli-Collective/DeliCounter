@@ -37,7 +37,9 @@ namespace DeliCounter.Backend
                 foreach (var yield in EnumerateInstallDependencies(depMod))
                     yield return yield;
                 if (!depMod.IsInstalled)
+                {
                     yield return new InstallModOperation(depMod);
+                }
                 else if (depMod.InstalledVersion < dep.Value)
                 {
                     yield return new UninstallModOperation(depMod);
@@ -49,14 +51,12 @@ namespace DeliCounter.Backend
         private static IEnumerable<ModOperation.ModOperation> EnumerateUninstallDependencies(Mod mod)
         {
             foreach (var dependent in ModRepository.Instance.Mods.Values.Where(m => m.IsInstalled))
-            {
                 if (dependent.Installed.Dependencies.Any(x => x.Key == mod.Guid))
                 {
                     foreach (var yield in EnumerateUninstallDependencies(dependent))
                         yield return yield;
                     yield return new UninstallModOperation(dependent);
                 }
-            }
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace DeliCounter.Backend
                 progressDialogue = new ProgressDialogue {Title = "Executing operations"};
                 progressDialogue.ShowAsync();
             });
-            for (int i = 0; i < ops.Length; i++)
+            for (var i = 0; i < ops.Length; i++)
             {
                 var op = ops[i];
                 op.ProgressDialogueCallback = (progress, message) => App.RunInMainThread(() =>
@@ -95,7 +95,6 @@ namespace DeliCounter.Backend
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                     break;
                 }
-
             }
 
             App.RunInMainThread(() =>
