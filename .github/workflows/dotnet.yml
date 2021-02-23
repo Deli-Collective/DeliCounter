@@ -23,3 +23,7 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+    - uses: actions/upload-artifact@v2
+      with:
+        name: DeliCounter
+        path: "$GITHUB_WORKSPACE\\\bin\\x64\\Debug\\net5.0-windows10.0.18362.0\\"
