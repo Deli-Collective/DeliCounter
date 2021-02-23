@@ -13,7 +13,7 @@ namespace DeliCounter
     {
         public App()
         {
-            SteamAppLocator = new SteamAppLocator(0, "H3VR", "h3vr.exe");
+            SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
         }
 

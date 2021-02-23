@@ -90,17 +90,19 @@ namespace DeliCounter.Backend.ModOperation
             {
                 case 2:
                     source = _vars["IMPLICIT"];
-                    destination = args[1];
+                    destination = Path.Combine(_vars["GAME_DIR"], args[1]);
                     break;
                 case 3:
                     source = args[1];
-                    destination = args[2];
+                    destination = Path.Combine(_vars["GAME_DIR"], args[2]);
                     break;
                 default:
                     // Something's borked
                     return;
             }
 
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
             if (Directory.Exists(source))
                 Directory.Move(source, destination);
             else if (File.Exists(source))

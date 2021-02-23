@@ -126,6 +126,7 @@ namespace DeliCounter.Backend
                 {
                     // Enumerate over the directories in this category path (mods)
                     var categoryPath = Path.Combine(RepoPath, category.Path);
+                    if (!Directory.Exists(categoryPath)) continue;
                     foreach (var directory in Directory.EnumerateDirectories(categoryPath))
                     {
                         // Get the GUID from the directory filename

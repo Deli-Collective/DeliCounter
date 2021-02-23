@@ -6,21 +6,20 @@
              xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <ScrollViewer Padding="4">
-        <DockPanel>
-            <TextBlock Text="Search" Style="{StaticResource HeaderTextBlockStyle}" DockPanel.Dock="Top" />
-            <TextBox x:Name="TextBoxSearch"
-                     ui:ControlHelper.PlaceholderText="Search names, descriptions, authors..."
-                     DockPanel.Dock="Top"
-                     TextChanged="TextBoxSearch_OnTextChanged"
-                     Margin="0 0 0 8" />
-            <ui:ListView DockPanel.Dock="Bottom"
-                         x:Name="ModList"
+    <DockPanel>
+        <TextBlock Text="Search" Style="{StaticResource HeaderTextBlockStyle}" DockPanel.Dock="Top" />
+        <TextBox x:Name="TextBoxSearch"
+                 ui:ControlHelper.PlaceholderText="Search names, descriptions, authors..."
+                 DockPanel.Dock="Top"
+                 TextChanged="TextBoxSearch_OnTextChanged"
+                 Margin="0 0 0 8" />
+        <ScrollViewer Padding="4" DockPanel.Dock="Bottom">
+            <ui:ListView x:Name="ModList"
                          BorderThickness="1"
                          SelectionMode="Single"
                          IsSelectionEnabled="True"
                          BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
                          SelectionChanged="ModList_SelectionChanged" />
-        </DockPanel>
-    </ScrollViewer>
+        </ScrollViewer>
+    </DockPanel>
 </UserControl>
