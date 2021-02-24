@@ -21,7 +21,7 @@
             <controls:ModRepositoryStatus x:Name="ModRepo" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="ApplicationData Build Info" Style="{StaticResource HeaderTextBlockStyle}" />
+            <TextBlock Text="Application Build Info" Style="{StaticResource HeaderTextBlockStyle}" />
             <controls:ApplicationGitInfo />
         </StackPanel>
 

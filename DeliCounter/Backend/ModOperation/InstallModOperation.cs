@@ -61,13 +61,13 @@ namespace DeliCounter.Backend.ModOperation
                 switch (args[0])
                 {
                     case "extract":
-                        Extract(args);
+                        await Task.Run(() => Extract(args));
                         break;
                     case "move":
-                        Move(args);
+                        await Task.Run(() => Move(args));
                         break;
                     case "mkdir":
-                        Mkdir(args);
+                        await Task.Run(() => Mkdir(args));
                         break;
                 }
             }
@@ -114,7 +114,7 @@ namespace DeliCounter.Backend.ModOperation
                 File.Move(source, destination);
         }
 
-        private void Mkdir(string[] args)
+        private static void Mkdir(string[] args)
         {
             Directory.CreateDirectory(args[1]);
         }
