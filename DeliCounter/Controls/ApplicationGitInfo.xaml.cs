@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using DeliCounter.Backend;
+using Semver;
 
 namespace DeliCounter.Controls
 {
@@ -9,6 +12,21 @@ namespace DeliCounter.Controls
         {
             InitializeComponent();
             BuildInfo.Text = Text;
+            ModRepository.Instance.RepositoryUpdated += ModRepositoryUpdated;
+        }
+
+        private void ModRepositoryUpdated()
+        {
+            var applicationData = ModRepository.Instance.ApplicationData;
+            var cVer = SemVersion.Parse($"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}");
+            if (applicationData.LatestApplicationVersion > cVer)
+            {
+                App.RunInMainThread(() =>
+                {
+                    UpdateText.Visibility = Visibility.Visible;
+                    UpdateText.Text = $"Update to {applicationData.LatestApplicationVersion} available!\n{applicationData.UpdateText}";
+                });
+            }
         }
 
         public static string Text

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Printing;
 using System.Threading;
+using System.Threading.Tasks;
 using DeliCounter.Properties;
 using Newtonsoft.Json.Bson;
 using SharpCompress.Archives;
@@ -25,19 +26,23 @@ namespace DeliCounter.Backend.ModOperation
             _version = mod.Latest;
         }
 
-        internal override void Run()
+        internal override async Task Run()
         {
             // Make sure we have the game directory
             var gameDir = Settings.Default.GameLocationOrError;
             if (gameDir is null) return;
 
             // Set some things up
-            ProgressDialogueCallback(0, $"Downloading {_version.Name}...");
-            _webClient.DownloadProgressChanged += (sender, args) => ProgressDialogueCallback(args.ProgressPercentage / 200d, $"Downloading {_version.Name}...");
+            ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
+            _webClient.DownloadProgressChanged += (sender, args) =>
+            {
+                var totalMegabytes = args.BytesReceived / 1000000d;
+                ProgressDialogueCallback(args.ProgressPercentage / 200d, $"Downloading {_version.Name}... ({totalMegabytes:#.##} MB)");
+            };
 
             // Download the file
             var downloadedPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
-            _webClient.DownloadFile(_version.DownloadUrl, downloadedPath);
+            await _webClient.DownloadFileTaskAsync(_version.DownloadUrl, downloadedPath);
 
             // Execute the install steps
             ProgressDialogueCallback(0.5, $"Installing {_version.Name}");

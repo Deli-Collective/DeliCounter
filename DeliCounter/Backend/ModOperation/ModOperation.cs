@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace DeliCounter.Backend.ModOperation
 {
@@ -13,6 +14,6 @@ namespace DeliCounter.Backend.ModOperation
             Mod = mod;
         }
 
-        internal abstract void Run();
+        internal abstract Task Run();
     }
 }

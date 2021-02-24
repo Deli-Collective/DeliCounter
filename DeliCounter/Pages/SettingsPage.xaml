@@ -10,7 +10,7 @@
     <ScrollViewer>
         <ui:SimpleStackPanel Style="{StaticResource ControlPageContentPanelStyle}">
             <!-- Application Settings-->
-            <TextBlock Text="Application Settings" Style="{StaticResource SubheaderTextBlockStyle}" />
+            <TextBlock Text="ApplicationData Settings" Style="{StaticResource SubheaderTextBlockStyle}" />
             <CheckBox x:Name="DarkMode" Content="Enable dark mode" IsChecked="{Binding EnableDarkMode}"
                       Checked="DarkMode_OnChecked" Unchecked="DarkMode_OnChecked" />
             <CheckBox x:Name="AutoDetectGameLocation" Content="Auto-detect game location"

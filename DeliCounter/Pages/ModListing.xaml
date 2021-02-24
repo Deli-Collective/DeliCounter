@@ -6,13 +6,13 @@
              xmlns:ui="http://schemas.modernwpf.com/2019"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
-    <DockPanel>
+    <DockPanel Margin="4">
         <TextBlock x:Name="CategoryTitle" Text="Category Name" Style="{StaticResource HeaderTextBlockStyle}"
                    DockPanel.Dock="Top" />
         <TextBlock x:Name="CategoryDescription"
                    Text="This is the sample category description for stuff and things!"
                    Style="{StaticResource BaseTextBlockStyle}" DockPanel.Dock="Top" Padding="0 0 0 8" />
-        <ScrollViewer Padding="4" DockPanel.Dock="Bottom">
+        <ScrollViewer DockPanel.Dock="Bottom">
             <ui:ListView
                 x:Name="ModList"
                 BorderThickness="1"

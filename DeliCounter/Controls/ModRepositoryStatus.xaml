@@ -15,7 +15,7 @@
                 </TextBlock>
             </StackPanel>
         </StackPanel>
-        <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText">
+        <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText" TextWrapping="Wrap">
             Please wait...
         </TextBlock>
         <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click" />

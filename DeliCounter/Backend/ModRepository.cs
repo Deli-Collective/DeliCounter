@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DeliCounter.Backend.Models;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
@@ -26,9 +27,10 @@ namespace DeliCounter.Backend
 
         private static ModRepository _instance;
 
-        public ModCategory[] Categories;
-        public Dictionary<string, Mod> Mods = new();
-        public Repository Repo;
+        public ModCategory[] Categories { get; private set; }
+        public Dictionary<string, Mod> Mods { get; private set; } = new();
+        public Repository Repo { get; private set; }
+        public ApplicationData ApplicationData { get; private set; }
 
         public static ModRepository Instance => _instance ??= new ModRepository();
 
@@ -103,6 +105,8 @@ namespace DeliCounter.Backend
         /// </summary>
         private Exception ScanMods()
         {
+
+
             Mods.Clear();
 
             // Fetch a list of all the categories in the repo
@@ -111,6 +115,10 @@ namespace DeliCounter.Backend
 
             try
             {
+                ApplicationData =
+                    JsonConvert.DeserializeObject<ApplicationData>(
+                        File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
+
                 var categories = JsonConvert.DeserializeObject<ModCategory[]>(File.ReadAllText(categoriesPath));
                 if (categories is null)
                 {

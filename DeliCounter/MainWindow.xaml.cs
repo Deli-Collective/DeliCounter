@@ -6,6 +6,8 @@ using System.Windows;
 using System.Windows.Media;
 using DeliCounter.Backend;
 using DeliCounter.Pages;
+using DeliCounter.Properties;
+using ModernWpf;
 using ModernWpf.Controls;
 
 namespace DeliCounter

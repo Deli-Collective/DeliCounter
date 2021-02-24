@@ -7,5 +7,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <StackPanel>
         <TextBlock x:Name="BuildInfo" Text="DeliCounter Build Info" />
+        <TextBlock x:Name="UpdateText" Visibility="Collapsed" Margin="0 16 0 0" FontWeight="Bold"/>
     </StackPanel>
 </UserControl>

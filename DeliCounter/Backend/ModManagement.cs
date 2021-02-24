@@ -87,7 +87,7 @@ namespace DeliCounter.Backend
 
                 try
                 {
-                    op.Run();
+                    op.Run().GetAwaiter().GetResult();
                 }
                 catch (Exception e)
                 {

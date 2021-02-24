@@ -12,7 +12,6 @@ namespace DeliCounter.Properties
         public Settings()
         {
             PropertyChanged += Settings_PropertyChanged;
-            SettingsLoaded += Settings_SettingsLoaded;
         }
 
         /// <summary>
@@ -35,11 +34,6 @@ namespace DeliCounter.Properties
                 });
                 return null;
             }
-        }
-
-        private void Settings_SettingsLoaded(object sender, SettingsLoadedEventArgs e)
-        {
-            ThemeManager.Current.ApplicationTheme = EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
         }
 
         private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)

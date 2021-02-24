@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using DeliCounter.Properties;
 
 namespace DeliCounter.Backend.ModOperation
@@ -9,7 +10,7 @@ namespace DeliCounter.Backend.ModOperation
         {
         }
 
-        internal override void Run()
+        internal override async Task Run()
         {
             var version = Mod.Latest;
 
