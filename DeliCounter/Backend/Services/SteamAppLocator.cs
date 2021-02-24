@@ -18,7 +18,7 @@ namespace DeliCounter.Backend
         public string AppFolderName { get; }
 
         /// <summary>
-        ///     ApplicationData executable name
+        ///     Application executable name
         /// </summary>
         public string AppExecutableName { get; }
 
