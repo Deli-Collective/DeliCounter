@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using DeliCounter;
+using DeliCounter.Backend;
 using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
@@ -25,6 +27,18 @@ namespace DeliCounter.Backend
             {
                 ExecuteOperations(EnumerateUninstallDependencies(mod)
                     .Concat(new[] {new UninstallModOperation(mod)}));
+            });
+        }
+
+        internal static void UpdateMod(Mod mod)
+        {
+            App.RunInBackgroundThread(() =>
+            {
+                ExecuteOperations(new ModOperation.ModOperation[]
+                {
+                    new UninstallModOperation(mod),
+                    new InstallModOperation(mod)
+                });
             });
         }
 
@@ -70,6 +84,7 @@ namespace DeliCounter.Backend
 
             ProgressDialogue progressDialogue = null;
             var error = false;
+            var errIndex = -1;
             App.RunInMainThread(() =>
             {
                 progressDialogue = new ProgressDialogue {Title = "Executing operations"};
@@ -88,6 +103,7 @@ namespace DeliCounter.Backend
                 try
                 {
                     op.Run().GetAwaiter().GetResult();
+                    if (!op.Completed) errIndex = i;
                 }
                 catch (Exception e)
                 {
@@ -105,6 +121,10 @@ namespace DeliCounter.Backend
                 {
                     progressDialogue.Title = "Error";
                     progressDialogue.Message.Text = "An exception has occured and the operation was not completed. An exception file was saved to the application's folder. Please submit it to the developers.";
+                } else if (errIndex != -1)
+                {
+                    progressDialogue.Title = "Error";
+                    progressDialogue.Message.Text = $"An operation did not complete successfully:\n{ops[errIndex].Message}";
                 }
                 else
                 {

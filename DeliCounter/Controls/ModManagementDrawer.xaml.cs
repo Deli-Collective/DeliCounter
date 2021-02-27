@@ -146,7 +146,7 @@ namespace DeliCounter.Controls
             if (SelectedMods.Count != 1) return;
             var mod = SelectedMods[0];
 
-            var dependentCount = ModRepository.Instance.Mods.Values.Count(x => x.IsInstalled && x.Installed.Dependencies.ContainsKey(mod.Guid));
+            var dependentCount = mod.InstalledDependents.Count();
             if (dependentCount > 0)
             {
                 // Confirm they want to do this
@@ -162,6 +162,12 @@ namespace DeliCounter.Controls
 
             // Uninstall
             ModManagement.UninstallMod(mod);
+        }
+
+        private void ButtonUpdate_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (SelectedMods.Count == 1)
+                ModManagement.UpdateMod(SelectedMods[0]);
         }
     }
 }

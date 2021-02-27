@@ -12,26 +12,39 @@ namespace DeliCounter.Backend.ModOperation
 
         internal override async Task Run()
         {
-            var version = Mod.Latest;
+            var cached = Mod.Cached;
 
             await Task.Run(() =>
             {
                 var gameLocation = Settings.Default.GameLocationOrError;
-                for (var i = 0; i < version.RemovalPaths.Length; i++)
+                foreach (var item in cached.Files)
                 {
-                    var item = version.RemovalPaths[i];
                     var path = Path.Combine(gameLocation, item);
                     if (string.IsNullOrWhiteSpace(gameLocation) || string.IsNullOrWhiteSpace(item) ||
                         !path.Contains(gameLocation)) return;
 
-                    ProgressDialogueCallback(1d / version.RemovalPaths.Length * i,
-                        $"Uninstalling {version.Name}: {item}");
-
                     if (File.Exists(path)) File.Delete(path);
                     else if (Directory.Exists(path)) Directory.Delete(path, true);
                 }
+
+                DeleteEmptyDirectories(gameLocation);
             });
             Mod.InstalledVersion = null;
+            Mod.Cached = null;
+            Completed = true;
+        }
+
+        private static void DeleteEmptyDirectories(string startLocation)
+        {
+            foreach (var directory in Directory.GetDirectories(startLocation))
+            {
+                DeleteEmptyDirectories(directory);
+                if (Directory.GetFiles(directory).Length == 0 &&
+                    Directory.GetDirectories(directory).Length == 0)
+                {
+                    Directory.Delete(directory, false);
+                }
+            }
         }
     }
 }

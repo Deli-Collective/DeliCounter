@@ -51,9 +51,36 @@ namespace DeliCounter.Backend
         public SemVersion InstalledVersion { get; set; }
 
         /// <summary>
+        ///  Retrieves the mod cache entry for this mod
+        /// </summary>
+        public CachedMod Cached { get; set; }
+
+        /// <summary>
         ///     Retrieves the installed version
         /// </summary>
         public ModVersion Installed => Versions[InstalledVersion];
+
+        public IEnumerable<Mod> InstalledDirectDependents
+        {
+            get
+            {
+                return ModRepository.Instance.Mods.Values.Where(x => x.IsInstalled && x.Installed.Dependencies.ContainsKey(Guid));
+            }
+        }
+
+        public IEnumerable<Mod> InstalledDependents
+        {
+            get
+            {
+                var list = new List<Mod>();
+                foreach (var dep in InstalledDirectDependents)
+                {
+                    list.Add(dep);
+                    list.AddRange(dep.InstalledDependents);
+                }
+                return list.Distinct();
+            }
+        }
 
         /// <summary>
         ///     Represents a specific version of a mod
@@ -110,11 +137,6 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] InstallationSteps { get; set; }
 
-            /// <summary>
-            ///     List of paths to remove when removing this mod
-            /// </summary>
-            public string[] RemovalPaths { get; set; }
-
             public bool MatchesQuery(string query)
             {
                 return Name.ToLower().Contains(query) ||
@@ -138,6 +160,7 @@ namespace DeliCounter.Backend
     {
         public string Guid { get; set; }
         public string VersionString { get; set; }
+        public string[] Files { get; set; }
 
         [JsonIgnore] public SemVersion Version => SemVersion.Parse(VersionString);
     }

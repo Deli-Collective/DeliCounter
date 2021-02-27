@@ -39,7 +39,7 @@ namespace DeliCounter.Backend
         public State Status { get; set; }
         public Exception Exception { get; set; }
 
-        public string ModCachePath
+        public static string ModCachePath
         {
             get
             {
@@ -197,7 +197,11 @@ namespace DeliCounter.Backend
 
                 // Set the installed version on the installed mods
                 foreach (var cached in installedMods)
-                    Mods.Values.First(x => x.Guid == cached.Guid).InstalledVersion = cached.Version;
+                {
+                    var mod = Mods.Values.First(x => x.Guid == cached.Guid);
+                    mod.InstalledVersion = cached.Version;
+                    mod.Cached = cached;
+                }
             }
             // If the mod cache is invalid let the user know. 
             catch (Exception e)
@@ -217,10 +221,8 @@ namespace DeliCounter.Backend
         public void WriteCache()
         {
             if (ModCachePath is null) return;
-            var installedMods = Mods.Values.Where(x => x.IsInstalled)
-                .Select(mod => new CachedMod {Guid = mod.Guid, VersionString = mod.InstalledVersion.ToString()})
-                .ToList();
-            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods));
+            var installedMods = Mods.Values.Where(x => x.Cached != null).Select(x => x.Cached);
+            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods.ToArray()));
             RepositoryUpdated?.Invoke();
         }
     }

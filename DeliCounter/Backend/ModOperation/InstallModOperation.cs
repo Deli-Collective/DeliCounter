@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Printing;
 using System.Threading;
 using System.Threading.Tasks;
 using DeliCounter.Properties;
-using Newtonsoft.Json.Bson;
 using SharpCompress.Archives;
 using SharpCompress.Common;
 
@@ -21,6 +19,8 @@ namespace DeliCounter.Backend.ModOperation
 
         private readonly Mod.ModVersion _version;
 
+        private readonly List<string> _installedFiles = new();
+
         public InstallModOperation(Mod mod) : base(mod)
         {
             _version = mod.Latest;
@@ -33,16 +33,36 @@ namespace DeliCounter.Backend.ModOperation
             if (gameDir is null) return;
 
             // Set some things up
+            var timeoutOccurred = false;
+            var t = new System.Timers.Timer {AutoReset = false, Interval = 15000};
+            t.Elapsed += (sender, args) =>
+            {
+                timeoutOccurred = true;
+                _webClient.CancelAsync();
+                Message = "Download went more than 15 seconds without receiving any new data.";
+            };
             ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
             _webClient.DownloadProgressChanged += (sender, args) =>
             {
                 var totalMegabytes = args.BytesReceived / 1000000d;
-                ProgressDialogueCallback(args.ProgressPercentage / 200d, $"Downloading {_version.Name}... ({totalMegabytes:#.##} MB)");
+                ProgressDialogueCallback(args.ProgressPercentage / 200d,
+                    $"Downloading {_version.Name}... ({totalMegabytes:#.##} MB)");
             };
+
 
             // Download the file
             var downloadedPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
+            t.Start();
             await _webClient.DownloadFileTaskAsync(_version.DownloadUrl, downloadedPath);
+
+            t.Dispose();
+            if (timeoutOccurred)
+            {
+                Completed = false;
+                return;
+            }
+
+
 
             // Execute the install steps
             ProgressDialogueCallback(0.5, $"Installing {_version.Name}");
@@ -72,8 +92,19 @@ namespace DeliCounter.Backend.ModOperation
                 }
             }
 
+            // Remove the temp file to not take up storage :)
+            if (File.Exists(downloadedPath)) File.Delete(downloadedPath);
+
             // Update the repo
             Mod.InstalledVersion = _version.VersionNumber;
+            Mod.Cached = new CachedMod
+            {
+                Guid = Mod.Guid,
+                VersionString = _version.VersionNumber.ToString(),
+                Files = _installedFiles.Select(x => x.Replace(_vars["GAME_DIR"], "")).ToArray()
+            };
+
+            Completed = true;
         }
 
         private string ExpandArgs(string arg)
@@ -84,8 +115,12 @@ namespace DeliCounter.Backend.ModOperation
         private void Extract(string[] args)
         {
             var archive = ArchiveFactory.Open(_vars["IMPLICIT"]);
-            var entries = archive.Entries.Where(entry => !entry.IsDirectory).ToArray();
-            foreach (var entry in entries) entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
+            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            {
+                entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
+                _installedFiles.Add(Path.Combine(args[1], entry.Key));
+            }
+            archive.Dispose();
         }
 
         private void Move(string[] args)
@@ -111,7 +146,9 @@ namespace DeliCounter.Backend.ModOperation
             if (Directory.Exists(source))
                 Directory.Move(source, destination);
             else if (File.Exists(source))
-                File.Move(source, destination);
+                File.Move(source, destination, true);
+
+            _installedFiles.Add(destination);
         }
 
         private static void Mkdir(string[] args)

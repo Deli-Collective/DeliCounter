@@ -12,7 +12,7 @@
             <Button x:Name="ButtonInstall" Content="Install" Style="{DynamicResource AccentButtonStyle}"
                     IsEnabled="False" Click="ButtonInstall_Click" />
             <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}"
-                    IsEnabled="False" />
+                    IsEnabled="False" HorizontalAlignment="Stretch" Click="ButtonUpdate_OnClick"/>
             <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" Click="ButtonUninstall_Click" />
 
         </ui:SimpleStackPanel>
