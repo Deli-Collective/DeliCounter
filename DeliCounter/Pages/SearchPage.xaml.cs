@@ -10,6 +10,13 @@ namespace DeliCounter.Pages
         public SearchPage()
         {
             InitializeComponent();
+            ModRepository.Instance.InstalledModsUpdated += Instance_InstalledModsUpdated;
+        }
+
+        private void Instance_InstalledModsUpdated()
+        {
+            App.RunInMainThread(() => UpdateSearch(TextBoxSearch.Text.ToLower()));
+            
         }
 
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -24,6 +31,11 @@ namespace DeliCounter.Pages
         private void TextBoxSearch_OnTextChanged(object sender, TextChangedEventArgs e)
         {
             var query = TextBoxSearch.Text.ToLower();
+            UpdateSearch(query);
+        }
+
+        private void UpdateSearch(string query)
+        {
             ModList.Items.Clear();
             if (string.IsNullOrEmpty(query)) return;
             foreach (var mod in ModRepository.Instance.Mods.Values.Where(x => x.MatchesQuery(query)))
