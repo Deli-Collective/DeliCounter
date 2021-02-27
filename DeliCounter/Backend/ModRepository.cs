@@ -35,6 +35,7 @@ namespace DeliCounter.Backend
         public static ModRepository Instance => _instance ??= new ModRepository();
 
         public event RepositoryUpdatedDelegate RepositoryUpdated;
+        public event RepositoryUpdatedDelegate InstalledModsUpdated;
 
         public State Status { get; set; }
         public Exception Exception { get; set; }
@@ -223,7 +224,7 @@ namespace DeliCounter.Backend
             if (ModCachePath is null) return;
             var installedMods = Mods.Values.Where(x => x.Cached != null).Select(x => x.Cached);
             File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods.ToArray()));
-            RepositoryUpdated?.Invoke();
+            InstalledModsUpdated?.Invoke();
         }
     }
 }

@@ -33,11 +33,9 @@ namespace DeliCounter.Backend.ModOperation
             if (gameDir is null) return;
 
             // Set some things up
-            var timeoutOccurred = false;
             var t = new System.Timers.Timer {AutoReset = false, Interval = 15000};
             t.Elapsed += (sender, args) =>
             {
-                timeoutOccurred = true;
                 _webClient.CancelAsync();
                 Message = "Download went more than 15 seconds without receiving any new data.";
             };
@@ -53,13 +51,19 @@ namespace DeliCounter.Backend.ModOperation
             // Download the file
             var downloadedPath = Path.Combine(Path.GetTempPath(), Path.GetTempFileName());
             t.Start();
-            await _webClient.DownloadFileTaskAsync(_version.DownloadUrl, downloadedPath);
-
-            t.Dispose();
-            if (timeoutOccurred)
+            try
             {
+                await _webClient.DownloadFileTaskAsync(_version.DownloadUrl, downloadedPath);
+            }
+            catch (TaskCanceledException e)
+            {
+                // Our timeout timer was invoked and we stopped the download.
                 Completed = false;
                 return;
+            }
+            finally
+            {
+                t.Dispose();
             }
 
 

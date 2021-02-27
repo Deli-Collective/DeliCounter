@@ -39,17 +39,10 @@ namespace DeliCounter
         {
             App.RunInMainThread(() =>
             {
-                try
+                // Remove the existing mod tabs
+                for (int i = NavView.MenuItems.Count - 1; i >= 4; i--)
                 {
-                    // Remove the existing mod tabs
-                    for (int i = NavView.MenuItems.Count - 1; i >= 4; i--)
-                    {
-                        NavView.MenuItems.RemoveAt(i);
-                    }
-                }
-                catch (Exception e)
-                {
-                    // Ignored
+                    NavView.MenuItems.RemoveAt(i);
                 }
 
 

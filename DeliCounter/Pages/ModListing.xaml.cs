@@ -12,7 +12,7 @@ namespace DeliCounter.Pages
         public ModListing(ModCategory category)
         {
             InitializeComponent();
-            ModRepository.Instance.RepositoryUpdated += () => App.RunInMainThread(Update);
+            ModRepository.Instance.InstalledModsUpdated += () => App.RunInMainThread(Update);
             _category = category;
             CategoryTitle.Text = category.Name;
             CategoryDescription.Text = category.Description;
