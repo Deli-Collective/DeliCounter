@@ -56,7 +56,7 @@ namespace DeliCounter.Backend.ModOperation
             {
                 await _webClient.DownloadFileTaskAsync(_version.DownloadUrl, downloadedPath);
             }
-            catch (TaskCanceledException e)
+            catch (TaskCanceledException)
             {
                 // Our timeout timer was invoked and we stopped the download.
                 Completed = false;
