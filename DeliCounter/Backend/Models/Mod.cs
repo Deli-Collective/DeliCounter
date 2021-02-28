@@ -28,7 +28,7 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     Retrieves the latest version number from the database
         /// </summary>
-        public Version LatestVersion => Versions.Keys.Max();
+        public Version LatestVersion => Versions.Keys.Where(x => Versions[x].DownloadUrl is not null).Max();
 
         /// <summary>
         ///     Retrieves the latest version from the database

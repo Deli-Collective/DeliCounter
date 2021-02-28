@@ -9,6 +9,7 @@ using LibGit2Sharp;
 using Newtonsoft.Json;
 using SemVer;
 using JsonException = System.Text.Json.JsonException;
+using Range = SemVer.Range;
 
 namespace DeliCounter.Backend
 {
@@ -204,6 +205,25 @@ namespace DeliCounter.Backend
                     var mod = Mods.Values.First(x => x.Guid == cached.Guid);
                     mod.InstalledVersion = cached.Version;
                     mod.Cached = cached;
+
+                    // The version was removed or updated
+                    if (!mod.Versions.ContainsKey(mod.InstalledVersion))
+                    {
+                        // Just insert an empty one to allow nothing to break
+                        mod.Versions.Add(mod.InstalledVersion, new Mod.ModVersion
+                        {
+                            VersionNumber = mod.InstalledVersion,
+                            Authors = Array.Empty<string>(),
+                            Dependencies = new Dictionary<string, Range>(),
+                            Description = "",
+                            DownloadUrl = null,
+                            IconUrl = null,
+                            InstallationSteps = Array.Empty<string>(),
+                            Name = "",
+                            ShortDescription = "",
+                            SourceUrl = ""
+                        });
+                    }
                 }
             }
             // If the mod cache is invalid let the user know. 

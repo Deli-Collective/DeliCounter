@@ -31,6 +31,12 @@ namespace DeliCounter.Backend.ModOperation
             });
             Mod.InstalledVersion = null;
             Mod.Cached = null;
+
+            // If this mod version doesn't have a download URL also remove it from the database
+            var ver = Mod.Versions[VersionNumber];
+            if (ver.DownloadUrl is null)
+                Mod.Versions.Remove(VersionNumber);
+
             Completed = true;
         }
 
