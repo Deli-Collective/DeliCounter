@@ -105,7 +105,11 @@ namespace DeliCounter.Backend.ModOperation
             {
                 Guid = Mod.Guid,
                 VersionString = _version.VersionNumber.ToString(),
-                Files = _installedFiles.Select(x => x.Replace(_vars["GAME_DIR"].Replace('\\', '/'), "")).ToArray()
+                Files = _installedFiles.Select(x => 
+                    x.Replace('\\', '/')
+                        .Replace(_vars["GAME_DIR"].Replace('\\', '/'), ""))
+                    .Select(x => x[0] == '/' ? x[1..] : x)
+                    .ToArray()
             };
 
             Completed = true;
