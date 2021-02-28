@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Navigation;
 using DeliCounter.Backend;
 using ModernWpf.Controls;
@@ -17,8 +16,8 @@ namespace DeliCounter.Controls
     /// </summary>
     public partial class ModManagementDrawer : UserControl
     {
-        public List<Mod> SelectedMods = new();
-        private SemVer.Version _selectedVersion;
+        public Mod SelectedMod;
+        private Version _selectedVersion;
 
         public ModManagementDrawer()
         {
@@ -28,72 +27,14 @@ namespace DeliCounter.Controls
 
         public void UpdateDisplay()
         {
-            switch (SelectedMods.Count)
+            if (SelectedMod == null)
             {
-                case 0:
-                    UpdateShowNone();
-                    break;
-                case 1:
-                    UpdateShowOne();
-                    break;
-                default:
-                    UpdateShowMultiple();
-                    break;
+                UpdateShowNone();
+                return;
             }
-        }
-
-        private void UpdateShowNone()
-        {
-            // Hide all the text blocks
-            TextBlockTitle.Text = "No mod selected";
-            TextBlockDescriptionWrapper.Visibility = Visibility.Collapsed;
-            TextBlockLatestWrapper.Visibility = Visibility.Collapsed;
-            TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
-            TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
-            TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
-            TextBlockSourceWrapper.Visibility = Visibility.Collapsed;
-
-            // Enable and make the buttons visible
-            ButtonInstall.IsEnabled = false;
-            ButtonInstall.Visibility = Visibility.Collapsed;
-            ButtonUpdate.IsEnabled = false;
-            ButtonUpdate.Visibility = Visibility.Collapsed;
-            ButtonUninstall.IsEnabled = false;
-            ButtonUninstall.Visibility = Visibility.Collapsed;
             
-            // Combobox
-            ComboBoxVersion.IsEnabled = false;
-            ComboBoxVersion.Visibility = Visibility.Collapsed;
-        }
-
-        private void UpdateShowMultiple()
-        {
-            // Hide all the text blocks
-            TextBlockTitle.Text = $"{SelectedMods.Count} mods selected";
-            TextBlockDescriptionWrapper.Visibility = Visibility.Collapsed;
-            TextBlockLatestWrapper.Visibility = Visibility.Collapsed;
-            TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
-            TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
-            TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
-            TextBlockSourceWrapper.Visibility = Visibility.Collapsed;
-
-            // Enable and make the buttons visible
-            ButtonInstall.IsEnabled = true;
-            ButtonInstall.Visibility = Visibility.Visible;
-            ButtonUpdate.IsEnabled = true;
-            ButtonUpdate.Visibility = Visibility.Visible;
-            ButtonUninstall.IsEnabled = true;
-            ButtonUninstall.Visibility = Visibility.Visible;
-            
-            // Combobox
-            ComboBoxVersion.IsEnabled = false;
-            ComboBoxVersion.Visibility = Visibility.Collapsed;
-        }
-
-        private void UpdateShowOne()
-        {
             // Get the selected mod and latest version
-            var mod = SelectedMods[0];
+            var mod = SelectedMod;
             var version = mod.Latest;
 
             // Update text block visibility
@@ -133,13 +74,37 @@ namespace DeliCounter.Controls
                 ButtonUpdate.IsEnabled = false;
                 ButtonUpdate.Visibility = Visibility.Collapsed;
             }
-            
+
             // Combobox
             ComboBoxVersion.IsEnabled = mod.Versions.Count > 1;
             ComboBoxVersion.Visibility = Visibility.Visible;
             ComboBoxVersion.ItemsSource = mod.Versions.Keys.OrderByDescending(x => x);
             _selectedVersion = mod.Versions.Keys.Max();
             ComboBoxVersion.SelectedItem = _selectedVersion;
+        }
+        
+        private void UpdateShowNone()
+        {
+            // Hide all the text blocks
+            TextBlockTitle.Text = "No mod selected";
+            TextBlockDescriptionWrapper.Visibility = Visibility.Collapsed;
+            TextBlockLatestWrapper.Visibility = Visibility.Collapsed;
+            TextBlockInstalledWrapper.Visibility = Visibility.Collapsed;
+            TextBlockAuthorsWrapper.Visibility = Visibility.Collapsed;
+            TextBlockDependenciesWrapper.Visibility = Visibility.Collapsed;
+            TextBlockSourceWrapper.Visibility = Visibility.Collapsed;
+
+            // Enable and make the buttons visible
+            ButtonInstall.IsEnabled = false;
+            ButtonInstall.Visibility = Visibility.Collapsed;
+            ButtonUpdate.IsEnabled = false;
+            ButtonUpdate.Visibility = Visibility.Collapsed;
+            ButtonUninstall.IsEnabled = false;
+            ButtonUninstall.Visibility = Visibility.Collapsed;
+            
+            // Combobox
+            ComboBoxVersion.IsEnabled = false;
+            ComboBoxVersion.Visibility = Visibility.Collapsed;
         }
 
         private void HyperlinkSource_OnRequestNavigate(object sender, RequestNavigateEventArgs e)
@@ -154,14 +119,12 @@ namespace DeliCounter.Controls
 
         private void ButtonInstall_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedMods.Count == 1)
-                ModManagement.InstallMod(SelectedMods[0], _selectedVersion);
+            ModManagement.InstallMod(SelectedMod, _selectedVersion);
         }
 
         private async void ButtonUninstall_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedMods.Count != 1) return;
-            var mod = SelectedMods[0];
+            var mod = SelectedMod;
 
             var dependentCount = mod.InstalledDependents.Count();
             if (dependentCount > 0)
@@ -183,26 +146,24 @@ namespace DeliCounter.Controls
 
         private void ButtonUpdate_OnClick(object sender, RoutedEventArgs e)
         {
-            if (SelectedMods.Count == 1)
-                ModManagement.UpdateMod(SelectedMods[0], _selectedVersion);
+            ModManagement.UpdateMod(SelectedMod, _selectedVersion);
         }
 
         private void ComboBoxVersion_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedVersion = (Version) ComboBoxVersion.SelectedItem;
 
-            // If we have a single mod selected and it is installed...
-            if (SelectedMods.Count != 1) return;
-            var mod = SelectedMods[0];
+            var mod = SelectedMod;
             if (!mod.IsInstalled) return;
-            
+
             // Set the update button text to either update or downgrade depending on the selected version
             if (mod.InstalledVersion < _selectedVersion)
             {
                 ButtonUpdate.Visibility = Visibility.Visible;
                 ButtonUpdate.IsEnabled = true;
                 ButtonUpdate.Content = "Update";
-            } else if (mod.InstalledVersion > _selectedVersion)
+            }
+            else if (mod.InstalledVersion > _selectedVersion)
             {
                 ButtonUpdate.Visibility = Visibility.Visible;
                 ButtonUpdate.IsEnabled = true;

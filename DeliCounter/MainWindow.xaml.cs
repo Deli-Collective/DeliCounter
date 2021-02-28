@@ -84,12 +84,6 @@ namespace DeliCounter
             var page = _pages[tag].Item1;
             NavViewContent.Navigate(page);
             Drawer.IsPaneOpen = _pages[tag].Item2;
-
-            if (page is ModListing listPage)
-                listPage.ModList.SelectedItem = null;
-
-            ModManagementDrawer.SelectedMods.Clear();
-            ModManagementDrawer.UpdateDisplay();
         }
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)

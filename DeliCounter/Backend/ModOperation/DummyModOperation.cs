@@ -1,20 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Version = SemVer.Version;
 
 namespace DeliCounter.Backend.ModOperation
 {
     public class DummyModOperation : ModOperation
     {
-        private readonly Func<Task> _action;
+        private Mod _depMod;
         
-        public DummyModOperation(Func<Task> action) : base(null, null)
+        public DummyModOperation(Mod mod, Version versionNumber, Mod depMod) : base(mod, versionNumber)
         {
-            _action = action;
+            _depMod = depMod;
         }
 
-        internal override async Task Run()
+        internal override Task Run()
         {
-            await _action();
+            Completed = false;
+            var requestedVersion = Mod.Versions[VersionNumber].Dependencies[_depMod.Guid].MaxSatisfying(_depMod.Versions.Keys);
+            Message = $"Could not satisfy a dependency of {Mod.Guid} because an incompatible version of {_depMod.Guid} is already installed. Try installing {_depMod.Guid} {requestedVersion}";
+            return Task.CompletedTask;
         }
     }
 }

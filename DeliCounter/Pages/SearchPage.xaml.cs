@@ -22,9 +22,7 @@ namespace DeliCounter.Pages
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var drawer = MainWindow.Instance.ModManagementDrawer;
-            drawer.SelectedMods.AddRange(e.AddedItems.Cast<ModListItem>().Select(x => x.Mod));
-            foreach (var mod in e.RemovedItems.Cast<ModListItem>().Select(x => x.Mod))
-                drawer.SelectedMods.Remove(mod);
+            drawer.SelectedMod = ((ModListItem) ModList.SelectedItem).Mod;
             drawer.UpdateDisplay();
         }
 

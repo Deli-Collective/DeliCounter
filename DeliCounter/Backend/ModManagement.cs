@@ -25,10 +25,24 @@ namespace DeliCounter.Backend
         {
             App.RunInBackgroundThread(() =>
             {
-                ExecuteOperations(new ModOperation.ModOperation[]
+                // Check that the requested version won't cause any issues
+                var notSatisfied = new List<string>();
+                foreach (var dependents in mod.InstalledDirectDependents)
                 {
-                    new UninstallModOperation(mod),
-                    new InstallModOperation(mod, versionNumber)
+                    if (!dependents.Installed.Dependencies[mod.Guid].IsSatisfied(versionNumber))
+                        notSatisfied.Add(dependents.Guid);
+                }
+
+                if (notSatisfied.Count == 0)
+                    ExecuteOperations(new ModOperation.ModOperation[]
+                    {
+                        new UninstallModOperation(mod),
+                        new InstallModOperation(mod, versionNumber)
+                    });
+                else App.RunInMainThread(() =>
+                {
+                    var dialogue = new AlertDialogue("Error", "This mod cannot be updated because one or more installed mods are not compatible with the selected version:\n" + string.Join(", ", notSatisfied));
+                    dialogue.ShowAsync();
                 });
             });
         }
@@ -48,9 +62,7 @@ namespace DeliCounter.Backend
                 }
                 else if (!compatibleRange.IsSatisfied(depMod.InstalledVersion))
                 {
-                    yield return new DummyModOperation(() =>
-                        throw new Exception(
-                            $"Cannot satisfy {mod.Guid}'s dependency of {depMod.Guid} with the installed version of {depMod.InstalledVersion}"));
+                    yield return new DummyModOperation(mod, versionNumber, depMod);
                 }
             }
         }
@@ -96,7 +108,11 @@ namespace DeliCounter.Backend
                 try
                 {
                     op.Run().GetAwaiter().GetResult();
-                    if (!op.Completed) errIndex = i;
+                    if (!op.Completed)
+                    {
+                        errIndex = i;
+                        break;
+                    }
                 }
                 catch (Exception e)
                 {
