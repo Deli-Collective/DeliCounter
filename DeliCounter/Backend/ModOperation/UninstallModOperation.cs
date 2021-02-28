@@ -6,7 +6,7 @@ namespace DeliCounter.Backend.ModOperation
 {
     internal class UninstallModOperation : ModOperation
     {
-        public UninstallModOperation(Mod mod) : base(mod)
+        public UninstallModOperation(Mod mod) : base(mod, mod.InstalledVersion)
         {
         }
 

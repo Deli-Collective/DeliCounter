@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DeliCounter.Properties;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using Version = SemVer.Version;
 
 namespace DeliCounter.Backend.ModOperation
 {
@@ -21,9 +22,9 @@ namespace DeliCounter.Backend.ModOperation
 
         private readonly List<string> _installedFiles = new();
 
-        public InstallModOperation(Mod mod) : base(mod)
+        public InstallModOperation(Mod mod, Version versionNumber) : base(mod, versionNumber)
         {
-            _version = mod.Latest;
+            _version = mod.Versions[versionNumber];
         }
 
         internal override async Task Run()

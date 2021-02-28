@@ -14,6 +14,7 @@
             <Button x:Name="ButtonUpdate" Content="Update" Style="{DynamicResource AccentButtonStyle}"
                     IsEnabled="False" HorizontalAlignment="Stretch" Click="ButtonUpdate_OnClick"/>
             <Button x:Name="ButtonUninstall" Content="Uninstall" IsEnabled="False" Click="ButtonUninstall_Click" />
+            <ComboBox x:Name="ComboBoxVersion" SelectionChanged="ComboBoxVersion_OnSelectionChanged"/>
 
         </ui:SimpleStackPanel>
 

@@ -86,20 +86,17 @@ namespace DeliCounter.Backend
                 var cloneOptions = new CloneOptions {CredentialsProvider = null};
                 var split = Settings.Default.GitRepository.Split("~");
                 var repoUrl = split[0];
-                var branch = split.Length > 1 ? split[1] : null;
+                var branch = split.Length > 1 ? split[1] : "main";
                 if (!Directory.Exists(RepoPath)) Repository.Clone(repoUrl, RepoPath, cloneOptions);
                 Repo = new Repository(RepoPath);
 
-                // Pull to update
-                var signature = new Signature(new Identity("no_username", "unused@email.com"), DateTimeOffset.Now);
-                var fetchOptions = new PullOptions {FetchOptions = new FetchOptions {CredentialsProvider = null}};
-                Commands.Pull(Repo, signature, fetchOptions);
-                
-                // Checkout a branch
-                if (branch is not null)
-                {
-                    Commands.Checkout(Repo, Repo.Branches["refs/remotes/origin/" + branch]);
-                }
+                // Fetch to update
+                var remote = Repo.Network.Remotes["origin"];
+                var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
+                Commands.Fetch(Repo, remote.Name, refSpecs, null, null);
+
+                // Checkout the selected branch
+                Commands.Checkout(Repo, Repo.Branches["refs/remotes/origin/" + branch]);
 
                 // No error
                 return null;
@@ -115,8 +112,6 @@ namespace DeliCounter.Backend
         /// </summary>
         private Exception ScanMods()
         {
-
-
             Mods.Clear();
 
             // Fetch a list of all the categories in the repo
@@ -125,9 +120,7 @@ namespace DeliCounter.Backend
 
             try
             {
-                ApplicationData =
-                    JsonConvert.DeserializeObject<ApplicationData>(
-                        File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
+                ApplicationData = JsonConvert.DeserializeObject<ApplicationData>(File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
 
                 var categories = JsonConvert.DeserializeObject<ModCategory[]>(File.ReadAllText(categoriesPath));
                 if (categories is null)
@@ -216,11 +209,7 @@ namespace DeliCounter.Backend
             // If the mod cache is invalid let the user know. 
             catch (Exception e)
             {
-                App.RunInMainThread(() =>
-                {
-                    new AlertDialogue("Error",
-                        "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.").ShowAsync();
-                });
+                App.RunInMainThread(() => { new AlertDialogue("Error", "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.").ShowAsync(); });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
             }
         }

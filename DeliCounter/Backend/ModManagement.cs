@@ -2,62 +2,55 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using DeliCounter;
-using DeliCounter.Backend;
 using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
+using Version = SemVer.Version;
 
 namespace DeliCounter.Backend
 {
     internal static class ModManagement
     {
-        internal static void InstallMod(Mod mod)
+        internal static void InstallMod(Mod mod, Version versionNumber)
         {
-            App.RunInBackgroundThread(() =>
-            {
-                ExecuteOperations(EnumerateInstallDependencies(mod)
-                    .Concat(new[] {new InstallModOperation(mod)}));
-            });
+            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new[] {new InstallModOperation(mod, versionNumber)})); });
         }
 
         internal static void UninstallMod(Mod mod)
         {
-            App.RunInBackgroundThread(() =>
-            {
-                ExecuteOperations(EnumerateUninstallDependencies(mod)
-                    .Concat(new[] {new UninstallModOperation(mod)}));
-            });
+            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateUninstallDependencies(mod).Concat(new[] {new UninstallModOperation(mod)})); });
         }
 
-        internal static void UpdateMod(Mod mod)
+        internal static void UpdateMod(Mod mod, Version versionNumber)
         {
             App.RunInBackgroundThread(() =>
             {
                 ExecuteOperations(new ModOperation.ModOperation[]
                 {
                     new UninstallModOperation(mod),
-                    new InstallModOperation(mod)
+                    new InstallModOperation(mod, versionNumber)
                 });
             });
         }
 
-        private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod)
+        private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod, Version versionNumber)
         {
-            var version = mod.Latest;
-            foreach (var dep in version.Dependencies)
+            var version = mod.Versions[versionNumber];
+            foreach (var (guid, compatibleRange) in version.Dependencies)
             {
-                var depMod = ModRepository.Instance.Mods[dep.Key];
-                foreach (var yield in EnumerateInstallDependencies(depMod))
+                var depMod = ModRepository.Instance.Mods[guid];
+                var depVersion = compatibleRange.MaxSatisfying(depMod.Versions.Keys);
+                foreach (var yield in EnumerateInstallDependencies(depMod, depVersion))
                     yield return yield;
                 if (!depMod.IsInstalled)
                 {
-                    yield return new InstallModOperation(depMod);
+                    yield return new InstallModOperation(depMod, depVersion);
                 }
-                else if (dep.Value.IsSatisfied(depMod.InstalledVersion))
+                else if (!compatibleRange.IsSatisfied(depMod.InstalledVersion))
                 {
-                    yield return new UninstallModOperation(depMod);
-                    yield return new InstallModOperation(depMod);
+                    yield return new DummyModOperation(() =>
+                        throw new Exception(
+                            $"Cannot satisfy {mod.Guid}'s dependency of {depMod.Guid} with the installed version of {depMod.InstalledVersion}"));
                 }
             }
         }
@@ -121,7 +114,8 @@ namespace DeliCounter.Backend
                 {
                     progressDialogue.Title = "Error";
                     progressDialogue.Message.Text = "An exception has occured and the operation was not completed. An exception file was saved to the application's folder. Please submit it to the developers.";
-                } else if (errIndex != -1)
+                }
+                else if (errIndex != -1)
                 {
                     progressDialogue.Title = "Error";
                     progressDialogue.Message.Text = $"An operation did not complete successfully:\n{ops[errIndex].Message}";
