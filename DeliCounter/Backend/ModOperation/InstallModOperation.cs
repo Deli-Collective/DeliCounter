@@ -68,7 +68,6 @@ namespace DeliCounter.Backend.ModOperation
             }
 
 
-
             // Execute the install steps
             ProgressDialogueCallback(0.5, $"Installing {_version.Name}");
 
@@ -106,7 +105,7 @@ namespace DeliCounter.Backend.ModOperation
             {
                 Guid = Mod.Guid,
                 VersionString = _version.VersionNumber.ToString(),
-                Files = _installedFiles.Select(x => x.Replace(_vars["GAME_DIR"], "")).ToArray()
+                Files = _installedFiles.Select(x => x.Replace(_vars["GAME_DIR"].Replace('\\', '/'), "")).ToArray()
             };
 
             Completed = true;
@@ -125,6 +124,7 @@ namespace DeliCounter.Backend.ModOperation
                 entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
                 _installedFiles.Add(Path.Combine(args[1], entry.Key));
             }
+
             archive.Dispose();
         }
 

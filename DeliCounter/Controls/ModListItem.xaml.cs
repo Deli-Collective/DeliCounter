@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using DeliCounter.Backend;
@@ -44,10 +45,6 @@ namespace DeliCounter.Controls
                 LocalStatusIcon.Text = SegoeGlyphs.Download;
                 LocalStatusIcon.Style = (Style) Application.Current.Resources["BaseTextBlockStyle"];
             }
-        }
-
-        private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
-        {
         }
     }
 }

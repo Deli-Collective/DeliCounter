@@ -10,8 +10,8 @@
              d:DesignWidth="600"
              Height="50">
     <DockPanel HorizontalAlignment="Stretch">
-        <Image x:Name="ModImage" Source="/Assets/placeholder.jpg" Margin="0 2 2 2" Stretch="Uniform"
-               DockPanel.Dock="Left" />
+        <Image x:Name="ModImage" Source="/Assets/placeholder.jpg" Margin="0 2 2 2"
+               DockPanel.Dock="Left" Width="46"/>
         <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Margin="0 0 16 0">
             <TextBlock x:Name="LocalStatusIcon" FontFamily="Segoe MDL2 Assets" Text="&#xE8FB;" FontSize="24"
                        FontWeight="UltraBold" />
