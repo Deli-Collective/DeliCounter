@@ -23,6 +23,16 @@ namespace DeliCounter.Controls
             ModTitle.Text = version.Name;
             ModShortDescription.Text = version.ShortDescription;
 
+            // Set the icon
+            if (version.IconUrl is not null)
+            {
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
+                bi.EndInit();
+                ModImage.Source = bi;
+            }
+            
             // Update the local status icons (Up to date, update available)
             if (mod.IsInstalled)
             {
@@ -34,13 +44,6 @@ namespace DeliCounter.Controls
                 LocalStatusIcon.Text = SegoeGlyphs.Download;
                 LocalStatusIcon.Style = (Style) Application.Current.Resources["BaseTextBlockStyle"];
             }
-
-            // Set the icon
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
-            bi.EndInit();
-            ModImage.Source = bi;
         }
 
         private void HyperlinkButton_Click(object sender, RoutedEventArgs e)
