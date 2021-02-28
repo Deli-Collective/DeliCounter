@@ -1,5 +1,5 @@
 ﻿
-using Semver;
+using SemVer;
 
 namespace DeliCounter.Backend.Models
 {
@@ -8,7 +8,7 @@ namespace DeliCounter.Backend.Models
         /// <summary>
         ///     Latest version of this application
         /// </summary>
-        public SemVersion LatestApplicationVersion { get; set; }
+        public Version LatestApplicationVersion { get; set; }
 
         /// <summary>
         ///     Short update notes for this version

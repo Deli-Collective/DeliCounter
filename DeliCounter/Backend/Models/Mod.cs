@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
-using Semver;
+using SemVer;
 
 namespace DeliCounter.Backend
 {
@@ -13,7 +13,7 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     All versions of the mod found in the database
         /// </summary>
-        public Dictionary<SemVersion, ModVersion> Versions = new();
+        public Dictionary<Version, ModVersion> Versions = new();
 
         /// <summary>
         ///     Mod GUID.
@@ -28,7 +28,7 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     Retrieves the latest version number from the database
         /// </summary>
-        public SemVersion LatestVersion => Versions.Keys.Max();
+        public Version LatestVersion => Versions.Keys.Max();
 
         /// <summary>
         ///     Retrieves the latest version from the database
@@ -43,12 +43,12 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     True if the local version matches the latest version
         /// </summary>
-        public bool UpToDate => IsInstalled && SemVersion.Equals(InstalledVersion, LatestVersion);
+        public bool UpToDate => IsInstalled && Equals(InstalledVersion, LatestVersion);
 
         /// <summary>
         ///     Retrieves the installed mod version number
         /// </summary>
-        public SemVersion InstalledVersion { get; set; }
+        public Version InstalledVersion { get; set; }
 
         /// <summary>
         ///  Retrieves the mod cache entry for this mod
@@ -90,7 +90,7 @@ namespace DeliCounter.Backend
             /// <summary>
             ///     Semantic Version number of this version of the mod
             /// </summary>
-            public SemVersion VersionNumber { get; set; }
+            public Version VersionNumber { get; set; }
 
             /// <summary>
             ///     Name of the mod
@@ -130,7 +130,7 @@ namespace DeliCounter.Backend
             /// <summary>
             ///     List of GUID dependencies for this mod.
             /// </summary>
-            public Dictionary<string, SemVersion> Dependencies { get; set; }
+            public Dictionary<string, Range> Dependencies { get; set; }
 
             /// <summary>
             ///     List of steps required for installing this mod
@@ -162,6 +162,6 @@ namespace DeliCounter.Backend
         public string VersionString { get; set; }
         public string[] Files { get; set; }
 
-        [JsonIgnore] public SemVersion Version => SemVersion.Parse(VersionString);
+        [JsonIgnore] public Version Version => Version.Parse(VersionString);
     }
 }

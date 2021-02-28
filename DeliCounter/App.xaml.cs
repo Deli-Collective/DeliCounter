@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
 using System.Windows.Navigation;
@@ -6,6 +7,7 @@ using DeliCounter.Backend;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
+using Newtonsoft.Json;
 
 namespace DeliCounter
 {
@@ -13,6 +15,11 @@ namespace DeliCounter
     {
         public App()
         {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
+            {
+                Converters = new List<JsonConverter>() {new SemRangeConverter(), new SemVersionConverter()}
+            };
+
             ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);

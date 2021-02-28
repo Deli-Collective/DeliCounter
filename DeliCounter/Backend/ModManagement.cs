@@ -54,7 +54,7 @@ namespace DeliCounter.Backend
                 {
                     yield return new InstallModOperation(depMod);
                 }
-                else if (depMod.InstalledVersion < dep.Value)
+                else if (dep.Value.IsSatisfied(depMod.InstalledVersion))
                 {
                     yield return new UninstallModOperation(depMod);
                     yield return new InstallModOperation(depMod);

@@ -2,7 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using DeliCounter.Backend;
-using Semver;
+using SemVer;
+using Version = SemVer.Version;
 
 namespace DeliCounter.Controls
 {
@@ -18,7 +19,7 @@ namespace DeliCounter.Controls
         private void ModRepositoryUpdated()
         {
             var applicationData = ModRepository.Instance.ApplicationData;
-            var cVer = SemVersion.Parse($"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}");
+            var cVer = Version.Parse($"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}");
             if (applicationData.LatestApplicationVersion > cVer)
             {
                 App.RunInMainThread(() =>

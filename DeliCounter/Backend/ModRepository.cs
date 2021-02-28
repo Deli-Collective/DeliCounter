@@ -7,7 +7,7 @@ using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
 using Newtonsoft.Json;
-using Semver;
+using SemVer;
 using JsonException = System.Text.Json.JsonException;
 
 namespace DeliCounter.Backend
