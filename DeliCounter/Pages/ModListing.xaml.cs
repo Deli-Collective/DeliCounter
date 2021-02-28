@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using System.Windows.Controls;
-using DeliCounter.Backend;
+﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
+using System.Windows.Controls;
 
 namespace DeliCounter.Pages
 {
@@ -29,7 +28,7 @@ namespace DeliCounter.Pages
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var drawer = MainWindow.Instance.ModManagementDrawer;
-            drawer.SelectedMod = ((ModListItem) ModList.SelectedItem)?.Mod;
+            drawer.SelectedMod = ((ModListItem)ModList.SelectedItem)?.Mod;
             drawer.UpdateDisplay();
         }
     }

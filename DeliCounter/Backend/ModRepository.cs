@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using DeliCounter.Backend.Models;
+﻿using DeliCounter.Backend.Models;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
 using Newtonsoft.Json;
-using SemVer;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using JsonException = System.Text.Json.JsonException;
 using Range = SemVer.Range;
 
@@ -84,7 +83,7 @@ namespace DeliCounter.Backend
             try
             {
                 // Clone if the repo doesn't exist
-                var cloneOptions = new CloneOptions {CredentialsProvider = null};
+                var cloneOptions = new CloneOptions { CredentialsProvider = null };
                 var split = Settings.Default.GitRepository.Split("~");
                 var repoUrl = split[0];
                 var branch = split.Length > 1 ? split[1] : "main";
@@ -143,7 +142,7 @@ namespace DeliCounter.Backend
                     {
                         // Get the GUID from the directory filename
                         var guid = Path.GetFileName(directory);
-                        var mod = new Mod {Guid = guid, Category = category};
+                        var mod = new Mod { Guid = guid, Category = category };
 
                         // Enumerate over each version of the mod
                         foreach (var versionFile in Directory.EnumerateFiles(directory))

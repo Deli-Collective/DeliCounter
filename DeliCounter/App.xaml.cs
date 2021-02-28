@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Windows;
-using System.Windows.Navigation;
-using DeliCounter.Backend;
+﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows;
+using System.Windows.Navigation;
 
 namespace DeliCounter
 {
@@ -17,7 +17,7 @@ namespace DeliCounter
         {
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
             {
-                Converters = new List<JsonConverter>() {new SemRangeConverter(), new SemVersionConverter()}
+                Converters = new List<JsonConverter>() { new SemRangeConverter(), new SemVersionConverter() }
             };
 
             ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
@@ -39,7 +39,7 @@ namespace DeliCounter
             Current.Dispatcher.Invoke(action);
         }
 
-        public new static App Current => (App) Application.Current;
+        public new static App Current => (App)Application.Current;
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {

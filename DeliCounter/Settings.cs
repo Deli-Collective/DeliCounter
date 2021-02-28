@@ -1,9 +1,7 @@
-﻿using System;
+﻿using DeliCounter.Controls;
+using System;
 using System.ComponentModel;
-using System.Configuration;
 using System.Windows;
-using DeliCounter.Controls;
-using ModernWpf;
 
 namespace DeliCounter.Properties
 {
@@ -26,7 +24,7 @@ namespace DeliCounter.Properties
 
                 App.RunInMainThread(() =>
                 {
-                    var mainWindow = (MainWindow) ((App) Application.Current).MainWindow;
+                    var mainWindow = (MainWindow)((App)Application.Current).MainWindow;
                     if (mainWindow.CurrentPage != "settings")
                         App.RunInMainThread(() =>
                             new AlertDialogue("Game location missing",

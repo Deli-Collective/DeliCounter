@@ -1,10 +1,10 @@
-﻿using System;
+﻿using DeliCounter.Backend.ModOperation;
+using DeliCounter.Controls;
+using DeliCounter.Properties;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
-using DeliCounter.Backend.ModOperation;
-using DeliCounter.Controls;
-using DeliCounter.Properties;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Backend
@@ -13,12 +13,12 @@ namespace DeliCounter.Backend
     {
         internal static void InstallMod(Mod mod, Version versionNumber)
         {
-            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new[] {new InstallModOperation(mod, versionNumber)})); });
+            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new[] { new InstallModOperation(mod, versionNumber) })); });
         }
 
         internal static void UninstallMod(Mod mod)
         {
-            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateUninstallDependencies(mod).Concat(new[] {new UninstallModOperation(mod)})); });
+            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateUninstallDependencies(mod).Concat(new[] { new UninstallModOperation(mod) })); });
         }
 
         internal static void UpdateMod(Mod mod, Version versionNumber)
@@ -92,7 +92,7 @@ namespace DeliCounter.Backend
             var errIndex = -1;
             App.RunInMainThread(() =>
             {
-                progressDialogue = new ProgressDialogue {Title = "Executing operations"};
+                progressDialogue = new ProgressDialogue { Title = "Executing operations" };
                 progressDialogue.ShowAsync();
             });
             for (var i = 0; i < ops.Length; i++)
@@ -151,8 +151,8 @@ namespace DeliCounter.Backend
             public bool Equals(ModOperation.ModOperation x, ModOperation.ModOperation y)
             {
                 if (ReferenceEquals(x, y)) return true;
-                if (ReferenceEquals(x, null)) return false;
-                if (ReferenceEquals(y, null)) return false;
+                if (x is null) return false;
+                if (y is null) return false;
                 return x.GetType() == y.GetType() && x.Mod.Equals(y.Mod);
             }
 

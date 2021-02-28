@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DeliCounter.Backend;
+using ModernWpf.Controls;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using DeliCounter.Backend;
-using ModernWpf.Controls;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Controls
@@ -32,7 +31,7 @@ namespace DeliCounter.Controls
                 UpdateShowNone();
                 return;
             }
-            
+
             // Get the selected mod and latest version
             var mod = SelectedMod;
             var version = mod.Latest;
@@ -82,7 +81,7 @@ namespace DeliCounter.Controls
             _selectedVersion = mod.Versions.Keys.Max();
             ComboBoxVersion.SelectedItem = _selectedVersion;
         }
-        
+
         private void UpdateShowNone()
         {
             // Hide all the text blocks
@@ -101,7 +100,7 @@ namespace DeliCounter.Controls
             ButtonUpdate.Visibility = Visibility.Collapsed;
             ButtonUninstall.IsEnabled = false;
             ButtonUninstall.Visibility = Visibility.Collapsed;
-            
+
             // Combobox
             ComboBoxVersion.IsEnabled = false;
             ComboBoxVersion.Visibility = Visibility.Collapsed;
@@ -151,7 +150,7 @@ namespace DeliCounter.Controls
 
         private void ComboBoxVersion_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            _selectedVersion = (Version) ComboBoxVersion.SelectedItem;
+            _selectedVersion = (Version)ComboBoxVersion.SelectedItem;
 
             var mod = SelectedMod;
             if (!mod.IsInstalled) return;

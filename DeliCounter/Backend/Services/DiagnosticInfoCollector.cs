@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DeliCounter.Controls;
+using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 using System.Windows;
-using DeliCounter.Controls;
-using Microsoft.VisualBasic.FileIO;
 
 namespace DeliCounter.Backend
 {
@@ -114,7 +114,7 @@ namespace DeliCounter.Backend
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            WriteExceptionToDisk((Exception) e.ExceptionObject);
+            WriteExceptionToDisk((Exception)e.ExceptionObject);
 
             if (e.IsTerminating)
                 MessageBox.Show("Something went wrong and the application needs to exit. An exception file has been saved to the application folder, please send it to the developers.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DeliCounter.Controls;
+using DeliCounter.Properties;
+using ModernWpf;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using DeliCounter.Backend;
-using DeliCounter.Controls;
-using DeliCounter.Properties;
-using ModernWpf;
 
 namespace DeliCounter.Pages
 {
@@ -59,7 +58,7 @@ namespace DeliCounter.Pages
             if (targetType != typeof(bool))
                 throw new InvalidOperationException("The target must be a boolean");
 
-            return !(bool) value;
+            return !(bool)value;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter,

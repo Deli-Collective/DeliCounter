@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DeliCounter.Backend;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
-using DeliCounter.Backend;
-using DeliCounter.Backend.ModOperation;
 
 namespace DeliCounter.Controls
 {

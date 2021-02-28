@@ -1,13 +1,11 @@
-﻿using System;
+﻿using DeliCounter.Properties;
+using SharpCompress.Archives;
+using SharpCompress.Common;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
-using DeliCounter.Properties;
-using SharpCompress.Archives;
-using SharpCompress.Common;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Backend.ModOperation
@@ -34,7 +32,7 @@ namespace DeliCounter.Backend.ModOperation
             if (gameDir is null) return;
 
             // Set some things up
-            var t = new System.Timers.Timer {AutoReset = false, Interval = 15000};
+            var t = new System.Timers.Timer { AutoReset = false, Interval = 15000 };
             t.Elapsed += (sender, args) =>
             {
                 _webClient.CancelAsync();
@@ -105,7 +103,7 @@ namespace DeliCounter.Backend.ModOperation
             {
                 Guid = Mod.Guid,
                 VersionString = _version.VersionNumber.ToString(),
-                Files = _installedFiles.Select(x => 
+                Files = _installedFiles.Select(x =>
                     x.Replace('\\', '/')
                         .Replace(_vars["GAME_DIR"].Replace('\\', '/'), ""))
                     .Select(x => x[0] == '/' ? x[1..] : x)
@@ -125,7 +123,7 @@ namespace DeliCounter.Backend.ModOperation
             var archive = ArchiveFactory.Open(_vars["IMPLICIT"]);
             foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
             {
-                entry.WriteToDirectory(args[1], new ExtractionOptions {ExtractFullPath = true, Overwrite = true});
+                entry.WriteToDirectory(args[1], new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
                 _installedFiles.Add(Path.Combine(args[1], entry.Key));
             }
 

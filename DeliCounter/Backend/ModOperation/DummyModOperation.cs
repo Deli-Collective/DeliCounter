@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Backend.ModOperation
 {
     public class DummyModOperation : ModOperation
     {
-        private Mod _depMod;
-        
+        private readonly Mod _depMod;
+
         public DummyModOperation(Mod mod, Version versionNumber, Mod depMod) : base(mod, versionNumber)
         {
             _depMod = depMod;

@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using DeliCounter.Properties;
+using System.IO;
 using System.Threading.Tasks;
-using DeliCounter.Properties;
 
 namespace DeliCounter.Backend.ModOperation
 {

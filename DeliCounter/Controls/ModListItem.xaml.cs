@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DeliCounter.Backend;
+using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using DeliCounter.Backend;
 
 namespace DeliCounter.Controls
 {
@@ -37,7 +36,7 @@ namespace DeliCounter.Controls
                 bi.EndInit();
                 ModImage.Source = bi;
             }
-            
+
             // Update the local status icons (Up to date, update available)
             if (mod.IsInstalled)
             {
@@ -47,7 +46,7 @@ namespace DeliCounter.Controls
             else
             {
                 LocalStatusIcon.Text = SegoeGlyphs.Download;
-                LocalStatusIcon.Style = (Style) Application.Current.Resources["BaseTextBlockStyle"];
+                LocalStatusIcon.Style = (Style)Application.Current.Resources["BaseTextBlockStyle"];
             }
         }
     }

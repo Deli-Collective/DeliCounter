@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DeliCounter.Backend;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using DeliCounter.Backend;
-using SemVer;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Controls
