@@ -84,15 +84,24 @@ namespace DeliCounter.Backend
             {
                 // Clone if the repo doesn't exist
                 var cloneOptions = new CloneOptions {CredentialsProvider = null};
-                if (!Directory.Exists(RepoPath))
-                    Repository.Clone(Settings.Default.GitRepository, RepoPath, cloneOptions);
+                var split = Settings.Default.GitRepository.Split("~");
+                var repoUrl = split[0];
+                var branch = split.Length > 1 ? split[1] : null;
+                if (!Directory.Exists(RepoPath)) Repository.Clone(repoUrl, RepoPath, cloneOptions);
                 Repo = new Repository(RepoPath);
 
                 // Pull to update
                 var signature = new Signature(new Identity("no_username", "unused@email.com"), DateTimeOffset.Now);
                 var fetchOptions = new PullOptions {FetchOptions = new FetchOptions {CredentialsProvider = null}};
                 Commands.Pull(Repo, signature, fetchOptions);
+                
+                // Checkout a branch
+                if (branch is not null)
+                {
+                    Commands.Checkout(Repo, Repo.Branches["refs/remotes/origin/" + branch]);
+                }
 
+                // No error
                 return null;
             }
             catch (LibGit2SharpException e)
