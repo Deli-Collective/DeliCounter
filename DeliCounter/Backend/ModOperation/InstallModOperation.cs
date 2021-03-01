@@ -41,6 +41,7 @@ namespace DeliCounter.Backend.ModOperation
             ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
             _webClient.DownloadProgressChanged += (sender, args) =>
             {
+                t.Interval = 15000;
                 var totalMegabytes = args.BytesReceived / 1000000d;
                 ProgressDialogueCallback(args.ProgressPercentage / 200d,
                     $"Downloading {_version.Name}... ({totalMegabytes:#.##} MB)");
