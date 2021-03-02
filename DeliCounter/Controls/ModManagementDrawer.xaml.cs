@@ -80,6 +80,8 @@ namespace DeliCounter.Controls
             ComboBoxVersion.ItemsSource = mod.Versions.Keys.OrderByDescending(x => x);
             _selectedVersion = mod.Versions.Keys.Max();
             ComboBoxVersion.SelectedItem = _selectedVersion;
+
+            UpdateUpdateButton();
         }
 
         private void UpdateShowNone()
@@ -151,11 +153,16 @@ namespace DeliCounter.Controls
         private void ComboBoxVersion_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedVersion = (Version)ComboBoxVersion.SelectedItem;
+            UpdateUpdateButton();
+        }
 
+        private void UpdateUpdateButton()
+        {
             var mod = SelectedMod;
             if (!mod.IsInstalled) return;
 
             // Set the update button text to either update or downgrade depending on the selected version
+            if (_selectedVersion == null) return;
             if (mod.InstalledVersion < _selectedVersion)
             {
                 ButtonUpdate.Visibility = Visibility.Visible;
