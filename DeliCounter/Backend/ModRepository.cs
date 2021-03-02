@@ -86,7 +86,7 @@ namespace DeliCounter.Backend
             {
                 // Clone if the repo doesn't exist
                 var cloneOptions = new CloneOptions { CredentialsProvider = null };
-                var split = Settings.Default.GitRepository.Split("~");
+                var split = Settings.Default.GitRepository.Split("/tree/");
                 var repoUrl = split[0].EndsWith('/') ? split[0][..^1] : split[0];
                 var branch = split.Length > 1 ? split[1] : "main";
                 if (!Directory.Exists(RepoPath)) Repository.Clone(repoUrl, RepoPath, cloneOptions);
