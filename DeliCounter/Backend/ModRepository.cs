@@ -85,7 +85,7 @@ namespace DeliCounter.Backend
             try
             {
                 // Clone if the repo doesn't exist
-                var cloneOptions = new CloneOptions { CredentialsProvider = null };
+                var cloneOptions = new CloneOptions {CredentialsProvider = null};
                 var split = Settings.Default.GitRepository.Split("/tree/");
                 var repoUrl = split[0].EndsWith('/') ? split[0][..^1] : split[0];
                 var branch = split.Length > 1 ? split[1] : "main";
@@ -130,7 +130,9 @@ namespace DeliCounter.Backend
 
             try
             {
-                ApplicationData = JsonConvert.DeserializeObject<ApplicationData>(File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
+                ApplicationData =
+                    JsonConvert.DeserializeObject<ApplicationData>(
+                        File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
 
                 var categories = JsonConvert.DeserializeObject<ModCategory[]>(File.ReadAllText(categoriesPath));
                 if (categories is null)
@@ -152,7 +154,7 @@ namespace DeliCounter.Backend
                     {
                         // Get the GUID from the directory filename
                         var guid = Path.GetFileName(directory);
-                        var mod = new Mod { Guid = guid, Category = category };
+                        var mod = new Mod {Guid = guid, Category = category};
 
                         // Enumerate over each version of the mod
                         foreach (var versionFile in Directory.EnumerateFiles(directory))
@@ -160,7 +162,8 @@ namespace DeliCounter.Backend
                             // Deserialize and add the version to the mod
                             var version = JsonConvert.DeserializeObject<Mod.ModVersion>(File.ReadAllText(versionFile));
                             if (version is null) continue;
-                            if (!Settings.Default.ShowModBetas && !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
+                            if (!Settings.Default.ShowModBetas &&
+                                !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
                             mod.Versions.Add(version.VersionNumber, version);
                         }
 
@@ -212,7 +215,10 @@ namespace DeliCounter.Backend
                 // Set the installed version on the installed mods
                 foreach (var cached in installedMods)
                 {
-                    var mod = Mods.Values.First(x => x.Guid == cached.Guid);
+                    // If the mod isn't in the database anymore, stub it.
+                    if (!Mods.ContainsKey(cached.Guid))
+                        Mods[cached.Guid] = new Mod {Guid = cached.Guid};
+                    var mod = Mods[cached.Guid];
                     mod.InstalledVersion = cached.Version;
                     mod.Cached = cached;
 
@@ -220,26 +226,32 @@ namespace DeliCounter.Backend
                     if (!mod.Versions.ContainsKey(mod.InstalledVersion))
                     {
                         // Just insert an empty one to allow nothing to break
-                        mod.Versions.Add(mod.InstalledVersion, new Mod.ModVersion
-                        {
-                            VersionNumber = mod.InstalledVersion,
-                            Authors = Array.Empty<string>(),
-                            Dependencies = new Dictionary<string, Range>(),
-                            Description = "",
-                            DownloadUrl = null,
-                            IconUrl = null,
-                            InstallationSteps = Array.Empty<string>(),
-                            Name = "",
-                            ShortDescription = "",
-                            SourceUrl = ""
-                        });
+                        mod.Versions.Add(mod.InstalledVersion,
+                            new Mod.ModVersion
+                            {
+                                VersionNumber = mod.InstalledVersion,
+                                Authors = Array.Empty<string>(),
+                                Dependencies = new Dictionary<string, Range>(),
+                                Description = "",
+                                DownloadUrl = null,
+                                IconUrl = null,
+                                InstallationSteps = Array.Empty<string>(),
+                                Name = cached.Guid,
+                                ShortDescription = "",
+                                SourceUrl = ""
+                            });
                     }
                 }
             }
             // If the mod cache is invalid let the user know. 
             catch (Exception e)
             {
-                App.RunInMainThread(() => { new AlertDialogue("Error", "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.").ShowAsync(); });
+                App.RunInMainThread(() =>
+                {
+                    new AlertDialogue("Error",
+                            "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.")
+                        .ShowAsync();
+                });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
             }
         }

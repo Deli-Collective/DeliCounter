@@ -37,6 +37,10 @@ namespace DeliCounter.Backend.ModOperation
             if (ver.DownloadUrl is null)
                 Mod.Versions.Remove(VersionNumber);
 
+            // If the mod no longer has any versions left, just yeet it.
+            if (Mod.Versions.Count == 0)
+                ModRepository.Instance.Mods.Remove(Mod.Guid);
+
             Completed = true;
         }
 
