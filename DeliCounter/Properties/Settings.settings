@@ -12,7 +12,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="GitRepository" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://github.com/Deli-Collective/Deli-Counter-Database</Value>
+      <Value Profile="(Default)">https://github.com/Deli-Collective/DeliCounter.Database</Value>
     </Setting>
     <Setting Name="FirstRun" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
