@@ -87,13 +87,21 @@ namespace DeliCounter.Backend
                 // Clone if the repo doesn't exist
                 var cloneOptions = new CloneOptions { CredentialsProvider = null };
                 var split = Settings.Default.GitRepository.Split("~");
-                var repoUrl = split[0];
+                var repoUrl = split[0].EndsWith('/') ? split[0][..^1] : split[0];
                 var branch = split.Length > 1 ? split[1] : "main";
                 if (!Directory.Exists(RepoPath)) Repository.Clone(repoUrl, RepoPath, cloneOptions);
                 Repo = new Repository(RepoPath);
 
-                // Fetch to update
+                // Check if we're still using the same remote and if not, update it
                 var remote = Repo.Network.Remotes["origin"];
+                if (remote.Url != repoUrl)
+                    Repo.Network.Remotes.Update(remote.Name, x =>
+                    {
+                        x.Url = repoUrl;
+                        x.PushUrl = repoUrl;
+                    });
+
+                // Fetch to update
                 var refSpecs = remote.FetchRefSpecs.Select(x => x.Specification);
                 Commands.Fetch(Repo, remote.Name, refSpecs, null, null);
 
