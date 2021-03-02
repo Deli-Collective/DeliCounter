@@ -73,6 +73,8 @@ namespace DeliCounter.Backend
             LoadModCache();
             Exception = updateResult ?? scanResult;
             RepositoryUpdated?.Invoke();
+            MainWindow.Instance.ModManagementDrawer.SelectedMod = null;
+            App.RunInMainThread(MainWindow.Instance.ModManagementDrawer.UpdateDisplay);
         }
 
         /// <summary>
@@ -150,6 +152,7 @@ namespace DeliCounter.Backend
                             // Deserialize and add the version to the mod
                             var version = JsonConvert.DeserializeObject<Mod.ModVersion>(File.ReadAllText(versionFile));
                             if (version is null) continue;
+                            if (!Settings.Default.ShowModBetas && !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
                             mod.Versions.Add(version.VersionNumber, version);
                         }
 

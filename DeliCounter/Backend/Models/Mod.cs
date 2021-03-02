@@ -137,6 +137,8 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] InstallationSteps { get; set; }
 
+            public bool IsBeta => !string.IsNullOrEmpty(VersionNumber.PreRelease);
+
             public bool MatchesQuery(string query)
             {
                 return Name.ToLower().Contains(query) ||

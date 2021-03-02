@@ -20,6 +20,8 @@
                      IsEnabled="{Binding AutoDetectGameLocation, Converter={StaticResource InverseBooleanConverter}}" />
             <TextBox x:Name="GitRepository" ui:ControlHelper.Header="Mod Repository"
                      ui:ControlHelper.PlaceholderText="https://github.com/..." Text="{Binding GitRepository}" />
+            <CheckBox x:Name="ShowModBetas" Content="Show mod beta versions" IsChecked="{Binding ShowModBetas}"
+                      Checked="ShowModBetas_OnChecked" Unchecked="ShowModBetas_OnChecked"/>
 
             <!-- Tools -->
             <Button Content="Generate Diagnostic File" Click="GenerateDiagnosticFile" />

@@ -1,4 +1,5 @@
-﻿using DeliCounter.Controls;
+﻿using DeliCounter.Backend;
+using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
 using System;
@@ -46,6 +47,11 @@ namespace DeliCounter.Pages
         {
             App.Current.DiagnosticInfoCollector.CollectAll();
             new AlertDialogue("Complete", "The diagnostic file has been saved to the desktop!").ShowAsync();
+        }
+
+        private void ShowModBetas_OnChecked(object sender, RoutedEventArgs e)
+        {
+            ModRepository.Instance.Refresh();
         }
     }
 

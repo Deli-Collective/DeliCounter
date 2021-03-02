@@ -82,5 +82,17 @@ namespace DeliCounter.Properties {
                 this["FirstRun"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ShowModBetas {
+            get {
+                return ((bool)(this["ShowModBetas"]));
+            }
+            set {
+                this["ShowModBetas"] = value;
+            }
+        }
     }
 }
