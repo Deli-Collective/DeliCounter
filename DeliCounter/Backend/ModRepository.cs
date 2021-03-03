@@ -263,7 +263,7 @@ namespace DeliCounter.Backend
         {
             if (ModCachePath is null) return;
             var installedMods = Mods.Values.Where(x => x.Cached != null).Select(x => x.Cached);
-            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods.ToArray()));
+            File.WriteAllText(ModCachePath, JsonConvert.SerializeObject(installedMods.ToArray(), Formatting.Indented));
             InstalledModsUpdated?.Invoke();
         }
     }
