@@ -57,6 +57,10 @@ namespace DeliCounter.Backend
             // If the BepInEx log file exists, include that too
             var logPath = Path.Combine(SteamAppLocator.AppLocation, "BepInEx", "LogOutput.log");
             if (File.Exists(logPath)) WriteToArchiveFile("LogOutput.log", File.ReadAllText(logPath));
+
+            // Collect any BepInEx preloader errors
+            foreach (var file in Directory.EnumerateFiles(SteamAppLocator.AppLocation, "preloader_*.log"))
+                WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
         }
 
         /// <summary>
@@ -90,7 +94,7 @@ namespace DeliCounter.Backend
             var skip = false;
             foreach (var line in output.Split("\r\n"))
             {
-                if (line.Contains("h3vr_Data"))
+                if (line.Contains("h3vr_Data") || line.Contains("ModRepository"))
                 {
                     skip = true;
                     sb.AppendLine(line + " (TRUNCATED)");
