@@ -232,12 +232,12 @@ namespace DeliCounter.Backend
                                 VersionNumber = mod.InstalledVersion,
                                 Authors = Array.Empty<string>(),
                                 Dependencies = new Dictionary<string, Range>(),
-                                Description = "",
+                                Description = "This mod has been removed from the database",
                                 DownloadUrl = null,
                                 IconUrl = null,
                                 InstallationSteps = Array.Empty<string>(),
                                 Name = cached.Guid,
-                                ShortDescription = "",
+                                ShortDescription = "This mod has been removed from the database",
                                 SourceUrl = ""
                             });
                     }
