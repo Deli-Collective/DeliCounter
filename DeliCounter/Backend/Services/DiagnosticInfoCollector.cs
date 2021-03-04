@@ -24,7 +24,7 @@ namespace DeliCounter.Backend
         public void CollectAll()
         {
             // Create the new zip archive
-            var archiveFileName = $"SlicerDiagnostics_{DateTime.Now:yy-MM-dd_hh-mm-ss}.zip";
+            var archiveFileName = $"DeliCounterDiagnostics_{DateTime.Now:yy-MM-dd_hh-mm-ss}.zip";
             using var fileStream = new FileStream(Path.Combine(SpecialDirectories.Desktop, archiveFileName), FileMode.Create);
             using var zip = new ZipArchive(fileStream, ZipArchiveMode.Create);
 
@@ -40,7 +40,7 @@ namespace DeliCounter.Backend
                                  $"Generated at: {DateTime.Now}\n" +
                                  $"Game Directory: {SteamAppLocator.AppLocation}\n" +
                                  "\n== DeliCounter Git Info ==\n" + ApplicationGitInfo.Text;
-            WriteToArchiveFile("SlicerDiagnostics.txt", diagnosticText);
+            WriteToArchiveFile("DeliCounterVersion.txt", diagnosticText);
 
             // Any exception files in the application folder are also fair game
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
