@@ -40,6 +40,8 @@ namespace DeliCounter.Backend
         /// </summary>
         public bool IsInstalled => InstalledVersion is not null;
 
+        public bool IsInstalledVersionInDatabase => Versions.ContainsKey(InstalledVersion);
+
         /// <summary>
         ///     True if the local version matches the latest version
         /// </summary>

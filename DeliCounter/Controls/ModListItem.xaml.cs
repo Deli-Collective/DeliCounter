@@ -1,7 +1,6 @@
 ﻿using DeliCounter.Backend;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -20,7 +19,7 @@ namespace DeliCounter.Controls
             InitializeComponent();
 
             // Get the version to display and edit the name and short description
-            var version = displayInstalled ? mod.Installed : mod.Latest;
+            var version = displayInstalled && mod.IsInstalledVersionInDatabase ? mod.Installed : mod.Latest;
 
             // If this version has no info then actually do display the latest
             if (version.DownloadUrl is null) version = mod.Latest;
