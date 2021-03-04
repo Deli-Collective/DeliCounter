@@ -1,6 +1,9 @@
 ﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
+using System;
+using System.Globalization;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace DeliCounter.Pages
 {
@@ -30,6 +33,25 @@ namespace DeliCounter.Pages
             var drawer = MainWindow.Instance.ModManagementDrawer;
             drawer.SelectedMod = ((ModListItem)ModList.SelectedItem)?.Mod;
             drawer.UpdateDisplay();
+        }
+    }
+
+    [ValueConversion(typeof(double), typeof(double))]
+    public class ListWidthConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter,
+            CultureInfo culture)
+        {
+            if (targetType != typeof(double))
+                throw new InvalidOperationException("The target must be a double");
+
+            return Math.Max((double)value - 2, 0);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter,
+            CultureInfo culture)
+        {
+            throw new NotSupportedException();
         }
     }
 }

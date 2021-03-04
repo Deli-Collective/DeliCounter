@@ -11,15 +11,14 @@
         <TextBox x:Name="TextBoxSearch"
                  ui:ControlHelper.PlaceholderText="Search names, descriptions, authors..."
                  DockPanel.Dock="Top"
-                 TextChanged="TextBoxSearch_OnTextChanged"
-                 Margin="0 0 0 8" />
-        <ScrollViewer DockPanel.Dock="Bottom">
-            <ui:ListView x:Name="ModList"
-                         BorderThickness="1"
-                         SelectionMode="Single"
-                         IsSelectionEnabled="True"
-                         BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                         SelectionChanged="ModList_SelectionChanged" />
-        </ScrollViewer>
+                 TextChanged="TextBoxSearch_OnTextChanged" />
+        <ListView
+            x:Name="ModList"
+            DockPanel.Dock="Bottom"
+            BorderThickness="1"
+            SelectionMode="Single"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+            SelectionChanged="ModList_SelectionChanged"
+            HorizontalContentAlignment="Stretch" />
     </DockPanel>
 </UserControl>

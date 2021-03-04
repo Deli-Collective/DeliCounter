@@ -19,6 +19,7 @@
             </Style>
 
             <pages:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+            <pages:ListWidthConverter x:Key="ListWidthConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

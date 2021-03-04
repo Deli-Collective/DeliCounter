@@ -8,19 +8,23 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel Margin="4">
         <TextBlock x:Name="CategoryTitle" Text="Category Name" Style="{StaticResource HeaderTextBlockStyle}"
-                   DockPanel.Dock="Top" />
+                   DockPanel.Dock="Top" Margin="4"/>
         <TextBlock x:Name="CategoryDescription"
                    Text="This is the sample category description for stuff and things!"
-                   Style="{StaticResource BaseTextBlockStyle}" DockPanel.Dock="Top" Padding="0 0 0 8" />
-        <ScrollViewer DockPanel.Dock="Bottom">
-            <ui:ListView
-                x:Name="ModList"
-                BorderThickness="1"
-                SelectionMode="Single"
-                IsSelectionEnabled="True"
-                BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-                SelectionChanged="ModList_SelectionChanged" />
-
-        </ScrollViewer>
+                   Style="{StaticResource BaseTextBlockStyle}" DockPanel.Dock="Top" Margin="4 0 0 8" />
+        <ListView
+            x:Name="ModList"
+            DockPanel.Dock="Bottom"
+            BorderThickness="1"
+            SelectionMode="Single"
+            BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+            SelectionChanged="ModList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="MaxWidth" Value="{Binding Path=ActualWidth, ElementName=ModList, Converter={StaticResource ListWidthConverter}}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </DockPanel>
 </UserControl>
