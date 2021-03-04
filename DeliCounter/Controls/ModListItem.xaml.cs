@@ -19,7 +19,7 @@ namespace DeliCounter.Controls
             InitializeComponent();
 
             // Get the version to display and edit the name and short description
-            var version = displayInstalled && mod.IsInstalledVersionInDatabase ? mod.Installed : mod.Latest;
+            Mod.ModVersion version = displayInstalled ? mod.Installed ?? mod.Latest : mod.Latest;
 
             ModTitle.Text = version.Name;
             ModShortDescription.Text = version.ShortDescription;

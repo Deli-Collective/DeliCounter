@@ -60,7 +60,7 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     Retrieves the installed version
         /// </summary>
-        public ModVersion Installed => Versions[InstalledVersion];
+        public ModVersion Installed => Versions.TryGetValue(InstalledVersion, out ModVersion version) ? version : null;
 
         public IEnumerable<Mod> InstalledDirectDependents
         {
