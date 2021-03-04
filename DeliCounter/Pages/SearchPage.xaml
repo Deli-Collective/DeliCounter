@@ -7,18 +7,25 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     <DockPanel Margin="4">
-        <TextBlock Text="Search" Style="{StaticResource HeaderTextBlockStyle}" DockPanel.Dock="Top" />
+        <TextBlock Text="Search" Style="{StaticResource HeaderTextBlockStyle}" DockPanel.Dock="Top" Margin="4"/>
         <TextBox x:Name="TextBoxSearch"
                  ui:ControlHelper.PlaceholderText="Search names, descriptions, authors..."
                  DockPanel.Dock="Top"
-                 TextChanged="TextBoxSearch_OnTextChanged" />
+                 TextChanged="TextBoxSearch_OnTextChanged"
+                 Margin="0 0 0 8"/>
         <ListView
             x:Name="ModList"
             DockPanel.Dock="Bottom"
             BorderThickness="1"
             SelectionMode="Single"
             BorderBrush="{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
-            SelectionChanged="ModList_SelectionChanged"
-            HorizontalContentAlignment="Stretch" />
+            SelectionChanged="ModList_SelectionChanged">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    <Setter Property="MaxWidth" Value="{Binding Path=ActualWidth, ElementName=ModList, Converter={StaticResource ListWidthConverter}}"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
     </DockPanel>
 </UserControl>
