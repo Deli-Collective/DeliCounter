@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using Version = SemVer.Version;
 
@@ -81,6 +82,20 @@ namespace DeliCounter.Controls
             _selectedVersion = mod.Versions.Keys.Max();
             ComboBoxVersion.SelectedItem = _selectedVersion;
 
+
+            // Mod Preview Image
+            if (string.IsNullOrEmpty(version.PreviewImageUrl))
+                ModPreviewImage.Visibility = Visibility.Collapsed;
+            else
+            {
+                ModPreviewImage.Visibility = Visibility.Visible;
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
+                bi.EndInit();
+                ModPreviewImage.Source = bi;
+            }
+
             UpdateUpdateButton();
         }
 
@@ -106,6 +121,9 @@ namespace DeliCounter.Controls
             // Combobox
             ComboBoxVersion.IsEnabled = false;
             ComboBoxVersion.Visibility = Visibility.Collapsed;
+
+            // Preview Image
+            ModPreviewImage.Visibility = Visibility.Collapsed;
         }
 
         private void HyperlinkSource_OnRequestNavigate(object sender, RequestNavigateEventArgs e)

@@ -24,6 +24,8 @@
                 <TextBlock x:Name="TextBlockTitle" Text="Mod title here"
                            Style="{StaticResource SubheaderTextBlockStyle}" />
 
+                <Image x:Name="ModPreviewImage" Source="../Assets/placeholder.jpg"/>
+
                 <!-- Description -->
                 <TextBlock x:Name="TextBlockDescriptionWrapper" Style="{StaticResource BaseTextBlockStyle}"
                            Padding="0 8 0 0">

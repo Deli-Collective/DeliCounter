@@ -115,6 +115,11 @@ namespace DeliCounter.Backend
             public string IconUrl { get; set; }
 
             /// <summary>
+            ///     URL for the mod's preview image
+            /// </summary>
+            public string PreviewImageUrl { get; set; }
+
+            /// <summary>
             ///     Source URL for the mod, e.g. a homepage, Git repo or other website link
             /// </summary>
             public string SourceUrl { get; set; }
