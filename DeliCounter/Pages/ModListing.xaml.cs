@@ -4,6 +4,7 @@ using System;
 using System.Globalization;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace DeliCounter.Pages
 {
@@ -33,6 +34,12 @@ namespace DeliCounter.Pages
             var drawer = MainWindow.Instance.ModManagementDrawer;
             drawer.SelectedMod = ((ModListItem)ModList.SelectedItem)?.Mod;
             drawer.UpdateDisplay();
+        }
+
+        private void ModItem_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ModListItem source = (ModListItem) ((ListViewItem) sender).Content;
+            ModManagement.DefaultAction(source.Mod);
         }
     }
 

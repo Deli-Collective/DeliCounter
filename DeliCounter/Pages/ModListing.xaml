@@ -23,6 +23,7 @@
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                     <Setter Property="MaxWidth" Value="{Binding Path=ActualWidth, ElementName=ModList, Converter={StaticResource ListWidthConverter}}"/>
+                    <EventSetter Event="MouseDoubleClick" Handler="ModItem_DoubleClick"/>
                 </Style>
             </ListView.ItemContainerStyle>
         </ListView>

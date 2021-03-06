@@ -47,6 +47,14 @@ namespace DeliCounter.Backend
             });
         }
 
+        internal static void DefaultAction(Mod mod)
+        {
+            // If the mod is not installed, install the latest version
+            if (!mod.IsInstalled) InstallMod(mod, mod.LatestVersion);
+            // If the mod is not up to date, update it.
+            else if (!mod.UpToDate) UpdateMod(mod, mod.LatestVersion);
+        }
+
         private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod, Version versionNumber)
         {
             var version = mod.Versions[versionNumber];
