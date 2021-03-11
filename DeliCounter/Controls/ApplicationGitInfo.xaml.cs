@@ -19,7 +19,7 @@ namespace DeliCounter.Controls
         {
             var applicationData = ModRepository.Instance.ApplicationData;
             var cVer = Version.Parse($"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}");
-            if (applicationData.LatestApplicationVersion > cVer)
+            if (applicationData != null && applicationData.LatestApplicationVersion > cVer)
             {
                 App.RunInMainThread(() =>
                 {

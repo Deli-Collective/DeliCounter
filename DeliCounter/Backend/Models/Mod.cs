@@ -28,7 +28,8 @@ namespace DeliCounter.Backend
         /// <summary>
         ///     Retrieves the latest version number from the database
         /// </summary>
-        public Version LatestVersion => Versions.Keys.Where(x => Versions[x].DownloadUrl is not null || Versions.Count == 1).Max();
+        public Version LatestVersion =>
+            Versions.Keys.Where(x => Versions[x].DownloadUrl is not null || Versions.Count == 1).Max();
 
         /// <summary>
         ///     Retrieves the latest version from the database
@@ -40,7 +41,8 @@ namespace DeliCounter.Backend
         /// </summary>
         public bool IsInstalled => InstalledVersion is not null;
 
-        public bool IsInstalledVersionInDatabase => Versions.ContainsKey(InstalledVersion) && !string.IsNullOrEmpty(Installed.DownloadUrl);
+        public bool IsInstalledVersionInDatabase =>
+            Versions.ContainsKey(InstalledVersion) && !string.IsNullOrEmpty(Installed.DownloadUrl);
 
         /// <summary>
         ///     True if the local version matches the latest version
@@ -66,7 +68,8 @@ namespace DeliCounter.Backend
         {
             get
             {
-                return ModRepository.Instance.Mods.Values.Where(x => x.IsInstalled && x.Installed.Dependencies.ContainsKey(Guid));
+                return ModRepository.Instance.Mods.Values.Where(x =>
+                    x.IsInstalled && x.Installed.Dependencies.ContainsKey(Guid));
             }
         }
 
@@ -80,6 +83,7 @@ namespace DeliCounter.Backend
                     list.Add(dep);
                     list.AddRange(dep.InstalledDependents);
                 }
+
                 return list.Distinct();
             }
         }
@@ -154,11 +158,13 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] IncompatibleTags { get; set; }
 
-            public bool IsTagsIncompatibleWithInstalled => Tags != null &&
-                ModRepository.Instance.Mods.Values
-                .Where(x => x.IsInstalled && x.Installed != this) // For each installed mod
-                .Select(x => x.Installed.Tags) // Get the tags
-                .Any(x => x != null && Tags.Any(x.Contains));
+            public IEnumerable<Mod> IncompatibleInstalledMods => Tags == null
+                ? System.Array.Empty<Mod>()
+                : ModRepository.Instance.Mods.Values
+                    .Where(x => x.IsInstalled && x.Installed != this)
+                    .Where(x =>
+                        x.Installed.Tags != null &&
+                        Tags.Any(tag => x.Installed.Tags.Contains(tag)));
 
             /// <summary>
             ///     Checks if the version number has a pre release tag

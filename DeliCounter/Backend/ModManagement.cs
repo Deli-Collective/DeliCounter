@@ -59,9 +59,10 @@ namespace DeliCounter.Backend
         {
             var version = mod.Versions[versionNumber];
 
-            if (version.IsTagsIncompatibleWithInstalled)
+            var incompatible = version.IncompatibleInstalledMods.ToArray();
+            if (incompatible.Length > 0)
             {
-                yield return new TagsIncompatibleModOperation(mod, versionNumber);
+                yield return new TagsIncompatibleModOperation(mod, versionNumber, incompatible);
                 yield break;
             }
 

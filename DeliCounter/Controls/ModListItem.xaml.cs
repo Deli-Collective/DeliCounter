@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Backend;
 using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -40,7 +41,7 @@ namespace DeliCounter.Controls
                 LocalStatusIcon.Text = mod.UpToDate ? SegoeGlyphs.Checkmark : SegoeGlyphs.Repeat;
                 LocalStatusIcon.Foreground = new SolidColorBrush(mod.UpToDate ? Colors.Green : Colors.DarkOrange);
             }
-            else if (version.IsTagsIncompatibleWithInstalled)
+            else if (version.IncompatibleInstalledMods.Any())
             {
                 LocalStatusIcon.Text = "";
             }
