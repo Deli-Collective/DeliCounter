@@ -144,7 +144,27 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] InstallationSteps { get; set; }
 
+            /// <summary>
+            ///     List of tags for this mod. Used to identify incompatibilities.
+            /// </summary>
+            public string[] Tags { get; set; }
+
+            /// <summary>
+            ///     A list of tags which this mod is not compatible with. Used for mods which you can only have one of installed.
+            /// </summary>
+            public string[] IncompatibleTags { get; set; }
+
+            public bool IsTagsIncompatibleWithInstalled => Tags != null &&
+                ModRepository.Instance.Mods.Values
+                .Where(x => x.IsInstalled && x.Installed != this) // For each installed mod
+                .Select(x => x.Installed.Tags) // Get the tags
+                .Any(x => x != null && Tags.Any(x.Contains));
+
+            /// <summary>
+            ///     Checks if the version number has a pre release tag
+            /// </summary>
             public bool IsBeta => !string.IsNullOrEmpty(VersionNumber.PreRelease);
+
 
             public bool MatchesQuery(string query)
             {

@@ -40,6 +40,10 @@ namespace DeliCounter.Controls
                 LocalStatusIcon.Text = mod.UpToDate ? SegoeGlyphs.Checkmark : SegoeGlyphs.Repeat;
                 LocalStatusIcon.Foreground = new SolidColorBrush(mod.UpToDate ? Colors.Green : Colors.DarkOrange);
             }
+            else if (version.IsTagsIncompatibleWithInstalled)
+            {
+                LocalStatusIcon.Text = "";
+            }
             else
             {
                 LocalStatusIcon.Text = SegoeGlyphs.Download;

@@ -58,6 +58,13 @@ namespace DeliCounter.Backend
         private static IEnumerable<ModOperation.ModOperation> EnumerateInstallDependencies(Mod mod, Version versionNumber)
         {
             var version = mod.Versions[versionNumber];
+
+            if (version.IsTagsIncompatibleWithInstalled)
+            {
+                yield return new TagsIncompatibleModOperation(mod, versionNumber);
+                yield break;
+            }
+
             foreach (var (guid, compatibleRange) in version.Dependencies)
             {
                 var depMod = ModRepository.Instance.Mods[guid];
@@ -70,7 +77,7 @@ namespace DeliCounter.Backend
                 }
                 else if (!compatibleRange.IsSatisfied(depMod.InstalledVersion))
                 {
-                    yield return new DummyModOperation(mod, versionNumber, depMod);
+                    yield return new DependenciesUnsatisfiedModOperation(mod, versionNumber, depMod);
                 }
             }
         }
