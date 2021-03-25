@@ -96,28 +96,31 @@ namespace DatabaseUpdater
             
             ConsoleLog(LogLevel.Info, $"Done fetching versions: {updated} updated, {error} errors, {alreadyUpToDate} already up to date.");
 
-            try
+            if (updated > 0)
             {
-                Commands.Stage(repo.Repo, "*");
-                User user = GitHubClient.User.Current().GetAwaiter().GetResult();
-                Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
-                repo.Repo.Commit($"Updated {updated} mods in database", sig, sig);
-
-
-                PushOptions options = new()
+                try
                 {
-                    CredentialsProvider = (_, _, _) =>
-                        new UsernamePasswordCredentials {Username = user.Login, Password = args[0]}
-                };
-                repo.Repo.Network.Push(repo.Repo.Head, options);
+                    Commands.Stage(repo.Repo, "**/*");
+                    User user = GitHubClient.User.Current().GetAwaiter().GetResult();
+                    Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
+                    repo.Repo.Commit($"Updated {updated} mods in database", sig, sig);
+
+
+                    PushOptions options = new()
+                    {
+                        CredentialsProvider = (_, _, _) =>
+                            new UsernamePasswordCredentials {Username = user.Login, Password = args[0]}
+                    };
+                    repo.Repo.Network.Push(repo.Repo.Head, options);
                 
-                ConsoleLog(LogLevel.Info, "Pushed changes");
+                    ConsoleLog(LogLevel.Info, "Pushed changes");
+                }
+                catch (LibGit2SharpException e)
+                {
+                    ConsoleLog(LogLevel.Error, "Couldn't push changes: " + e.Message);
+                }
             }
-            catch (LibGit2SharpException e)
-            {
-                ConsoleLog(LogLevel.Error, "Couldn't push changes: " + e.Message);
-            }
-            
+
             sw.Stop();
             ConsoleLog(LogLevel.Info, $"Done in {sw.ElapsedMilliseconds / 1000d}s!");
         }
