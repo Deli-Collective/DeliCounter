@@ -28,4 +28,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Update
-      run: dotnet run --project UpdateDatabase "$GH_PAT"
+      run: dotnet run --project DatabaseUpdater "$GH_PAT"
