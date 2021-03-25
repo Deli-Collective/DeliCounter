@@ -12,13 +12,13 @@ namespace DatabaseUpdater
 {
     public class GitHubVersionFetcher : VersionFetcher
     {
-        private readonly GitHubClient _client = new(new ProductHeaderValue("DeliCounter-Updater"));
+        private readonly GitHubClient _client;
 
         public override bool Versioned => true;
 
-        public GitHubVersionFetcher(string token)
+        public GitHubVersionFetcher(GitHubClient client)
         {
-            if (token is not null) _client.Credentials = new Credentials(token);
+            _client = client;
         }
 
         public override async Task<FetchedVersion> GetLatestVersion(Mod.ModVersion mod)

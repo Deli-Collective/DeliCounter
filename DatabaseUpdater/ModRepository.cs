@@ -67,7 +67,7 @@ namespace DatabaseUpdater
                 Commands.Fetch(Repo, remote.Name, refSpecs, null, null);
 
                 // Checkout the selected branch
-                Commands.Checkout(Repo, Repo.Branches["refs/remotes/origin/" + branch]);
+                Commands.Checkout(Repo, Repo.Branches[branch]);
 
                 // No error
                 return null;

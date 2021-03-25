@@ -1,8 +1,13 @@
 ﻿using DeliCounter.Backend;
+using LibGit2Sharp;
 using Newtonsoft.Json;
+using Octokit;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using Credentials = Octokit.Credentials;
+using Signature = LibGit2Sharp.Signature;
 
 namespace DatabaseUpdater
 {
@@ -27,16 +32,21 @@ namespace DatabaseUpdater
             Console.WriteLine($"[{level.ToString(),7}] {message}");
         }
 
-        private static Dictionary<string, VersionFetcher> _checkers = new()
+        private static readonly Dictionary<string, VersionFetcher> Checkers = new()
         {
             ["bonetome.com"] = new BoneTomeVersionFetcher()
             
         };
 
+        private static readonly GitHubClient GitHubClient = new(new ProductHeaderValue("DeliCounter-Updater"));
+        
         private static void Main(string[] args)
         {
-            _checkers["github.com"] = new GitHubVersionFetcher(args[0]);
-            JsonConvert.DefaultSettings = () => new JsonSerializerSettings() {Converters = new List<JsonConverter>() {new SemRangeConverter(), new SemVersionConverter()}};
+            Stopwatch sw = Stopwatch.StartNew();
+            
+            if (args.Length > 0) GitHubClient.Credentials = new Credentials(args[0]);
+            Checkers["github.com"] = new GitHubVersionFetcher(GitHubClient);
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings {Converters = new List<JsonConverter> {new SemRangeConverter(), new SemVersionConverter()}};
             ModRepository repo = new("https://github.com/Deli-Collective/DeliCounter.Database/tree/main");
 
             int alreadyUpToDate = 0, updated = 0, error = 0;
@@ -44,7 +54,7 @@ namespace DatabaseUpdater
             foreach (Mod mod in repo.Mods.Values)
             {
                 string sourceWebsite = mod.Latest.SourceUrl.Split("/")[2];
-                if (!_checkers.TryGetValue(sourceWebsite, out VersionFetcher checker))
+                if (!Checkers.TryGetValue(sourceWebsite, out VersionFetcher checker))
                 {
                     ConsoleLog(LogLevel.Error, $"{mod.Guid}: No version fetcher for {sourceWebsite}");
                     continue;
@@ -84,7 +94,32 @@ namespace DatabaseUpdater
                 }
             }
             
-            ConsoleLog(LogLevel.Info, $"Done! {updated} updated, {error} errors, {alreadyUpToDate} already up to date.");
+            ConsoleLog(LogLevel.Info, $"Done fetching versions: {updated} updated, {error} errors, {alreadyUpToDate} already up to date.");
+
+            try
+            {
+                Commands.Stage(repo.Repo, "*");
+                User user = GitHubClient.User.Current().GetAwaiter().GetResult();
+                Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
+                repo.Repo.Commit($"Updated {updated} mods in database", sig, sig);
+
+
+                PushOptions options = new()
+                {
+                    CredentialsProvider = (_, _, _) =>
+                        new UsernamePasswordCredentials {Username = user.Login, Password = args[0]}
+                };
+                repo.Repo.Network.Push(repo.Repo.Head, options);
+                
+                ConsoleLog(LogLevel.Info, "Pushed changes");
+            }
+            catch (LibGit2SharpException e)
+            {
+                ConsoleLog(LogLevel.Error, "Couldn't push changes: " + e.Message);
+            }
+            
+            sw.Stop();
+            ConsoleLog(LogLevel.Info, $"Done in {sw.ElapsedMilliseconds / 1000d}s!");
         }
     }
 }
