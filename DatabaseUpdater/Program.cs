@@ -30,6 +30,7 @@ namespace DatabaseUpdater
         private static Dictionary<string, VersionFetcher> _checkers = new()
         {
             ["bonetome.com"] = new BoneTomeVersionFetcher()
+            
         };
 
         private static void Main(string[] args)

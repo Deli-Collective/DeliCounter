@@ -64,14 +64,9 @@ namespace DeliCounter.Backend
         /// </summary>
         public ModVersion Installed => Versions.TryGetValue(InstalledVersion, out ModVersion version) ? version : null;
 
-        public IEnumerable<Mod> InstalledDirectDependents
-        {
-            get
-            {
-                return ModRepository.Instance.Mods.Values.Where(x =>
-                    x.IsInstalled && x.Installed.Dependencies.ContainsKey(Guid));
-            }
-        }
+        public IEnumerable<Mod> InstalledDirectDependents =>
+            ModRepository.Instance.Mods.Values.Where(x =>
+                x.IsInstalled && x.Installed.Dependencies.ContainsKey(Guid));
 
         public IEnumerable<Mod> InstalledDependents
         {
@@ -185,6 +180,11 @@ namespace DeliCounter.Backend
         {
             return Guid.ToLower().Contains(query) ||
                    Latest.MatchesQuery(query);
+        }
+
+        public override string ToString()
+        {
+            return IsInstalled ? $"{Guid} {InstalledVersion}" : Guid;
         }
     }
 

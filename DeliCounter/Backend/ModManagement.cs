@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Range = SemVer.Range;
 using Version = SemVer.Version;
 
 namespace DeliCounter.Backend
@@ -30,7 +31,14 @@ namespace DeliCounter.Backend
                 foreach (var dependents in mod.InstalledDirectDependents)
                 {
                     if (!dependents.Installed.Dependencies[mod.Guid].IsSatisfied(versionNumber))
-                        notSatisfied.Add(dependents.Guid);
+                        notSatisfied.Add(dependents.ToString());
+                }
+
+                foreach ((string key, Range value) in mod.Versions[versionNumber].Dependencies)
+                {
+                    var dependency = ModRepository.Instance.Mods[key];
+                    if (!value.IsSatisfied(dependency.InstalledVersion))
+                        notSatisfied.Add(dependency.ToString());
                 }
 
                 if (notSatisfied.Count == 0)
@@ -41,7 +49,8 @@ namespace DeliCounter.Backend
                     });
                 else App.RunInMainThread(() =>
                 {
-                    var dialogue = new AlertDialogue("Error", "This mod cannot be updated because one or more installed mods are not compatible with the selected version:\n" + string.Join(", ", notSatisfied));
+                    string op = mod.InstalledVersion < versionNumber ? "updated" : "downgraded";
+                    var dialogue = new AlertDialogue("Error", $"This mod cannot be {op} because one or more installed mods are not compatible with the selected version:\n" + string.Join(", ", notSatisfied));
                     dialogue.ShowAsync();
                 });
             });
