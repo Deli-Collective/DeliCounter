@@ -32,6 +32,11 @@ namespace DatabaseUpdater
             Console.WriteLine($"[{level.ToString(),7}] {message}");
         }
 
+        private static readonly JsonSerializerSettings jsonSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
         private static readonly Dictionary<string, VersionFetcher> Checkers = new()
         {
             ["bonetome.com"] = new BoneTomeVersionFetcher()
@@ -82,7 +87,7 @@ namespace DatabaseUpdater
                     mod.Latest.DownloadUrl = latest.DownloadUrl;
 
                     // Write the stuff
-                    File.WriteAllText($"ModRepository/{mod.Category.Path}/{mod.Guid}/{latest.Version}.json", JsonConvert.SerializeObject(mod.Latest, Formatting.Indented));
+                    File.WriteAllText($"ModRepository/{mod.Category.Path}/{mod.Guid}/{latest.Version}.json", JsonConvert.SerializeObject(mod.Latest, Formatting.Indented, jsonSettings));
 
                     ConsoleLog(LogLevel.Info, $"{mod.Guid} was updated from {mod.LatestVersion} to {latest.Version}");
                     updated++;

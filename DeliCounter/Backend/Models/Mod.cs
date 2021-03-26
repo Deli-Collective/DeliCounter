@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
-using SemVer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Range = SemVer.Range;
+using Version = SemVer.Version;
 
 namespace DeliCounter.Backend
 {
@@ -153,6 +155,7 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] IncompatibleTags { get; set; }
 
+            [JsonIgnore]
             public IEnumerable<Mod> IncompatibleInstalledMods => Tags == null
                 ? System.Array.Empty<Mod>()
                 : ModRepository.Instance.Mods.Values
