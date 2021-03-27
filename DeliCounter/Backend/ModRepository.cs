@@ -222,12 +222,12 @@ namespace DeliCounter.Backend
                     mod.InstalledVersion = cached.Version;
                     mod.Cached = cached;
 
-                    // The version was removed or updated
+                    // The mod wasn't in the database and we need to stub it with some random info
                     if (!mod.Versions.ContainsKey(mod.InstalledVersion))
                     {
                         // Just insert an empty one to allow nothing to break
                         mod.Versions.Add(mod.InstalledVersion,
-                            new Mod.ModVersion
+                            mod.Versions.Count == 0 ? new Mod.ModVersion
                             {
                                 VersionNumber = mod.InstalledVersion,
                                 Authors = Array.Empty<string>(),
@@ -239,6 +239,18 @@ namespace DeliCounter.Backend
                                 Name = cached.Guid,
                                 ShortDescription = "This mod has been removed from the database",
                                 SourceUrl = ""
+                            } :
+                            new Mod.ModVersion
+                            {
+                                VersionNumber = mod.InstalledVersion,
+                                Authors = mod.Latest.Authors,
+                                Dependencies = mod.Latest.Dependencies,
+                                Description = mod.Latest.Description,
+                                IconUrl = mod.Latest.IconUrl,
+                                InstallationSteps = Array.Empty<string>(),
+                                Name = mod.Latest.Name,
+                                ShortDescription = mod.Latest.ShortDescription,
+                                SourceUrl = mod.Latest.SourceUrl
                             });
                     }
                 }

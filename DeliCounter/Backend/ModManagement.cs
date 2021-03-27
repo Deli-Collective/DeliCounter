@@ -26,6 +26,8 @@ namespace DeliCounter.Backend
         {
             App.RunInBackgroundThread(() =>
             {
+                List<ModOperation.ModOperation> ops = new();
+
                 // Check that the requested version won't cause any issues
                 var notSatisfied = new List<string>();
                 foreach (var dependents in mod.InstalledDirectDependents)
@@ -37,16 +39,20 @@ namespace DeliCounter.Backend
                 foreach ((string key, Range value) in mod.Versions[versionNumber].Dependencies)
                 {
                     var dependency = ModRepository.Instance.Mods[key];
+
+                    // If for some reason the user doesn't have a dependency installed, skip this because it will be installed later.
+                    if (!dependency.IsInstalled) continue;
+                        
                     if (!value.IsSatisfied(dependency.InstalledVersion))
                         notSatisfied.Add(dependency.ToString());
                 }
 
                 if (notSatisfied.Count == 0)
-                    ExecuteOperations(new ModOperation.ModOperation[]
+                    ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new ModOperation.ModOperation[]
                     {
                         new UninstallModOperation(mod),
                         new InstallModOperation(mod, versionNumber)
-                    });
+                    }));
                 else App.RunInMainThread(() =>
                 {
                     string op = mod.InstalledVersion < versionNumber ? "updated" : "downgraded";
