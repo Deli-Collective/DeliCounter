@@ -36,7 +36,6 @@ namespace DeliCounter.Backend.ModOperation
             t.Elapsed += (sender, args) =>
             {
                 _webClient.CancelAsync();
-                Message = "Download went more than 15 seconds without receiving any new data.";
             };
             ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
             _webClient.DownloadProgressChanged += (sender, args) =>
@@ -58,6 +57,14 @@ namespace DeliCounter.Backend.ModOperation
             catch (TaskCanceledException)
             {
                 // Our timeout timer was invoked and we stopped the download.
+                Message = "Download went more than 15 seconds without receiving any new data.";
+                Completed = false;
+                return;
+            }
+            catch (WebException e)
+            {
+                // The download couldn't be completed for some reason. 
+                Message = $"Could not download the file: {e.Message}";
                 Completed = false;
                 return;
             }
