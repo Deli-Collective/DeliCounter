@@ -78,7 +78,7 @@ namespace DeliCounter.Backend
             // Start the tree command and wait for it to exit
             var proc = new Process
             {
-                StartInfo = new ProcessStartInfo("cmd.exe", $"/C tree /F /A {SteamAppLocator.AppLocation}")
+                StartInfo = new ProcessStartInfo("cmd.exe", $"/C tree /F /A \"{SteamAppLocator.AppLocation}\"")
                 {
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
