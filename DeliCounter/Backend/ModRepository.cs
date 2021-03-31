@@ -57,13 +57,12 @@ namespace DeliCounter.Backend
         public void Refresh()
         {
             var updateResult = UpdateRepo();
-            var scanResult = ScanMods();
 
             // Check the results
-            if (updateResult is null && scanResult is null)
+            if (updateResult is null)
                 // Both were successful
                 Status = State.UpToDate;
-            else if (updateResult is not null && scanResult is null)
+            else if (updateResult is InvalidDataException)
                 // Update failed but local repo is still valid
                 Status = State.CantUpdate;
             else
@@ -71,10 +70,9 @@ namespace DeliCounter.Backend
                 Status = State.Error;
 
             LoadModCache();
-            Exception = updateResult ?? scanResult;
+            Exception = updateResult;
             RepositoryUpdated?.Invoke();
-            MainWindow.Instance.ModManagementDrawer.SelectedMod = null;
-            App.RunInMainThread(MainWindow.Instance.ModManagementDrawer.UpdateDisplay);
+            App.RunInMainThread(() => MainWindow.Instance.ModManagementDrawer.SetMod(null));
         }
 
         /// <summary>
@@ -108,8 +106,20 @@ namespace DeliCounter.Backend
                 // Checkout the selected branch
                 Commands.Checkout(Repo, Repo.Branches["refs/remotes/origin/" + branch]);
 
+                // If there's an error loading the database, go back commits until there isn't
+                int commitsBack = 0;
+                Exception e = ScanMods();
+                if (e != null) DiagnosticInfoCollector.WriteExceptionToDisk(e);
+                while (e != null)
+                {
+                    commitsBack++;
+                    Commit currentCommit = Repo.Head.Commits.First();
+                    Commands.Checkout(Repo, Repo.Head.Commits.First(x => currentCommit.Parents.Contains(x)));
+                    e = ScanMods();
+                }
+
                 // No error
-                return null;
+                return commitsBack == 0 ? null : new InvalidDataException($"{commitsBack} commit(s) were invalid, returning to previous commit. The errors encountered can be found in the application folder.");
             }
             catch (LibGit2SharpException e)
             {
@@ -161,7 +171,9 @@ namespace DeliCounter.Backend
                         {
                             // Deserialize and add the version to the mod
                             var version = JsonConvert.DeserializeObject<Mod.ModVersion>(File.ReadAllText(versionFile));
+                            version.Mod = mod;
                             if (version is null) continue;
+                            if (version.IconUrl == "") throw new JsonException($"[{version}] Icon url cannot be empty, must be null.");
                             if (!Settings.Default.ShowModBetas &&
                                 !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
                             mod.Versions.Add(version.VersionNumber, version);

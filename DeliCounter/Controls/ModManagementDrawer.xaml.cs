@@ -16,7 +16,7 @@ namespace DeliCounter.Controls
     /// </summary>
     public partial class ModManagementDrawer : UserControl
     {
-        public Mod SelectedMod;
+        private Mod _selectedMod;
         private Version _selectedVersion;
 
         public ModManagementDrawer()
@@ -25,17 +25,30 @@ namespace DeliCounter.Controls
             UpdateDisplay();
         }
 
+        public void SetMod(Mod mod)
+        {
+            _selectedMod = mod;
+            if (mod is not null)
+            {
+                _selectedVersion = mod.InstalledVersion ?? mod.LatestVersion;
+                ComboBoxVersion.IsEnabled = _selectedMod.Versions.Count > 1;
+                ComboBoxVersion.Visibility = Visibility.Visible;
+                ComboBoxVersion.ItemsSource = _selectedMod.Versions.Keys.OrderByDescending(x => x);
+                _selectedVersion = _selectedMod.Versions.Keys.Max();
+                ComboBoxVersion.SelectedItem = _selectedVersion;
+            }
+            UpdateDisplay();
+        }
+
         public void UpdateDisplay()
         {
-            if (SelectedMod == null)
+            if (_selectedMod == null)
             {
                 UpdateShowNone();
                 return;
             }
 
-            // Get the selected mod and latest version
-            var mod = SelectedMod;
-            var version = mod.Latest;
+            Mod.ModVersion version = _selectedMod.Versions[_selectedVersion ?? _selectedMod.LatestVersion];
 
             // Update text block visibility
             TextBlockDescriptionWrapper.Visibility = Visibility.Visible;
@@ -49,21 +62,21 @@ namespace DeliCounter.Controls
             TextBlockTitle.Text = version.Name;
             TextBlockDescription.Text = version.Description;
             TextBlockAuthors.Text = string.Join(", ", version.Authors);
-            TextBlockLatest.Text = version.VersionNumber.ToString();
-            TextBlockInstalled.Text = mod.IsInstalled ? mod.Installed?.VersionNumber?.ToString() ?? "0.0.0" : "No";
+            TextBlockLatest.Text = _selectedMod.LatestVersion.ToString();
+            TextBlockInstalled.Text = _selectedMod.IsInstalled ? _selectedMod.Installed?.VersionNumber?.ToString() ?? "0.0.0" : "No";
             TextBlockDependencies.Text = string.Join(", ", version.Dependencies.Select(x => x.Key + " " + x.Value));
             TextBlockSource.Text = version.SourceUrl;
             HyperlinkSource.NavigateUri = !string.IsNullOrEmpty(version.SourceUrl) ? new Uri(version.SourceUrl, UriKind.Absolute) : null;
 
             // Update the action button visibility
-            if (mod.IsInstalled)
+            if (_selectedMod.IsInstalled)
             {
                 ButtonInstall.IsEnabled = false;
                 ButtonInstall.Visibility = Visibility.Collapsed;
                 ButtonUninstall.IsEnabled = true;
                 ButtonUninstall.Visibility = Visibility.Visible;
-                ButtonUpdate.IsEnabled = !mod.UpToDate;
-                ButtonUpdate.Visibility = mod.UpToDate ? Visibility.Collapsed : Visibility.Visible;
+                ButtonUpdate.IsEnabled = !_selectedMod.UpToDate;
+                ButtonUpdate.Visibility = _selectedMod.UpToDate ? Visibility.Collapsed : Visibility.Visible;
             }
             else
             {
@@ -74,14 +87,6 @@ namespace DeliCounter.Controls
                 ButtonUpdate.IsEnabled = false;
                 ButtonUpdate.Visibility = Visibility.Collapsed;
             }
-
-            // Combobox
-            ComboBoxVersion.IsEnabled = mod.Versions.Count > 1;
-            ComboBoxVersion.Visibility = Visibility.Visible;
-            ComboBoxVersion.ItemsSource = mod.Versions.Keys.OrderByDescending(x => x);
-            _selectedVersion = mod.Versions.Keys.Max();
-            ComboBoxVersion.SelectedItem = _selectedVersion;
-
 
             // Mod Preview Image
             if (string.IsNullOrEmpty(version.PreviewImageUrl))
@@ -138,12 +143,12 @@ namespace DeliCounter.Controls
 
         private void ButtonInstall_Click(object sender, RoutedEventArgs e)
         {
-            ModManagement.InstallMod(SelectedMod, _selectedVersion);
+            ModManagement.InstallMod(_selectedMod, _selectedVersion);
         }
 
         private async void ButtonUninstall_Click(object sender, RoutedEventArgs e)
         {
-            var mod = SelectedMod;
+            var mod = _selectedMod;
 
             var dependentCount = mod.InstalledDependents.Count();
             if (dependentCount > 0)
@@ -165,18 +170,18 @@ namespace DeliCounter.Controls
 
         private void ButtonUpdate_OnClick(object sender, RoutedEventArgs e)
         {
-            ModManagement.UpdateMod(SelectedMod, _selectedVersion);
+            ModManagement.UpdateMod(_selectedMod, _selectedVersion);
         }
 
         private void ComboBoxVersion_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             _selectedVersion = (Version)ComboBoxVersion.SelectedItem;
-            UpdateUpdateButton();
+            UpdateDisplay();
         }
 
         private void UpdateUpdateButton()
         {
-            var mod = SelectedMod;
+            var mod = _selectedMod;
             if (!mod.IsInstalled) return;
 
             // Set the update button text to either update or downgrade depending on the selected version

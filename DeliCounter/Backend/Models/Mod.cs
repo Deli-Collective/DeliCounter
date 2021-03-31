@@ -90,6 +90,9 @@ namespace DeliCounter.Backend
         /// </summary>
         public class ModVersion
         {
+            [JsonIgnore]
+            public Mod Mod { get; set; }
+
             /// <summary>
             ///     Semantic Version number of this version of the mod
             /// </summary>
@@ -176,6 +179,11 @@ namespace DeliCounter.Backend
                        Description.ToLower().Contains(query) ||
                        ShortDescription.ToLower().Contains(query) ||
                        Authors.Any(x => x.ToLower().Contains(query));
+            }
+
+            public override string ToString()
+            {
+                return $"{Mod.Guid} {VersionNumber}";
             }
         }
 
