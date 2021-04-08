@@ -16,8 +16,10 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+    - name: Restore dependencies
+      run: dotnet restore --no-cache
     - name: Build
-      run: dotnet build
+      run: dotnet build --no-restore
     - name: Update
       run: dotnet run --project DatabaseUpdater "$env:GH_PAT"
       env:
