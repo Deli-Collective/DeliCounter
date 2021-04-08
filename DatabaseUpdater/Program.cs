@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
+using Windows.System.Threading;
 using Credentials = Octokit.Credentials;
 using Signature = LibGit2Sharp.Signature;
 
@@ -18,6 +20,13 @@ namespace DatabaseUpdater
             Info,
             Warning,
             Error
+        }
+
+        private enum ModUpdateStatus
+        {
+            UpToDate,
+            Updated,
+            Error,
         }
 
         private static void ConsoleLog(LogLevel level, string message)
@@ -44,6 +53,10 @@ namespace DatabaseUpdater
         };
 
         private static readonly GitHubClient GitHubClient = new(new ProductHeaderValue("DeliCounter-Updater"));
+
+        private static Queue<Mod> QueuedMods;
+        private static int _alreadyUpToDate = 0, _updated = 0, _error = 0;
+        private static ModRepository _repo;
         
         private static void Main(string[] args)
         {
@@ -52,82 +65,107 @@ namespace DatabaseUpdater
             if (args.Length > 0) GitHubClient.Credentials = new Credentials(args[0]);
             Checkers["github.com"] = new GitHubVersionFetcher(GitHubClient);
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {Converters = new List<JsonConverter> {new SemRangeConverter(), new SemVersionConverter()}};
-            ModRepository repo = new("https://github.com/Deli-Collective/DeliCounter.Database/tree/main");
+            _repo = new ModRepository("https://github.com/Deli-Collective/DeliCounter.Database/tree/main");
 
-            int alreadyUpToDate = 0, updated = 0, error = 0;
+            QueuedMods = new Queue<Mod>(_repo.Mods.Values);
 
-            foreach (Mod mod in repo.Mods.Values)
+            // Make our threads and start them
+            Thread[] threads = new Thread[8];
+            for (int i = 0; i < threads.Length; i++)
             {
-                string sourceWebsite = mod.Latest.SourceUrl.Split("/")[2];
-                if (!Checkers.TryGetValue(sourceWebsite, out VersionFetcher checker))
-                {
-                    ConsoleLog(LogLevel.Error, $"{mod.Guid}: No version fetcher for {sourceWebsite}");
-                    continue;
-                }
-
-                try
-                {
-                    FetchedVersion latest = checker.GetLatestVersion(mod.Latest).GetAwaiter().GetResult();
-
-                    if (mod.LatestVersion >= latest.Version)
-                    {
-                        ConsoleLog(LogLevel.Info, $"{mod.Guid} is up to date");
-                        alreadyUpToDate++;
-                        continue;
-                    }
-
-                    // If this isn't a versioned mod or we're only bumping the patch version, don't keep the old one around
-                    if (!checker.Versioned || (mod.LatestVersion.Major == latest.Version.Major && mod.LatestVersion.Minor == latest.Version.Minor))
-                    {
-                        File.Delete($"ModRepository/{mod.Category.Path}/{mod.Guid}/{mod.LatestVersion}.json");
-                    }
-
-                    // Update the mod file
-                    mod.Latest.VersionNumber = latest.Version;
-                    mod.Latest.DownloadUrl = latest.DownloadUrl;
-
-                    // Write the stuff
-                    File.WriteAllText($"ModRepository/{mod.Category.Path}/{mod.Guid}/{latest.Version}.json", JsonConvert.SerializeObject(mod.Latest, Formatting.Indented, jsonSettings));
-
-                    ConsoleLog(LogLevel.Info, $"{mod.Guid} was updated from {mod.LatestVersion} to {latest.Version}");
-                    updated++;
-                }
-                catch (Exception e)
-                {
-                    ConsoleLog(LogLevel.Error, $"Error checking latest version for {mod.Guid}: {e.Message}");
-                    error++;
-                }
+                threads[i] = new Thread(ThreadKernel);
+                threads[i].Start();
             }
             
-            ConsoleLog(LogLevel.Info, $"Done fetching versions: {updated} updated, {error} errors, {alreadyUpToDate} already up to date.");
+            // Let them each finish
+            foreach (Thread t in threads) t.Join();
 
-            if (updated > 0)
-            {
-                try
-                {
-                    Commands.Stage(repo.Repo, "**/*");
-                    User user = GitHubClient.User.Current().GetAwaiter().GetResult();
-                    Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
-                    repo.Repo.Commit($"Updated {updated} mods in database", sig, sig);
-
-
-                    PushOptions options = new()
-                    {
-                        CredentialsProvider = (_, _, _) =>
-                            new UsernamePasswordCredentials {Username = user.Login, Password = args[0]}
-                    };
-                    repo.Repo.Network.Push(repo.Repo.Head, options);
-                
-                    ConsoleLog(LogLevel.Info, "Pushed changes");
-                }
-                catch (LibGit2SharpException e)
-                {
-                    ConsoleLog(LogLevel.Error, "Couldn't push changes: " + e.Message);
-                }
-            }
+            ConsoleLog(LogLevel.Info, $"Done fetching versions: {_updated} updated, {_error} errors, {_alreadyUpToDate} already up to date.");
+            
+            if (_updated > 0) GitCommit(args[0]);
 
             sw.Stop();
             ConsoleLog(LogLevel.Info, $"Done in {sw.ElapsedMilliseconds / 1000d}s!");
+        }
+
+        private static void ThreadKernel()
+        {
+            while (true)
+            {
+                Mod mod;
+                lock (QueuedMods) mod = QueuedMods.Count > 0 ? QueuedMods.Dequeue() : null;
+                if (mod is null) return;
+                UpdateMod(mod);
+            }
+        }
+        
+        private static void UpdateMod(Mod mod)
+        {
+            string sourceWebsite = mod.Latest.SourceUrl.Split("/")[2];
+            if (!Checkers.TryGetValue(sourceWebsite, out VersionFetcher checker))
+            {
+                ConsoleLog(LogLevel.Error, $"{mod.Guid}: No version fetcher for {sourceWebsite}");
+                _error++;
+                return;
+            }
+
+            try
+            {
+                FetchedVersion latest = checker.GetLatestVersion(mod.Latest).GetAwaiter().GetResult();
+
+                if (mod.LatestVersion >= latest.Version)
+                {
+                    ConsoleLog(LogLevel.Info, $"{mod.Guid} is up to date");
+                    _alreadyUpToDate++;
+                    return;
+                }
+
+                // If this isn't a versioned mod or we're only bumping the patch version, don't keep the old one around
+                if (!checker.Versioned || (mod.LatestVersion.Major == latest.Version.Major && mod.LatestVersion.Minor == latest.Version.Minor))
+                {
+                    File.Delete($"ModRepository/{mod.Category.Path}/{mod.Guid}/{mod.LatestVersion}.json");
+                }
+
+                // Update the mod file
+                mod.Latest.VersionNumber = latest.Version;
+                mod.Latest.DownloadUrl = latest.DownloadUrl;
+
+                // Write the stuff
+                File.WriteAllText($"ModRepository/{mod.Category.Path}/{mod.Guid}/{latest.Version}.json", JsonConvert.SerializeObject(mod.Latest, Formatting.Indented, jsonSettings));
+
+                ConsoleLog(LogLevel.Info, $"{mod.Guid} was updated from {mod.LatestVersion} to {latest.Version}");
+                _updated++;
+            }
+            catch (Exception e)
+            {
+                ConsoleLog(LogLevel.Error, $"Error checking latest version for {mod.Guid}: {e.Message}");
+                _error++;
+            }
+        }
+
+        private static void GitCommit(string token)
+        {
+            try
+            {
+                Commands.Stage(_repo.Repo, "**/*");
+                User user = GitHubClient.User.Current().GetAwaiter().GetResult();
+                Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
+                _repo.Repo.Commit($"Updated {_updated} mods in database", sig, sig);
+
+
+                PushOptions options = new()
+                {
+                    CredentialsProvider = (_, _, _) =>
+                        new UsernamePasswordCredentials {Username = user.Login, Password = token}
+                };
+                _repo.Repo.Network.Push(_repo.Repo.Head, options);
+                
+                ConsoleLog(LogLevel.Info, "Pushed changes");
+            }
+            catch (LibGit2SharpException e)
+            {
+                ConsoleLog(LogLevel.Error, "Couldn't push changes: " + e.Message);
+            }
         }
     }
 }
