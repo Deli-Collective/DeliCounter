@@ -3,6 +3,7 @@ using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
 using Newtonsoft.Json;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -19,6 +20,9 @@ namespace DeliCounter
             {
                 Converters = new List<JsonConverter>() { new SemRangeConverter(), new SemVersionConverter() }
             };
+
+            // Init Sentry
+            SentrySdk.Init("https://bcfd3132000f420986e6c816e9d8a621@o567748.ingest.sentry.io/5712026");
 
             ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");

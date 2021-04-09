@@ -3,6 +3,7 @@ using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
 using Newtonsoft.Json;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -109,7 +110,11 @@ namespace DeliCounter.Backend
                 // If there's an error loading the database, go back commits until there isn't
                 int commitsBack = 0;
                 Exception e = ScanMods();
-                if (e != null) DiagnosticInfoCollector.WriteExceptionToDisk(e);
+                if (e != null)
+                {
+                    SentrySdk.CaptureException(e);
+                    DiagnosticInfoCollector.WriteExceptionToDisk(e);
+                }
                 while (e != null)
                 {
                     commitsBack++;
@@ -277,6 +282,7 @@ namespace DeliCounter.Backend
                         .ShowAsync();
                 });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
+                SentrySdk.CaptureException(e);
             }
         }
 

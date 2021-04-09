@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Controls;
 using Microsoft.VisualBasic.FileIO;
+using Sentry;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -118,7 +119,9 @@ namespace DeliCounter.Backend
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            WriteExceptionToDisk((Exception)e.ExceptionObject);
+            Exception ex = (Exception) e.ExceptionObject;
+            WriteExceptionToDisk(ex);
+            SentrySdk.CaptureException(ex);
 
             if (e.IsTerminating)
                 MessageBox.Show("Something went wrong and the application needs to exit. An exception file has been saved to the application folder, please send it to the developers.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);

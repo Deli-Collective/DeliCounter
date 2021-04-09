@@ -1,6 +1,7 @@
 ﻿using DeliCounter.Backend.ModOperation;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -148,6 +149,7 @@ namespace DeliCounter.Backend
                 catch (Exception e)
                 {
                     error = true;
+                    SentrySdk.CaptureException(e);
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                     break;
                 }
