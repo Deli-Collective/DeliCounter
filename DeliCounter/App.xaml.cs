@@ -30,8 +30,6 @@ namespace DeliCounter
             ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
-
-            throw new Exception("Test!");
         }
 
         public SteamAppLocator SteamAppLocator { get; }
