@@ -12,6 +12,8 @@ namespace DeliCounter.Backend.ModOperation
 
         internal override async Task Run()
         {
+            await base.Run();
+
             var cached = Mod.Cached;
 
             await Task.Run(() =>

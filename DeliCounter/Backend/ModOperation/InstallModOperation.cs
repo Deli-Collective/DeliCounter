@@ -28,6 +28,8 @@ namespace DeliCounter.Backend.ModOperation
 
         internal override async Task Run()
         {
+            await base.Run();
+
             // Make sure we have the game directory
             var gameDir = Settings.Default.GameLocationOrError;
             if (gameDir is null) return;

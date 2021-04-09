@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sentry;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Version = SemVer.Version;
@@ -24,6 +25,16 @@ namespace DeliCounter.Backend.ModOperation
             VersionNumber = versionNumber;
         }
 
-        internal abstract Task Run();
+        internal virtual async Task Run()
+        {
+            SentrySdk.ConfigureScope(scope =>
+            {
+                scope.Contexts["mod"] = new
+                {
+                    Guid = Mod.Guid,
+                    Version = VersionNumber.ToString()
+                };
+            });
+        }
     }
 }
