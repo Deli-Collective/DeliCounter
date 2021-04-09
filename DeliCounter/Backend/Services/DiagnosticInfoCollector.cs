@@ -7,6 +7,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 
 namespace DeliCounter.Backend
@@ -22,11 +23,11 @@ namespace DeliCounter.Backend
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         }
 
-        public void CollectAll()
+        public string CollectAll()
         {
             // Create the new zip archive
-            var archiveFileName = $"DeliCounterDiagnostics_{DateTime.Now:yy-MM-dd_hh-mm-ss}.zip";
-            using var fileStream = new FileStream(Path.Combine(SpecialDirectories.Desktop, archiveFileName), FileMode.Create);
+            var archiveFileName = Path.Combine(SpecialDirectories.Desktop, $"DeliCounterDiagnostics_{DateTime.Now:yy-MM-dd_hh-mm-ss}.zip");
+            using var fileStream = new FileStream(archiveFileName, FileMode.Create);
             using var zip = new ZipArchive(fileStream, ZipArchiveMode.Create);
 
             // Local method to reduce code repetition
@@ -49,19 +50,23 @@ namespace DeliCounter.Backend
                 WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
 
             // If we don't know where the game is that's fine just skip the rest
-            if (string.IsNullOrEmpty(SteamAppLocator.AppLocation)) return;
+            if (!string.IsNullOrEmpty(SteamAppLocator.AppLocation))
+            {
 
-            // Do a tree and write the installed mods file into the archive
-            WriteToArchiveFile("tree.txt", GenerateTree());
-            WriteToArchiveFile("installed_mods.json", File.ReadAllText(Path.Combine(SteamAppLocator.AppLocation, Constants.InstalledModsCache)));
+                // Do a tree and write the installed mods file into the archive
+                WriteToArchiveFile("tree.txt", GenerateTree());
+                WriteToArchiveFile("installed_mods.json", File.ReadAllText(Path.Combine(SteamAppLocator.AppLocation, Constants.InstalledModsCache)));
 
-            // If the BepInEx log file exists, include that too
-            var logPath = Path.Combine(SteamAppLocator.AppLocation, "BepInEx", "LogOutput.log");
-            if (File.Exists(logPath)) WriteToArchiveFile("LogOutput.log", File.ReadAllText(logPath));
+                // If the BepInEx log file exists, include that too
+                var logPath = Path.Combine(SteamAppLocator.AppLocation, "BepInEx", "LogOutput.log");
+                if (File.Exists(logPath)) WriteToArchiveFile("LogOutput.log", File.ReadAllText(logPath));
 
-            // Collect any BepInEx preloader errors
-            foreach (var file in Directory.EnumerateFiles(SteamAppLocator.AppLocation, "preloader_*.log"))
-                WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
+                // Collect any BepInEx preloader errors
+                foreach (var file in Directory.EnumerateFiles(SteamAppLocator.AppLocation, "preloader_*.log"))
+                    WriteToArchiveFile(Path.GetFileName(file), File.ReadAllText(file));
+            }
+
+            return archiveFileName;
         }
 
         /// <summary>
@@ -100,7 +105,7 @@ namespace DeliCounter.Backend
                     skip = true;
                     sb.AppendLine(line + " (TRUNCATED)");
                 }
-                else if (skip && line.Trim() == "|")
+                else if (skip && line.TrimEnd() == "|")
                 {
                     skip = false;
                 }
@@ -121,10 +126,24 @@ namespace DeliCounter.Backend
         {
             Exception ex = (Exception) e.ExceptionObject;
             WriteExceptionToDisk(ex);
-            SentrySdk.CaptureException(ex);
 
             if (e.IsTerminating)
-                MessageBox.Show("Something went wrong and the application needs to exit. An exception file has been saved to the application folder, please send it to the developers.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+            {
+                string filename = CollectAll();
+
+                App.Current.SentryDisposable.Dispose();
+                using (SentrySdk.Init("https://bcfd3132000f420986e6c816e9d8a621@o567748.ingest.sentry.io/5712026"))
+                {
+                    SentrySdk.WithScope(scope => {
+                        scope.SetExtra("Test", "Test");
+                        scope.AddAttachment(filename);
+                        SentrySdk.CaptureException(ex);
+                    });
+                }
+
+                MessageBox.Show("Something went wrong and the application needs to exit. Information about this error (installed mods, error details) were sent to the developer", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                SentrySdk.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
+            }
         }
     }
 }
