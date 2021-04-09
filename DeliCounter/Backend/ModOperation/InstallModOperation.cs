@@ -65,7 +65,6 @@ namespace DeliCounter.Backend.ModOperation
             catch (WebException e)
             {
                 // The download couldn't be completed for some reason.
-                SentrySdk.CaptureException(e);
                 Message = $"Could not download the file: {e.Message}";
                 Completed = false;
                 return;

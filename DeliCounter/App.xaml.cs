@@ -2,11 +2,13 @@
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
+using ModernWpf.Controls;
 using Newtonsoft.Json;
 using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -55,8 +57,23 @@ namespace DeliCounter
             if (Settings.Default.FirstRun)
             {
                 var dialogue = new AlertDialogue("Disclaimer", "You are about to mod your game. By continuing, you acknowledge that you may encounter issues and that these issues are NOT to be reported to the developer of the game. Please instead report all issues to the mod authors who can be contacted via their mod's source URL or in the main H3 Discord.");
-                dialogue.ShowAsync();
+                App.Current.QueueDialog(dialogue);
                 Settings.Default.FirstRun = false;
+            }
+        }
+
+        private Queue<ContentDialog> _contentDialogQueue = new();
+
+        public async void QueueDialog(ContentDialog dialog)
+        {
+            _contentDialogQueue.Enqueue(dialog);
+            if (_contentDialogQueue.Count == 1)
+            {
+                while (_contentDialogQueue.Count > 0)
+                {
+                    await _contentDialogQueue.Peek().ShowAsync();
+                    _contentDialogQueue.Dequeue();
+                }
             }
         }
     }

@@ -33,7 +33,7 @@ namespace DeliCounter.Pages
                 _settings.AutoDetectGameLocation = false;
                 var dialogue = new AlertDialogue("Couldn't detect game folder",
                     "Hey! It seems we couldn't auto-detect your game folder. Please set it manually!");
-                dialogue.ShowAsync();
+                App.Current.QueueDialog(dialogue);
             }
         }
 

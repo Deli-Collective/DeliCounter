@@ -1,4 +1,4 @@
-﻿using DeliCounter.Backend.Models;
+using DeliCounter.Backend.Models;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
@@ -194,6 +194,8 @@ namespace DeliCounter.Backend
             }
             catch (Exception e)
             {
+                Mods = new Dictionary<string, Mod>();
+                Categories = Array.Empty<ModCategory>();
                 return e;
             }
         }
@@ -277,9 +279,10 @@ namespace DeliCounter.Backend
             {
                 App.RunInMainThread(() =>
                 {
+                    App.Current.QueueDialog(
                     new AlertDialogue("Error",
                             "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.")
-                        .ShowAsync();
+                        );
                 });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
                 SentrySdk.CaptureException(e);
