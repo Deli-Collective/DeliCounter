@@ -18,9 +18,24 @@ namespace DeliCounter.Backend
             App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new[] { new InstallModOperation(mod, versionNumber) })); });
         }
 
-        internal static void UninstallMod(Mod mod)
+        internal static void InstallMods(IEnumerable<Mod> mods)
         {
-            App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateUninstallDependencies(mod).Concat(new[] { new UninstallModOperation(mod) })); });
+            App.RunInBackgroundThread(() => {
+                IEnumerable<ModOperation.ModOperation> enumerable = Array.Empty<ModOperation.ModOperation>();
+                foreach (Mod mod in mods)
+                    enumerable = enumerable.Concat(EnumerateInstallDependencies(mod, mod.LatestVersion).Concat(new[] { new InstallModOperation(mod, mod.LatestVersion) }));
+                ExecuteOperations(enumerable);
+            });
+        }
+
+        internal static void UninstallMods(IEnumerable<Mod> mods)
+        {
+            App.RunInBackgroundThread(() => {
+                IEnumerable <ModOperation.ModOperation> enumerable = Array.Empty<ModOperation.ModOperation>();
+                foreach (Mod mod in mods)
+                    enumerable = enumerable.Concat(EnumerateUninstallDependencies(mod).Concat(new[] { new UninstallModOperation(mod) }));
+                ExecuteOperations(enumerable);
+            });
         }
 
         internal static void UpdateMod(Mod mod, Version versionNumber)
@@ -61,6 +76,11 @@ namespace DeliCounter.Backend
                     dialogue.ShowAsync();
                 });
             });
+        }
+
+        internal static void UpdateMods(IEnumerable<Mod> mods)
+        {
+            foreach (Mod mod in mods) UpdateMod(mod, mod.LatestVersion);
         }
 
         internal static void DefaultAction(Mod mod)

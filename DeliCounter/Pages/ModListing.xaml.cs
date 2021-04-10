@@ -32,7 +32,9 @@ namespace DeliCounter.Pages
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var drawer = MainWindow.Instance.ModManagementDrawer;
-            drawer.SetMod(((ModListItem)ModList.SelectedItem)?.Mod);
+            drawer.AddSelected(e.AddedItems);
+            drawer.RemoveSelected(e.RemovedItems);
+            drawer.SelectedUpdated();
         }
 
         private void ModItem_DoubleClick(object sender, MouseButtonEventArgs e)

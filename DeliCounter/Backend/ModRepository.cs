@@ -73,7 +73,7 @@ namespace DeliCounter.Backend
             LoadModCache();
             Exception = updateResult;
             RepositoryUpdated?.Invoke();
-            App.RunInMainThread(() => MainWindow.Instance.ModManagementDrawer.SetMod(null));
+            App.RunInMainThread(MainWindow.Instance.ModManagementDrawer.ClearSelected);
         }
 
         /// <summary>
