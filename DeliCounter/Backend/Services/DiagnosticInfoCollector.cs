@@ -7,7 +7,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Reflection;
 using System.Text;
-using System.Threading;
 using System.Windows;
 
 namespace DeliCounter.Backend
@@ -21,6 +20,19 @@ namespace DeliCounter.Backend
             SteamAppLocator = appLocator;
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+        }
+
+        private IDisposable _sentry;
+
+        public IDisposable InitSentry()
+        {
+            _sentry = SentrySdk.Init(o =>
+            {
+                o.Dsn = "https://bcfd3132000f420986e6c816e9d8a621@o567748.ingest.sentry.io/5712026";
+                o.Release = $"deli-counter@{Version.Parse($"{ThisAssembly.Git.SemVer.Major}.{ThisAssembly.Git.SemVer.Minor}.{ThisAssembly.Git.SemVer.Patch}")}";
+                o.ShutdownTimeout = TimeSpan.FromSeconds(5);
+            });
+            return _sentry;
         }
 
         public string CollectAll()
@@ -131,8 +143,8 @@ namespace DeliCounter.Backend
             {
                 string filename = CollectAll();
 
-                App.Current.SentryDisposable.Dispose();
-                using (SentrySdk.Init("https://bcfd3132000f420986e6c816e9d8a621@o567748.ingest.sentry.io/5712026"))
+                _sentry.Dispose();
+                using (InitSentry())
                 {
                     SentrySdk.WithScope(scope => {
                         scope.SetExtra("Test", "Test");

@@ -23,15 +23,11 @@ namespace DeliCounter
                 Converters = new List<JsonConverter>() { new SemRangeConverter(), new SemVersionConverter() }
             };
 
-            // Init Sentry
-            SentryDisposable = SentrySdk.Init(o => {
-                o.Dsn = "https://bcfd3132000f420986e6c816e9d8a621@o567748.ingest.sentry.io/5712026";
-                o.ShutdownTimeout = TimeSpan.FromSeconds(5);
-            });
-
             ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
+
+            DiagnosticInfoCollector.InitSentry();
         }
 
         public SteamAppLocator SteamAppLocator { get; }
