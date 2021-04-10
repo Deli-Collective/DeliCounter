@@ -73,7 +73,7 @@ namespace DeliCounter.Backend
                 {
                     string op = mod.InstalledVersion < versionNumber ? "updated" : "downgraded";
                     var dialogue = new AlertDialogue("Error", $"This mod cannot be {op} because one or more installed mods are not compatible with the selected version:\n" + string.Join(", ", notSatisfied));
-                    dialogue.ShowAsync();
+                    App.Current.QueueDialog(dialogue);
                 });
             });
         }
@@ -145,7 +145,7 @@ namespace DeliCounter.Backend
             App.RunInMainThread(() =>
             {
                 progressDialogue = new ProgressDialogue { Title = "Executing operations" };
-                progressDialogue.ShowAsync();
+                App.Current.QueueDialog(progressDialogue);
             });
             for (var i = 0; i < ops.Length; i++)
             {

@@ -147,7 +147,6 @@ namespace DeliCounter.Backend
                 using (InitSentry())
                 {
                     SentrySdk.WithScope(scope => {
-                        scope.SetExtra("Test", "Test");
                         scope.AddAttachment(filename);
                         SentrySdk.CaptureException(ex);
                     });

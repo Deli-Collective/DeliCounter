@@ -115,6 +115,7 @@ namespace DeliCounter.Backend
                     SentrySdk.CaptureException(e);
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                 }
+
                 while (e != null)
                 {
                     commitsBack++;
@@ -137,11 +138,14 @@ namespace DeliCounter.Backend
         /// </summary>
         private Exception ScanMods()
         {
-            Mods.Clear();
-
+            Categories ??= Array.Empty<ModCategory>();
+            if (Mods is null) Mods = new Dictionary<string, Mod>();
+            else Mods.Clear();
+            
             // Fetch a list of all the categories in the repo
-            var categoriesPath = Path.Combine(RepoPath, "categories.json");
-            if (!File.Exists(categoriesPath)) return new FileNotFoundException("Categories file can not be found!");
+            string categoriesPath = Path.Combine(RepoPath, "categories.json");
+            if (!File.Exists(categoriesPath))
+                return new FileNotFoundException("Categories file can not be found!");
 
             try
             {
@@ -149,13 +153,9 @@ namespace DeliCounter.Backend
                     JsonConvert.DeserializeObject<ApplicationData>(
                         File.ReadAllText(Path.Combine(RepoPath, "application_data.json")));
 
-                var categories = JsonConvert.DeserializeObject<ModCategory[]>(File.ReadAllText(categoriesPath));
+                ModCategory[] categories = JsonConvert.DeserializeObject<ModCategory[]>(File.ReadAllText(categoriesPath));
                 if (categories is null)
-                {
-                    Categories = Array.Empty<ModCategory>();
-                    Mods = new Dictionary<string, Mod>();
                     return new JsonException("Categories file is invalid!");
-                }
 
                 Categories = categories;
 
@@ -246,31 +246,32 @@ namespace DeliCounter.Backend
                     {
                         // Just insert an empty one to allow nothing to break
                         mod.Versions.Add(mod.InstalledVersion,
-                            mod.Versions.Count == 0 ? new Mod.ModVersion
-                            {
-                                VersionNumber = mod.InstalledVersion,
-                                Authors = Array.Empty<string>(),
-                                Dependencies = new Dictionary<string, Range>(),
-                                Description = "This mod has been removed from the database",
-                                DownloadUrl = null,
-                                IconUrl = null,
-                                InstallationSteps = Array.Empty<string>(),
-                                Name = cached.Guid,
-                                ShortDescription = "This mod has been removed from the database",
-                                SourceUrl = ""
-                            } :
-                            new Mod.ModVersion
-                            {
-                                VersionNumber = mod.InstalledVersion,
-                                Authors = mod.Latest.Authors,
-                                Dependencies = mod.Latest.Dependencies,
-                                Description = mod.Latest.Description,
-                                IconUrl = mod.Latest.IconUrl,
-                                InstallationSteps = Array.Empty<string>(),
-                                Name = mod.Latest.Name,
-                                ShortDescription = mod.Latest.ShortDescription,
-                                SourceUrl = mod.Latest.SourceUrl
-                            });
+                            mod.Versions.Count == 0
+                                ? new Mod.ModVersion
+                                {
+                                    VersionNumber = mod.InstalledVersion,
+                                    Authors = Array.Empty<string>(),
+                                    Dependencies = new Dictionary<string, Range>(),
+                                    Description = "This mod has been removed from the database",
+                                    DownloadUrl = null,
+                                    IconUrl = null,
+                                    InstallationSteps = Array.Empty<string>(),
+                                    Name = cached.Guid,
+                                    ShortDescription = "This mod has been removed from the database",
+                                    SourceUrl = ""
+                                }
+                                : new Mod.ModVersion
+                                {
+                                    VersionNumber = mod.InstalledVersion,
+                                    Authors = mod.Latest.Authors,
+                                    Dependencies = mod.Latest.Dependencies,
+                                    Description = mod.Latest.Description,
+                                    IconUrl = mod.Latest.IconUrl,
+                                    InstallationSteps = Array.Empty<string>(),
+                                    Name = mod.Latest.Name,
+                                    ShortDescription = mod.Latest.ShortDescription,
+                                    SourceUrl = mod.Latest.SourceUrl
+                                });
                     }
                 }
             }
@@ -280,9 +281,9 @@ namespace DeliCounter.Backend
                 App.RunInMainThread(() =>
                 {
                     App.Current.QueueDialog(
-                    new AlertDialogue("Error",
+                        new AlertDialogue("Error",
                             "Your installed mods file appears to be invalid and can not be loaded. This will probably need to be resolved manually.")
-                        );
+                    );
                 });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
                 SentrySdk.CaptureException(e);

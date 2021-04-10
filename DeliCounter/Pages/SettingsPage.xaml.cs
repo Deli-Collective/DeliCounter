@@ -46,7 +46,7 @@ namespace DeliCounter.Pages
         private void GenerateDiagnosticFile(object sender, RoutedEventArgs e)
         {
             App.Current.DiagnosticInfoCollector.CollectAll();
-            new AlertDialogue("Complete", "The diagnostic file has been saved to the desktop!").ShowAsync();
+            App.Current.QueueDialog(new AlertDialogue("Complete", "The diagnostic file has been saved to the desktop!"));
         }
 
         private void ShowModBetas_OnChecked(object sender, RoutedEventArgs e)

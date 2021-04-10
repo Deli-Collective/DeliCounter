@@ -159,13 +159,14 @@ namespace DeliCounter.Backend
             public string[] IncompatibleTags { get; set; }
 
             [JsonIgnore]
-            public IEnumerable<Mod> IncompatibleInstalledMods => Tags == null
-                ? System.Array.Empty<Mod>()
+            public IEnumerable<Mod> IncompatibleInstalledMods => IncompatibleTags == null
+                ? Array.Empty<Mod>()
                 : ModRepository.Instance.Mods.Values
                     .Where(x => x.IsInstalled && x.Installed != this)
                     .Where(x =>
+                        IncompatibleTags.Contains(x.Guid) || (
                         x.Installed.Tags != null &&
-                        Tags.Any(tag => x.Installed.Tags.Contains(tag)));
+                        IncompatibleTags.Any(tag => x.Installed.Tags.Contains(tag))));
 
             /// <summary>
             ///     Checks if the version number has a pre release tag

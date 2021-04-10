@@ -26,9 +26,8 @@ namespace DeliCounter.Properties
                 {
                     var mainWindow = (MainWindow)((App)Application.Current).MainWindow;
                     if (mainWindow.CurrentPage != "settings")
-                        App.RunInMainThread(() =>
-                            new AlertDialogue("Game location missing",
-                                "Your game location is not set! Please set it in the settings menu.").ShowAsync());
+                        App.Current.QueueDialog(new AlertDialogue("Game location missing",
+                            "Your game location is not set! Please set it in the settings menu."));
                 });
                 return null;
             }
