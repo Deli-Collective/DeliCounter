@@ -1,4 +1,4 @@
-﻿using Sentry;
+using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace DeliCounter.Backend.ModOperation
             VersionNumber = versionNumber;
         }
 
-        internal virtual async Task Run()
+        internal virtual Task Run()
         {
             SentrySdk.ConfigureScope(scope =>
             {
@@ -35,6 +35,7 @@ namespace DeliCounter.Backend.ModOperation
                     Version = VersionNumber.ToString()
                 };
             });
+            return Task.CompletedTask;
         }
     }
 }

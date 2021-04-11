@@ -1,4 +1,5 @@
 ﻿using DeliCounter.Controls;
+using DeliCounter.Properties;
 using Microsoft.VisualBasic.FileIO;
 using Sentry;
 using System;
@@ -53,6 +54,7 @@ namespace DeliCounter.Backend
             var diagnosticText = "== Diagnostic Info ==\n" +
                                  $"Generated at: {DateTime.Now}\n" +
                                  $"Game Directory: {SteamAppLocator.AppLocation}\n" +
+                                 $"Mod Repository: {Settings.Default.GitRepository}\n" +
                                  "\n== DeliCounter Git Info ==\n" + ApplicationGitInfo.Text;
             WriteToArchiveFile("DeliCounterVersion.txt", diagnosticText);
 
