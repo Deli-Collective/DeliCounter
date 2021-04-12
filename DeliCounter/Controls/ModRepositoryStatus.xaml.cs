@@ -28,12 +28,14 @@ namespace DeliCounter.Controls
                         StatusIcon.Foreground = new SolidColorBrush(Colors.Red);
                         LastUpdateText.Text = ModRepository.Instance.Exception.Message;
                         StatusText.Text = "Error";
+                        ButtonReset.IsEnabled = true;
                         break;
                     case ModRepository.State.CantUpdate:
                         StatusIcon.Text = "\uF13C";
                         StatusIcon.Foreground = new SolidColorBrush(Colors.Orange);
                         LastUpdateText.Text = ModRepository.Instance.Exception.Message;
                         StatusText.Text = "Offline";
+                        ButtonReset.IsEnabled = true;
                         break;
                     case ModRepository.State.UpToDate:
                         StatusIcon.Text = SegoeGlyphs.Checkmark;
@@ -41,6 +43,7 @@ namespace DeliCounter.Controls
                         LastUpdateText.Text =
                             $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When}";
                         StatusText.Text = "Up to date!";
+                        ButtonReset.IsEnabled = false;
                         break;
                 }
             });
@@ -53,7 +56,13 @@ namespace DeliCounter.Controls
             LastUpdateText.Text = "Please wait...";
             StatusText.Text = "Fetching data...";
             ButtonRefresh.IsEnabled = false;
+            ButtonReset.IsEnabled = false;
             App.RunInBackgroundThread(ModRepository.Instance.Refresh);
+        }
+
+        private void ButtonReset_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            App.RunInBackgroundThread(ModRepository.Instance.Reset);
         }
     }
 }

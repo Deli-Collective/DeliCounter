@@ -18,6 +18,9 @@
         <TextBlock Padding="8 4 0 0" x:Name="LastUpdateText" TextWrapping="Wrap">
             Please wait...
         </TextBlock>
-        <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click" />
+        <StackPanel Orientation="Horizontal">
+            <Button x:Name="ButtonRefresh" Content="Refresh" Margin="0 8 0 0" IsEnabled="False" Click="ButtonRefresh_Click" />
+            <Button x:Name="ButtonReset" Content="Reset repository" Margin="16 8 0 0" IsEnabled="False" Click="ButtonReset_Click" />
+        </StackPanel>
     </StackPanel>
 </UserControl>

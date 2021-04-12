@@ -311,6 +311,13 @@ namespace DeliCounter.Backend
             }
         }
 
+        public void Reset()
+        {
+            if (Repo is not null) Repo.Dispose();
+            if (Directory.Exists(RepoPath)) Directory.Delete(RepoPath, true);
+            Refresh();
+        }
+
         /// <summary>
         ///     Writes the installed mods cache to the game folder
         /// </summary>
