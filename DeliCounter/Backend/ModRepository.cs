@@ -129,7 +129,15 @@ namespace DeliCounter.Backend
             }
             catch (LibGit2SharpException e)
             {
-                return e;
+                // If the database failed to checkout for some reason try to scan mods anyway
+                try
+                {
+                    ScanMods();
+                } catch (Exception innerE)
+                {
+                    return innerE;
+                }
+                return new InvalidDataException(e.Message + " (Still able to read the local repo)", e);
             }
         }
 
