@@ -116,16 +116,29 @@ namespace DeliCounter.Backend
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                 }
 
-                while (e != null)
+                try
                 {
-                    commitsBack++;
-                    Commit currentCommit = Repo.Head.Commits.First();
-                    Commands.Checkout(Repo, Repo.Head.Commits.First(x => currentCommit.Parents.Contains(x)));
-                    e = ScanMods();
+                    while (e != null && commitsBack < 6)
+                    {
+                        commitsBack++;
+                        Commit currentCommit = Repo.Head.Commits.First();
+                        Commands.Checkout(Repo, Repo.Head.Commits.First(x => currentCommit.Parents.Contains(x)));
+                        e = ScanMods();
+                    }
+                } catch (InvalidOperationException e)
+                {
+                    // There are no commits to go back?
+                    return e;
                 }
 
-                // No error
-                return commitsBack == 0 ? null : new InvalidDataException($"{commitsBack} commit(s) were invalid, returning to previous commit. The errors encountered can be found in the application folder.");
+                if (commitsBack < 6)
+                    return commitsBack == 0 ? null : new InvalidDataException($"{commitsBack} commit(s) were invalid, returning to previous commit. The errors encountered can be found in the application folder.");
+                else
+                {
+                    Categories = Array.Empty<ModCategory>();
+                    Mods.Clear();
+                    return new ArgumentOutOfRangeException("The current and previous 5 commits are all invalid. Stopping.");
+                }
             }
             catch (LibGit2SharpException e)
             {
@@ -187,7 +200,7 @@ namespace DeliCounter.Backend
                             version.Mod = mod;
                             if (version is null) continue;
                             if (version.IconUrl == "") throw new JsonException($"[{version}] Icon url cannot be empty, must be null.");
-                            if (!Settings.Default.ShowModBetas &&
+                            if ((Settings.Default is not null && !Settings.Default.ShowModBetas) &&
                                 !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
                             mod.Versions.Add(version.VersionNumber, version);
                         }
