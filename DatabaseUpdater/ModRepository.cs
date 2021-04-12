@@ -21,7 +21,7 @@ namespace DatabaseUpdater
 
         private const string RepoPath = "ModRepository";
 
-        public ModCategory[] Categories { get; private set; }
+        public ModCategory[] Categories { get; private set; } = Array.Empty<ModCategory>();
         public Dictionary<string, Mod> Mods { get; private set; } = new();
         public Repository Repo { get; private set; }
         public ApplicationData ApplicationData { get; private set; }

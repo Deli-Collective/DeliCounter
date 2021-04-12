@@ -86,7 +86,7 @@ namespace DeliCounter
 
         private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
         {
-            ThreadPool.QueueUserWorkItem((_) => ModRepository.Instance.Refresh());
+            App.RunInBackgroundThread(ModRepository.Instance.Refresh);
         }
 
         private void NavView_PaneToggled(NavigationView sender, object args)
