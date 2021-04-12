@@ -125,10 +125,10 @@ namespace DeliCounter.Backend
                         Commands.Checkout(Repo, Repo.Head.Commits.First(x => currentCommit.Parents.Contains(x)));
                         e = ScanMods();
                     }
-                } catch (InvalidOperationException e)
+                } catch (InvalidOperationException ex)
                 {
                     // There are no commits to go back?
-                    return e;
+                    return ex;
                 }
 
                 if (commitsBack < 6)
