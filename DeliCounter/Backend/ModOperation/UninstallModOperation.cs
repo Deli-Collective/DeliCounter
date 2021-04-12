@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Properties;
 using System.IO;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace DeliCounter.Backend.ModOperation
@@ -48,14 +49,20 @@ namespace DeliCounter.Backend.ModOperation
 
         private static void DeleteEmptyDirectories(string startLocation)
         {
-            foreach (var directory in Directory.GetDirectories(startLocation))
+            try
             {
-                DeleteEmptyDirectories(directory);
-                if (Directory.GetFiles(directory).Length == 0 &&
-                    Directory.GetDirectories(directory).Length == 0)
+                foreach (var directory in Directory.GetDirectories(startLocation))
                 {
-                    Directory.Delete(directory, false);
+                    DeleteEmptyDirectories(directory);
+                    if (Directory.GetFiles(directory).Length == 0 &&
+                        Directory.GetDirectories(directory).Length == 0)
+                    {
+                        Directory.Delete(directory, false);
+                    }
                 }
+            } catch (DirectoryNotFoundException)
+            {
+                // Empty catch. I have NO idea how it's even possible to get into this scenario but SOMEONE managed to so.
             }
         }
     }
