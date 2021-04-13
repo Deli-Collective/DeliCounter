@@ -132,8 +132,14 @@ namespace DeliCounter.Backend
 
         public static void WriteExceptionToDisk(Exception e)
         {
-            var filename = $"Exception_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
-            File.WriteAllText(filename, e.ToString());
+            try
+            {
+                var filename = $"Exception_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
+                File.WriteAllText(filename, e.ToString());
+            } catch (UnauthorizedAccessException)
+            {
+                // Ignored.
+            }
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
