@@ -110,7 +110,7 @@ namespace DeliCounter.Backend
                 // There is no version that satisfies this?
                 if (depVersion is null)
                 {
-                    SentrySdk.CaptureMessage($"User tries to install {mod.Guid} @ {versionNumber} but no valid version for dependency {depMod.Guid} was found!");
+                    SentrySdk.CaptureMessage($"Database: {mod.Guid} @ {versionNumber} is not satified by any version of {depMod.Guid}");
                     yield return new DependenciesUnsatisfiedModOperation(mod, versionNumber, depMod);
                     yield break;
                 }
