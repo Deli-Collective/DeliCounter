@@ -3,10 +3,13 @@ using DeliCounter.Properties;
 using Microsoft.VisualBasic.FileIO;
 using Sentry;
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 
@@ -136,32 +139,51 @@ namespace DeliCounter.Backend
             {
                 var filename = $"Exception_{DateTime.Now:yy-MM-dd_hh-mm-ss}.txt";
                 File.WriteAllText(filename, e.ToString());
-            } catch (UnauthorizedAccessException)
+            }
+            catch (UnauthorizedAccessException)
             {
                 // Ignored.
             }
         }
 
+        // These are all the exceptions I don't care about.
+        private static readonly Type[] IgnoredExceptions = {
+            typeof(UnauthorizedAccessException), typeof(DirectoryNotFoundException),
+            typeof(FileNotFoundException), typeof(Win32Exception), typeof(TypeInitializationException),
+            typeof(IOException), typeof(COMException)
+        };
+
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception ex = (Exception) e.ExceptionObject;
-            WriteExceptionToDisk(ex);
-
+            Exception ex = (Exception)e.ExceptionObject;
+            
             if (e.IsTerminating)
             {
-                string filename = CollectAll();
-
-                _sentry.Dispose();
-                using (InitSentry())
+                // If this exception is not ignored, send it to sentry
+                if (!IgnoredExceptions.Contains(ex.GetType()) && !IgnoredExceptions.Contains(ex.InnerException.GetType()))
                 {
-                    SentrySdk.WithScope(scope => {
-                        scope.AddAttachment(filename);
-                        SentrySdk.CaptureException(ex);
-                    });
-                }
+                    _sentry.Dispose();
+                    using (InitSentry())
+                    {
+                        SentrySdk.WithScope(scope =>
+                        {
+                            string filename = CollectAll();
+                            scope.AddAttachment(filename);
+                            SentrySdk.CaptureException(ex);
+                            File.Delete(filename);
+                        });
 
-                MessageBox.Show("Something went wrong and the application needs to exit. Information about this error (installed mods, error details) were sent to the developer", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
-                SentrySdk.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
+                        SentrySdk.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
+                    }
+
+                    MessageBox.Show("Something went wrong and the application needs to exit. Information about this error (installed mods, error details) were sent to the developer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                // Otherwise log it to disk.
+                } else
+                {
+                    WriteExceptionToDisk(ex);
+                    MessageBox.Show($"Something went wrong and the application needs to exit. Information about this error was saved to the application folder and is probably an issue local to your computer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
     }
