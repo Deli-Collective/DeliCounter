@@ -106,6 +106,15 @@ namespace DeliCounter.Backend
             {
                 var depMod = ModRepository.Instance.Mods[guid];
                 var depVersion = compatibleRange.MaxSatisfying(depMod.Versions.Keys);
+
+                // There is no version that satisfies this?
+                if (depVersion is null)
+                {
+                    SentrySdk.CaptureMessage($"User tries to install {mod.Guid} @ {versionNumber} but no valid version for dependency {depMod.Guid} was found!");
+                    yield return new DependenciesUnsatisfiedModOperation(mod, versionNumber, depMod);
+                    yield break;
+                }
+
                 foreach (var yield in EnumerateInstallDependencies(depMod, depVersion))
                     yield return yield;
                 if (!depMod.IsInstalled)
@@ -115,6 +124,7 @@ namespace DeliCounter.Backend
                 else if (!compatibleRange.IsSatisfied(depMod.InstalledVersion))
                 {
                     yield return new DependenciesUnsatisfiedModOperation(mod, versionNumber, depMod);
+                    yield break;
                 }
             }
         }
