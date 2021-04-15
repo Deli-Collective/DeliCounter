@@ -2,6 +2,7 @@ using DeliCounter.Backend.Models;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using LibGit2Sharp;
+using LibGit2Sharp.Tests.TestHelpers;
 using Newtonsoft.Json;
 using Sentry;
 using System;
@@ -314,7 +315,7 @@ namespace DeliCounter.Backend
         public void Reset()
         {
             if (Repo is not null) Repo.Dispose();
-            if (Directory.Exists(RepoPath)) Directory.Delete(RepoPath, true);
+            if (Directory.Exists(RepoPath)) DirectoryHelper.DeleteDirectory(RepoPath);
             Refresh();
         }
 

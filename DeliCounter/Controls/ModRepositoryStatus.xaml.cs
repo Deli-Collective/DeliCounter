@@ -43,7 +43,7 @@ namespace DeliCounter.Controls
                         LastUpdateText.Text =
                             $"Last update: {ModRepository.Instance.Repo.Head.Commits.First().Author.When}";
                         StatusText.Text = "Up to date!";
-                        ButtonReset.IsEnabled = false;
+                        ButtonReset.IsEnabled = true;
                         break;
                 }
             });
