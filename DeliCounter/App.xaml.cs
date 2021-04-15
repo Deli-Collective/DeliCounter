@@ -67,7 +67,13 @@ namespace DeliCounter
             {
                 while (_contentDialogQueue.Count > 0)
                 {
-                    await _contentDialogQueue.Peek().ShowAsync();
+                    try
+                    {
+                        await _contentDialogQueue.Peek().ShowAsync();
+                    } catch (InvalidOperationException)
+                    {
+                        // Not sure what causes this but just ignore it
+                    }
                     _contentDialogQueue.Dequeue();
                 }
             }

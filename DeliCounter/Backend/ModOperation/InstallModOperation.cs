@@ -2,6 +2,7 @@
 using Sentry;
 using SharpCompress.Archives;
 using SharpCompress.Common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -103,6 +104,9 @@ namespace DeliCounter.Backend.ModOperation
                         await Task.Run(() => Mkdir(args));
                         break;
                 }
+
+                // If a step failed then exit early
+                if (!Completed) break;
             }
 
             // Remove the temp file to not take up storage :)
@@ -120,8 +124,6 @@ namespace DeliCounter.Backend.ModOperation
                     .Select(x => x[0] == '/' ? x[1..] : x)
                     .ToArray()
             };
-
-            Completed = true;
         }
 
         private string ExpandArgs(string arg)
@@ -131,14 +133,23 @@ namespace DeliCounter.Backend.ModOperation
 
         private void Extract(string[] args)
         {
-            var archive = ArchiveFactory.Open(_vars["IMPLICIT"]);
-            foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+            try
             {
-                entry.WriteToDirectory(args[1], new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
-                _installedFiles.Add(Path.Combine(args[1], entry.Key));
+                var archive = ArchiveFactory.Open(_vars["IMPLICIT"]);
+                foreach (var entry in archive.Entries.Where(entry => !entry.IsDirectory))
+                {
+                    entry.WriteToDirectory(args[1], new ExtractionOptions { ExtractFullPath = true, Overwrite = true });
+                    _installedFiles.Add(Path.Combine(args[1], entry.Key));
+                }
+
+                archive.Dispose();
+            } catch (InvalidOperationException)
+            {
+                // Zip file was not valid?
+                Completed = false;
+                Message = "Downloaded file was not a valid zip. Incomplete download? Try again";
             }
 
-            archive.Dispose();
         }
 
         private void Move(string[] args)

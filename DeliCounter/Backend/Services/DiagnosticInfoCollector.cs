@@ -147,20 +147,28 @@ namespace DeliCounter.Backend
         }
 
         // These are all the exceptions I don't care about.
-        private static readonly Type[] IgnoredExceptions = {
+        public static readonly Type[] IgnoredExceptions = {
             typeof(UnauthorizedAccessException), typeof(DirectoryNotFoundException),
             typeof(FileNotFoundException), typeof(Win32Exception), typeof(TypeInitializationException),
             typeof(IOException), typeof(COMException)
         };
 
+        public void SentryLogException(Exception ex)
+        {
+            if (IgnoredExceptions.Contains(ex.GetType())) return;
+            SentrySdk.CaptureException(ex);
+        }
+
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception ex = (Exception)e.ExceptionObject;
-            
+            Exception inner = ex;
+            while (ex.InnerException is not null) inner = ex.InnerException;
+
             if (e.IsTerminating)
             {
                 // If this exception is not ignored, send it to sentry
-                if (!IgnoredExceptions.Contains(ex.GetType()) && !IgnoredExceptions.Contains(ex.InnerException.GetType()))
+                if (!IgnoredExceptions.Contains(inner.GetType()))
                 {
                     _sentry.Dispose();
                     using (InitSentry())
@@ -176,13 +184,14 @@ namespace DeliCounter.Backend
                         SentrySdk.FlushAsync(TimeSpan.FromSeconds(10)).GetAwaiter().GetResult();
                     }
 
-                    MessageBox.Show("Something went wrong and the application needs to exit. Information about this error (installed mods, error details) were sent to the developer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+
+                    MessageBox.Show($"Something went wrong and the application needs to exit.\n{inner.Message}\nInformation about this error (installed mods, error details) were sent to the developer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
 
                 // Otherwise log it to disk.
                 } else
                 {
                     WriteExceptionToDisk(ex);
-                    MessageBox.Show($"Something went wrong and the application needs to exit. Information about this error was saved to the application folder and is probably an issue local to your computer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show($"Something went wrong and the application needs to exit.\n{inner.Message}\nInformation about this error was saved to the application folder and is probably an issue local to your computer.", "Fatal error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }

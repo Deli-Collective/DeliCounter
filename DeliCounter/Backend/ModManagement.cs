@@ -179,7 +179,7 @@ namespace DeliCounter.Backend
                 catch (Exception e)
                 {
                     error = true;
-                    SentrySdk.CaptureException(e);
+                    App.Current.DiagnosticInfoCollector.SentryLogException(e);
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                     break;
                 }

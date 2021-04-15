@@ -112,7 +112,7 @@ namespace DeliCounter.Backend
                 Exception e = ScanMods();
                 if (e != null)
                 {
-                    SentrySdk.CaptureException(e);
+                    App.Current.DiagnosticInfoCollector.SentryLogException(e);
                     DiagnosticInfoCollector.WriteExceptionToDisk(e);
                 }
 
@@ -307,7 +307,7 @@ namespace DeliCounter.Backend
                     );
                 });
                 DiagnosticInfoCollector.WriteExceptionToDisk(e);
-                SentrySdk.CaptureException(e);
+                App.Current.DiagnosticInfoCollector.SentryLogException(e);
             }
         }
 

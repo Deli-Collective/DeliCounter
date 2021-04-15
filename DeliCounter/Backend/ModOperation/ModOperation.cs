@@ -15,7 +15,7 @@ namespace DeliCounter.Backend.ModOperation
 
         internal Action<double, string> ProgressDialogueCallback { get; set; }
 
-        protected internal bool Completed { get; protected set; }
+        protected internal bool Completed { get; protected set; } = true;
 
         protected internal string Message { get; protected set; }
 
