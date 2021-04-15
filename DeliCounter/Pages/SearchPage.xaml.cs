@@ -44,6 +44,12 @@ namespace DeliCounter.Pages
 
         private void ModItem_DoubleClick(object sender, MouseButtonEventArgs e)
         {
+            if (App.Current.SteamAppLocator.IsRunning)
+            {
+                App.Current.QueueDialog(new AlertDialogue("Cannot do this now", "Please close H3VR before modifying your install."));
+                return;
+            }
+
             ModListItem source = (ModListItem)((ListViewItem)sender).Content;
             ModManagement.DefaultAction(source.Mod);
         }

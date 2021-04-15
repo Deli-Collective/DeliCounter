@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -30,6 +31,15 @@ namespace DeliCounter.Backend
         ///     Returns the path to the game executable (or null if not found)
         /// </summary>
         public string ExecutablePath => Path.Combine(AppLocation, AppExecutableName);
+
+        public bool IsRunning
+        {
+            get
+            {
+                Process[] processes = Process.GetProcessesByName(Path.GetFileNameWithoutExtension(AppExecutableName));
+                return processes.Length > 0;
+            }
+        }
 
         public SteamAppLocator(int appId, string folderName, string executableName)
         {

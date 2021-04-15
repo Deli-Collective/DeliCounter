@@ -216,6 +216,12 @@ namespace DeliCounter.Controls
 
         private void ButtonInstall_Click(object sender, RoutedEventArgs e)
         {
+            if (App.Current.SteamAppLocator.IsRunning)
+            {
+                App.Current.QueueDialog(new AlertDialogue("Cannot do this now", "Please close H3VR before modifying your install."));
+                return;
+            }
+
             if (_selectedMods.Count == 1)
                 ModManagement.InstallMod(_selectedMods[0], _selectedVersion);
             else
@@ -224,6 +230,12 @@ namespace DeliCounter.Controls
 
         private async void ButtonUninstall_Click(object sender, RoutedEventArgs e)
         {
+            if (App.Current.SteamAppLocator.IsRunning)
+            {
+                App.Current.QueueDialog(new AlertDialogue("Cannot do this now", "Please close H3VR before modifying your install."));
+                return;
+            }
+
             int dependentCount = _selectedMods.SelectMany(x => x.InstalledDependents).Distinct().Count();
             if (dependentCount > 0)
             {
@@ -244,6 +256,12 @@ namespace DeliCounter.Controls
 
         private void ButtonUpdate_OnClick(object sender, RoutedEventArgs e)
         {
+            if (App.Current.SteamAppLocator.IsRunning)
+            {
+                App.Current.QueueDialog(new AlertDialogue("Cannot do this now", "Please close H3VR before modifying your install."));
+                return;
+            }
+
             if (_selectedMods.Count == 1)
                 ModManagement.UpdateMod(_selectedMods[0], _selectedVersion);
             else
