@@ -31,6 +31,9 @@ namespace DeliCounter.Controls
                     var bi = new BitmapImage();
                     bi.BeginInit();
                     bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
+                    bi.CacheOption = BitmapCacheOption.OnLoad;
+                    bi.DecodePixelHeight = 64;
+                    bi.DecodePixelWidth = 64;
                     bi.EndInit();
                     ModImage.Source = bi;
                 }
