@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
+using DeliCounter.Controls.Abstract;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -39,7 +40,12 @@ namespace DeliCounter.Pages
             ModList.Items.Clear();
             if (string.IsNullOrEmpty(query)) return;
             foreach (var mod in ModRepository.Instance.Mods.Values.Where(x => x.MatchesQuery(query)))
-                ModList.Items.Add(new ModListItem(mod, mod.IsInstalled));
+                ModList.Items.Add(App.Current.Settings.ModListItemType switch
+                {
+                    ModListItemType.LargeWithIcon => new LargeModListItem(mod, true),
+                    ModListItemType.Large => new LargeModListItem(mod, false),
+                    _ => new CompactModListItem(mod)
+                });
         }
 
         private void ModItem_DoubleClick(object sender, MouseButtonEventArgs e)

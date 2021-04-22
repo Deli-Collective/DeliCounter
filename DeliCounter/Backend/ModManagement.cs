@@ -145,7 +145,7 @@ namespace DeliCounter.Backend
         /// </summary>
         private static void ExecuteOperations(IEnumerable<ModOperation.ModOperation> operations)
         {
-            if (Settings.Default.GameLocationOrError is null) return;
+            if (App.Current.Settings.GameLocationOrError is null) return;
 
             var ops = operations.Distinct(new ModOperationEqualityComparer()).ToArray();
 

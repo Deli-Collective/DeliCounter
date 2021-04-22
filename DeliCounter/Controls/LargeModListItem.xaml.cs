@@ -1,4 +1,5 @@
 ﻿using DeliCounter.Backend;
+using DeliCounter.Controls.Abstract;
 using System;
 using System.Linq;
 using System.Windows;
@@ -10,30 +11,34 @@ namespace DeliCounter.Controls
     /// <summary>
     ///     Interaction logic for ModListItem.xaml
     /// </summary>
-    public partial class ModListItem
+    public partial class LargeModListItem : ModListItem
     {
-        public Mod Mod;
-
-        public ModListItem(Mod mod, bool displayInstalled = false)
+        public LargeModListItem(Mod mod, bool showIcon) : base(mod)
         {
-            Mod = mod;
             InitializeComponent();
 
             // Get the version to display and edit the name and short description
-            Mod.ModVersion version = displayInstalled ? mod.Installed ?? mod.Latest : mod.Latest;
+            Mod.ModVersion version = mod.Latest;
 
             ModTitle.Text = version.Name;
             ModShortDescription.Text = version.ShortDescription;
 
-            // Set the icon
-            if (version.IconUrl is not null)
+            if (showIcon)
             {
-                var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
-                bi.EndInit();
-                ModImage.Source = bi;
+                // Set the icon
+                if (version.IconUrl is not null)
+                {
+                    var bi = new BitmapImage();
+                    bi.BeginInit();
+                    bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
+                    bi.EndInit();
+                    ModImage.Source = bi;
+                }
+            } else
+            {
+                ModImage.Visibility = Visibility.Collapsed;
             }
+            
 
             // Update the local status icons (Up to date, update available)
             if (mod.IsInstalled)

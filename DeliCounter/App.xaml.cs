@@ -23,7 +23,8 @@ namespace DeliCounter
                 Converters = new List<JsonConverter>() { new SemRangeConverter(), new SemVersionConverter() }
             };
 
-            ThemeManager.Current.ApplicationTheme = Settings.Default.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
+            Settings = Settings.Default;
+            ThemeManager.Current.ApplicationTheme = App.Current.Settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
 
@@ -35,6 +36,8 @@ namespace DeliCounter
         public IDisposable SentryDisposable { get; }
 
         public DiagnosticInfoCollector DiagnosticInfoCollector { get; }
+
+        internal Settings Settings { get; }
 
         public static void RunInBackgroundThread(Action action)
         {
@@ -50,11 +53,11 @@ namespace DeliCounter
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            if (Settings.Default.FirstRun)
+            if (App.Current.Settings.FirstRun)
             {
                 var dialogue = new AlertDialogue("Disclaimer", "You are about to mod your game. By continuing, you acknowledge that you may encounter issues and that these issues are NOT to be reported to the developer of the game. Please instead report all issues to the mod authors who can be contacted via their mod's source URL or in the main H3 Discord.");
                 App.Current.QueueDialog(dialogue);
-                Settings.Default.FirstRun = false;
+                App.Current.Settings.FirstRun = false;
             }
         }
 

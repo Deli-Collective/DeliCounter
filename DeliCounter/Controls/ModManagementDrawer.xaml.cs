@@ -1,4 +1,5 @@
 ﻿using DeliCounter.Backend;
+using DeliCounter.Controls.Abstract;
 using ModernWpf.Controls;
 using System;
 using System.Collections;

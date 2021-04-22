@@ -19,7 +19,7 @@ namespace DeliCounter.Backend.ModOperation
 
             await Task.Run(() =>
             {
-                var gameLocation = Settings.Default.GameLocationOrError;
+                var gameLocation = App.Current.Settings.GameLocationOrError;
                 foreach (var item in cached.Files)
                 {
                     var path = Path.Combine(gameLocation, item);

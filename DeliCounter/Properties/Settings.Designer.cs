@@ -94,5 +94,17 @@ namespace DeliCounter.Properties {
                 this["ShowModBetas"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ListItemType {
+            get {
+                return ((int)(this["ListItemType"]));
+            }
+            set {
+                this["ListItemType"] = value;
+            }
+        }
     }
 }

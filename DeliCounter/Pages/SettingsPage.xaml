@@ -15,6 +15,9 @@
                       Checked="DarkMode_OnChecked" Unchecked="DarkMode_OnChecked" />
             <CheckBox x:Name="AutoDetectGameLocation" Content="Auto-detect game location"
                       IsChecked="{Binding AutoDetectGameLocation}" Checked="AutoDetectGameLocation_OnChecked" />
+            <ComboBox x:Name="ComboBoxModListItem" SelectionChanged="ComboBox_SelectionChanged"
+                      ui:ControlHelper.Header="Mod Listing Item Type"/>
+
             <TextBox x:Name="GameLocation" ui:ControlHelper.Header="Game Location" Text="{Binding GameLocation}"
                      ui:ControlHelper.PlaceholderText="Path to folder containing h3vr.exe"
                      IsEnabled="{Binding AutoDetectGameLocation, Converter={StaticResource InverseBooleanConverter}}" />

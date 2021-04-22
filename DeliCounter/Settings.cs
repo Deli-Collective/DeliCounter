@@ -1,4 +1,5 @@
 ﻿using DeliCounter.Controls;
+using DeliCounter.Controls.Abstract;
 using System;
 using System.ComponentModel;
 using System.Windows;
@@ -41,5 +42,7 @@ namespace DeliCounter.Properties
         }
 
         public event Action GameLocationChanged;
+
+        public ModListItemType ModListItemType => (ModListItemType)ListItemType;
     }
 }

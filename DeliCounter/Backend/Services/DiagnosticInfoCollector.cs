@@ -57,7 +57,7 @@ namespace DeliCounter.Backend
             var diagnosticText = "== Diagnostic Info ==\n" +
                                  $"Generated at: {DateTime.Now}\n" +
                                  $"Game Directory: {SteamAppLocator.AppLocation}\n" +
-                                 $"Mod Repository: {Settings.Default.GitRepository}\n" +
+                                 $"Mod Repository: {App.Current.Settings.GitRepository}\n" +
                                  "\n== DeliCounter Git Info ==\n" + ApplicationGitInfo.Text;
             WriteToArchiveFile("DeliCounterVersion.txt", diagnosticText);
 
@@ -161,6 +161,8 @@ namespace DeliCounter.Backend
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            if (Debugger.IsAttached) return;
+
             Exception ex = (Exception)e.ExceptionObject;
             Exception inner = ex;
             while (ex.InnerException is not null) inner = ex.InnerException;

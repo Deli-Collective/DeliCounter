@@ -32,7 +32,7 @@ namespace DeliCounter.Backend.ModOperation
             await base.Run();
 
             // Make sure we have the game directory
-            var gameDir = Settings.Default.GameLocationOrError;
+            var gameDir = App.Current.Settings.GameLocationOrError;
             if (gameDir is null) return;
 
             // Set some things up

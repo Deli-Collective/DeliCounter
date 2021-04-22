@@ -46,14 +46,14 @@ namespace DeliCounter.Backend
         {
             get
             {
-                var path = Settings.Default.GameLocationOrError;
+                var path = App.Current.Settings.GameLocationOrError;
                 return path is null ? null : Path.Join(path, "installed_mods.json");
             }
         }
 
         public ModRepository()
         {
-            Settings.Default.GameLocationChanged += LoadModCache;
+            App.Current.Settings.GameLocationChanged += LoadModCache;
         }
 
         public void Refresh()
@@ -86,7 +86,7 @@ namespace DeliCounter.Backend
             {
                 // Clone if the repo doesn't exist
                 var cloneOptions = new CloneOptions {CredentialsProvider = null};
-                var split = Settings.Default.GitRepository.Split("/tree/");
+                var split = App.Current.Settings.GitRepository.Split("/tree/");
                 var repoUrl = split[0].EndsWith('/') ? split[0][..^1] : split[0];
                 var branch = split.Length > 1 ? split[1] : "main";
                 if (!Directory.Exists(RepoPath)) Repository.Clone(repoUrl, RepoPath, cloneOptions);
@@ -201,7 +201,7 @@ namespace DeliCounter.Backend
                             version.Mod = mod;
                             if (version is null) continue;
                             if (version.IconUrl == "") throw new JsonException($"[{version}] Icon url cannot be empty, must be null.");
-                            if ((Settings.Default is not null && !Settings.Default.ShowModBetas) &&
+                            if ((App.Current.Settings is not null && !App.Current.Settings.ShowModBetas) &&
                                 !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
                             mod.Versions.Add(version.VersionNumber, version);
                         }

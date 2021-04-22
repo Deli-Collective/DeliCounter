@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
+using DeliCounter.Controls.Abstract;
 using DeliCounter.Properties;
 using ModernWpf;
 using System;
@@ -19,8 +20,11 @@ namespace DeliCounter.Pages
         public SettingsPage()
         {
             InitializeComponent();
-            _settings = Settings.Default;
+            _settings = App.Current.Settings;
             DataContext = _settings;
+
+            ComboBoxModListItem.ItemsSource = Enum.GetValues(typeof(ModListItemType));
+            ComboBoxModListItem.SelectedIndex = _settings.ListItemType;
         }
 
         private void AutoDetectGameLocation_OnChecked(object sender, RoutedEventArgs e)
@@ -52,6 +56,11 @@ namespace DeliCounter.Pages
         private void ShowModBetas_OnChecked(object sender, RoutedEventArgs e)
         {
             ModRepository.Instance.Refresh();
+        }
+
+        private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            _settings.ListItemType = ComboBoxModListItem.SelectedIndex;
         }
     }
 

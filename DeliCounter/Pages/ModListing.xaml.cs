@@ -1,5 +1,6 @@
 ﻿using DeliCounter.Backend;
 using DeliCounter.Controls;
+using DeliCounter.Controls.Abstract;
 using System;
 using System.Globalization;
 using System.Windows.Controls;
@@ -22,11 +23,16 @@ namespace DeliCounter.Pages
             Update();
         }
 
-        private void Update()
+        public void Update()
         {
             ModList.Items.Clear();
             foreach (var mod in _category.Mods)
-                ModList.Items.Add(new ModListItem(mod, mod.IsInstalled));
+                ModList.Items.Add(App.Current.Settings.ModListItemType switch
+                {
+                    ModListItemType.LargeWithIcon => new LargeModListItem(mod, true),
+                    ModListItemType.Large => new LargeModListItem(mod, false),
+                    _ => new CompactModListItem(mod)
+                });
         }
 
         private void ModList_SelectionChanged(object sender, SelectionChangedEventArgs e)
