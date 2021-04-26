@@ -100,8 +100,16 @@ namespace DeliCounter.Controls
             TextBlockLatest.Text = mod.LatestVersion.ToString();
             TextBlockInstalled.Text = mod.IsInstalled ? mod.Installed?.VersionNumber?.ToString() ?? "0.0.0" : "No";
             TextBlockDependencies.Text = string.Join(", ", version.Dependencies.Select(x => x.Key + " " + x.Value));
+
             TextBlockSource.Text = version.SourceUrl;
-            HyperlinkSource.NavigateUri = !string.IsNullOrEmpty(version.SourceUrl) ? new Uri(version.SourceUrl, UriKind.Absolute) : null;
+            try
+            {
+                HyperlinkSource.NavigateUri = !string.IsNullOrEmpty(version.SourceUrl) ? new Uri(version.SourceUrl, UriKind.Absolute) : null;
+            } catch (UriFormatException)
+            {
+                // ignored
+            }
+            
 
             // Update the action button visibility
             if (mod.IsInstalled)
