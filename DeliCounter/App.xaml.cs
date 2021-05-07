@@ -69,11 +69,13 @@ namespace DeliCounter
 
         private void App_OnLoadCompleted(object sender, NavigationEventArgs e)
         {
-            if (App.Current.Settings.FirstRun)
+            if (Settings.FirstRun)
             {
                 var dialogue = new AlertDialogue("Disclaimer", "You are about to mod your game. By continuing, you acknowledge that you may encounter issues and that these issues are NOT to be reported to the developer of the game. Please instead report all issues to the mod authors who can be contacted via their mod's source URL or in the main H3 Discord.");
-                App.Current.QueueDialog(dialogue);
-                App.Current.Settings.FirstRun = false;
+                QueueDialog(dialogue);
+                var secondDialogue = new CleanInstallDialogue();
+                QueueDialog(secondDialogue);
+                Settings.FirstRun = false;
             }
         }
 
@@ -97,5 +99,7 @@ namespace DeliCounter
                 }
             }
         }
+
+        public bool AreDialogsQueued => _contentDialogQueue.Count > 0;
     }
 }

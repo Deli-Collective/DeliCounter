@@ -300,7 +300,7 @@ namespace DeliCounter.Backend
             // If the mod cache is invalid let the user know. 
             catch (Exception e)
             {
-                App.RunInMainThread(() =>
+                if (!App.Current.AreDialogsQueued) App.RunInMainThread(() =>
                 {
                     App.Current.QueueDialog(
                         new AlertDialogue("Error",

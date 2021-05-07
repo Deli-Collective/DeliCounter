@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 
 namespace DeliCounter.Backend
@@ -157,6 +158,50 @@ namespace DeliCounter.Backend
         {
             if (IgnoredExceptions.Contains(ex.GetType())) return;
             SentrySdk.CaptureException(ex);
+        }
+
+
+        private static readonly string[] ToKeep = new[]
+        {
+            "h3vr_Data",
+            "actions\\.json",
+            "binding.+",
+            "h3vr\\.exe",
+            "steam_api64\\.dll",
+            "DeliCounter\\.cfg"
+        };
+        public void CleanInstallFolder(string installFolder)
+        {
+            string[] files = Directory.EnumerateFileSystemEntries(installFolder).ToArray();
+            foreach (var entry in files)
+            {
+                bool matchesAny = false;
+                foreach (var pattern in ToKeep)
+                {
+                    matchesAny = Regex.IsMatch(entry, pattern) || matchesAny;
+                }
+
+                if (!matchesAny)
+                {
+                    if (Directory.Exists(entry)) Directory.Delete(entry, true);
+                    else File.Delete(entry);
+                }
+            }
+        }
+
+        public bool ContainsAnyModdedFiles(string installFolder)
+        {
+            string[] files = Directory.EnumerateFileSystemEntries(installFolder).ToArray();
+            foreach (var entry in files)
+            {
+                bool matchesAny = false;
+                foreach (var pattern in ToKeep)
+                    matchesAny = Regex.IsMatch(entry, pattern) || matchesAny;
+
+                if (!matchesAny) return true;
+            }
+
+            return false;
         }
 
         private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
