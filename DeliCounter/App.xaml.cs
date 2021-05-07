@@ -5,13 +5,13 @@ using DeliCounter.Properties;
 using ModernWpf;
 using ModernWpf.Controls;
 using Newtonsoft.Json;
-using Sentry;
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Navigation;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 
 namespace DeliCounter
 {
@@ -19,21 +19,32 @@ namespace DeliCounter
     {
         public App()
         {
+            // Configure some things
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings()
             {
                 Converters = new List<JsonConverter>() { new SemRangeConverter(), new SemVersionConverter() }
             };
-
             Settings = Settings.Default;
-            ThemeManager.Current.ApplicationTheme = App.Current.Settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
 
+            // Setup the settings file stuff
             PortableJsonSettingsProvider.SettingsDirectory = SteamAppLocator.AppLocation;
             PortableJsonSettingsProvider.SettingsFileName = "DeliCounter.cfg";
             PortableJsonSettingsProvider.ApplyProvider(Settings);
 
+            // Initialize Sentry
             DiagnosticInfoCollector.InitSentry();
+
+            // Check if Windows wants light or dark theme
+            var uiSettings = new UISettings();
+            var color = uiSettings.GetColorValue(UIColorType.Background);
+            bool darkModeRequestedByOS = color == Color.FromArgb(255, 0, 0, 0);
+            
+            // If this is our first run, honor the OS settings, otherwise keep what is in the settings
+            if (Settings.FirstRun) Settings.EnableDarkMode = darkModeRequestedByOS;
+            ThemeManager.Current.ApplicationTheme = Settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
+
         }
 
         public SteamAppLocator SteamAppLocator { get; }
