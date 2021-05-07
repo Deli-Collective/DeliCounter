@@ -203,6 +203,7 @@ namespace DeliCounter.Backend
                             if (version.IconUrl == "") throw new JsonException($"[{version}] Icon url cannot be empty, must be null.");
                             if ((App.Current.Settings is not null && !App.Current.Settings.ShowModBetas) &&
                                 !string.IsNullOrEmpty(version.VersionNumber.PreRelease)) continue;
+                            if (!App.Current.Settings.ShowModBetas && version.IsBeta) continue;
                             mod.Versions.Add(version.VersionNumber, version);
                         }
 

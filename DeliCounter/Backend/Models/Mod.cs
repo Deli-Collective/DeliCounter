@@ -158,6 +158,11 @@ namespace DeliCounter.Backend
             /// </summary>
             public string[] IncompatibleTags { get; set; }
 
+            /// <summary>
+            ///     True if the mod should only be shown to people who have the beta option enbled
+            /// </summary>
+            public bool IsBeta { get; set; }
+
             [JsonIgnore]
             public IEnumerable<Mod> IncompatibleInstalledMods => IncompatibleTags == null
                 ? Array.Empty<Mod>()
@@ -167,11 +172,6 @@ namespace DeliCounter.Backend
                         IncompatibleTags.Contains(x.Guid) || (
                         x.Installed.Tags != null &&
                         IncompatibleTags.Any(tag => x.Installed.Tags.Contains(tag))));
-
-            /// <summary>
-            ///     Checks if the version number has a pre release tag
-            /// </summary>
-            public bool IsBeta => !string.IsNullOrEmpty(VersionNumber.PreRelease);
 
 
             public bool MatchesQuery(string query)
