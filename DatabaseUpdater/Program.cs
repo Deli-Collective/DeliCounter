@@ -149,7 +149,7 @@ namespace DatabaseUpdater
             {
                 Commands.Stage(_repo.Repo, "**/*");
                 User user = GitHubClient.User.Current().GetAwaiter().GetResult();
-                Signature sig = new(user.Name, user.Email, DateTimeOffset.Now);
+                Signature sig = new(user.Name, user.Email ?? "deli-employee@example.com", DateTimeOffset.Now);
                 _repo.Repo.Commit($"Updated {_updated} mods in database", sig, sig);
 
 
