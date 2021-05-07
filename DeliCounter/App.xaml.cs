@@ -1,4 +1,5 @@
-﻿using DeliCounter.Backend;
+﻿using Bluegrams.Application;
+using DeliCounter.Backend;
 using DeliCounter.Controls;
 using DeliCounter.Properties;
 using ModernWpf;
@@ -27,6 +28,10 @@ namespace DeliCounter
             ThemeManager.Current.ApplicationTheme = App.Current.Settings.EnableDarkMode ? ApplicationTheme.Dark : ApplicationTheme.Light;
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
+
+            PortableJsonSettingsProvider.SettingsDirectory = SteamAppLocator.AppLocation;
+            PortableJsonSettingsProvider.SettingsFileName = "DeliCounter.cfg";
+            PortableJsonSettingsProvider.ApplyProvider(Settings);
 
             DiagnosticInfoCollector.InitSentry();
         }
