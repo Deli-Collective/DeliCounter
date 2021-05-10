@@ -7,7 +7,7 @@
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
 
-    <Grid Margin="8">
+    <Grid Margin="16">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
@@ -21,9 +21,20 @@
             <controls:ModRepositoryStatus x:Name="ModRepo" />
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="Application Build Info" Style="{StaticResource HeaderTextBlockStyle}" />
+            <TextBlock Text="Application Info" Style="{StaticResource HeaderTextBlockStyle}" />
             <controls:ApplicationGitInfo />
         </StackPanel>
-
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}">Quick start</TextBlock>
+            <TextBlock Margin="8 0 0 0" TextWrapping="Wrap" Style="{StaticResource BodyTextBlockStyle}">
+                - Use the menu on the left to navigate the application and
+                view your installed mods and mods that you can install.<LineBreak/><LineBreak/>
+                - In a mod category, click on a mod to view information about it on the right
+                and see available actions in the bottom right.<LineBreak/><LineBreak/>
+                - Installing a mod is as simple as clicking the 'install' action while it is selected, nothing else required.<LineBreak/><LineBreak/>
+                - To select multiple mods at the same time, hold down control or shift while clicking on them.<LineBreak/><LineBreak/>
+                - Finally, just run your game as normal via Steam and enjoy! (You may close this application at any time)
+            </TextBlock>
+        </StackPanel>
     </Grid>
 </UserControl>
