@@ -1,6 +1,4 @@
-﻿using DeliCounter.Properties;
-using Sentry;
-using SharpCompress.Archives;
+﻿using SharpCompress.Archives;
 using SharpCompress.Common;
 using System;
 using System.Collections.Generic;
