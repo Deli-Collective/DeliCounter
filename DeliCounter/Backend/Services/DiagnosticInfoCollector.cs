@@ -208,12 +208,16 @@ namespace DeliCounter.Backend
         {
             if (Debugger.IsAttached) return;
 
-            Exception ex = (Exception)e.ExceptionObject;
-            Exception inner = ex;
-            while (ex.InnerException is not null) inner = ex.InnerException;
-
             if (e.IsTerminating)
             {
+                Exception ex = (Exception)e.ExceptionObject;
+                Exception inner = ex;
+                while (ex.InnerException is not null)
+                {
+                    if (IgnoredExceptions.Contains(inner.GetType())) return;
+                    inner = ex.InnerException;
+                }
+
                 // If this exception is not ignored, send it to sentry
                 if (!IgnoredExceptions.Contains(inner.GetType()))
                 {
