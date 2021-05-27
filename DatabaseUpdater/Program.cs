@@ -1,4 +1,4 @@
-﻿using DeliCounter.Backend;
+using DeliCounter.Backend;
 using LibGit2Sharp;
 using Newtonsoft.Json;
 using Octokit;
@@ -54,7 +54,8 @@ namespace DatabaseUpdater
 
         private static readonly GitHubClient GitHubClient = new(new ProductHeaderValue("DeliCounter-Updater"));
 
-        private static Queue<Mod> QueuedMods;
+        private static Queue<Mod> _queuedMods;
+        private static List<string> _ignoredMods;
         private static int _alreadyUpToDate = 0, _updated = 0, _error = 0;
         private static ModRepository _repo;
         
@@ -66,8 +67,10 @@ namespace DatabaseUpdater
             Checkers["github.com"] = new GitHubVersionFetcher(GitHubClient);
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {Converters = new List<JsonConverter> {new SemRangeConverter(), new SemVersionConverter()}};
             _repo = new ModRepository("https://github.com/Deli-Collective/DeliCounter.Database/tree/main");
+            _ignoredMods = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText("ModRepository/ignore_updates.json"));
 
-            QueuedMods = new Queue<Mod>(_repo.Mods.Values);
+            lock (_queuedMods)
+                _queuedMods = new Queue<Mod>(_repo.Mods.Values);
 
             // Make our threads and start them
             Thread[] threads = new Thread[8];
@@ -93,7 +96,7 @@ namespace DatabaseUpdater
             while (true)
             {
                 Mod mod;
-                lock (QueuedMods) mod = QueuedMods.Count > 0 ? QueuedMods.Dequeue() : null;
+                lock (_queuedMods) mod = _queuedMods.Count > 0 ? _queuedMods.Dequeue() : null;
                 if (mod is null) return;
                 UpdateMod(mod);
             }
@@ -101,6 +104,12 @@ namespace DatabaseUpdater
         
         private static void UpdateMod(Mod mod)
         {
+            if (_ignoredMods.Contains(mod.Guid))
+            {
+                ConsoleLog(LogLevel.Info, $"{mod.Guid} is ignored. Will not check for update.");
+                return;
+            }
+            
             string sourceWebsite = mod.Latest.SourceUrl.Split("/")[2];
             if (!Checkers.TryGetValue(sourceWebsite, out VersionFetcher checker))
             {
