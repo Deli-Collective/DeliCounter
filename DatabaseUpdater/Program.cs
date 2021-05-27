@@ -68,9 +68,8 @@ namespace DatabaseUpdater
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings {Converters = new List<JsonConverter> {new SemRangeConverter(), new SemVersionConverter()}};
             _repo = new ModRepository("https://github.com/Deli-Collective/DeliCounter.Database/tree/main");
             _ignoredMods = JsonConvert.DeserializeObject<List<string>>(File.ReadAllText("ModRepository/ignore_updates.json"));
-
-            lock (_queuedMods)
-                _queuedMods = new Queue<Mod>(_repo.Mods.Values);
+            
+            _queuedMods = new Queue<Mod>(_repo.Mods.Values);
 
             // Make our threads and start them
             Thread[] threads = new Thread[8];
