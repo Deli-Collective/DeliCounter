@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace DeliCounter.Backend
 {
@@ -78,17 +79,15 @@ namespace DeliCounter.Backend
             {
                 // We didn't find it, look at other library folders by lazily parsing libraryfolders.
                 var libraryFolders = Path.Combine(steamDir, @"steamapps\libraryfolders.vdf");
-                foreach (var ii in File.ReadAllLines(libraryFolders).Skip(4)
-                    .Where(x => x.Length != 0 && x[0] != '}')
-                    .Select(x => x.Split('\t')[3].Trim('"').Replace(@"\\", @"\")).Where(ii =>
-                        File.Exists(ii + $@"\steamapps\appmanifest_{AppId}.acf")))
+                foreach (Match match in Regex.Matches(File.ReadAllText(libraryFolders), @"^\s+\""path\""\s+\""(.+)\""$", RegexOptions.Multiline))
                 {
-                    result = Path.Combine(ii, $@"steamapps\common\{AppFolderName}\");
-                    break;
+                    var folder = match.Groups[1].Value;
+                    if (!File.Exists(Path.Combine(folder, $"steamapps/appmanifest_{AppId}.acf"))) continue;
+                    result = Path.Combine(folder, $"steamapps/common/{AppFolderName}");
                 }
             }
 
-            AppLocation = string.IsNullOrEmpty(result) ? null : result;
+            AppLocation = string.IsNullOrEmpty(result) ? null : Path.GetFullPath(result);
         }
     }
 }
