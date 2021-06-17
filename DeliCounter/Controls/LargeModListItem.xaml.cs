@@ -1,6 +1,7 @@
 ﻿using DeliCounter.Backend;
 using DeliCounter.Controls.Abstract;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -28,14 +29,20 @@ namespace DeliCounter.Controls
                 // Set the icon
                 if (version.IconUrl is not null)
                 {
-                    var bi = new BitmapImage();
-                    bi.BeginInit();
-                    bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
-                    bi.CacheOption = BitmapCacheOption.OnLoad;
-                    bi.DecodePixelHeight = 64;
-                    bi.DecodePixelWidth = 64;
-                    bi.EndInit();
-                    ModImage.Source = bi;
+                    try
+                    {
+                        var bi = new BitmapImage();
+                        bi.BeginInit();
+                        bi.UriSource = new Uri(version.IconUrl, UriKind.Absolute);
+                        bi.CacheOption = BitmapCacheOption.OnLoad;
+                        bi.DecodePixelHeight = 64;
+                        bi.DecodePixelWidth = 64;
+                        bi.EndInit();
+                        ModImage.Source = bi;
+                    } catch (IOException)
+                    {
+                        // Ignored. Happens when it can't create a temporary file to download the image.
+                    }
                 }
             } else
             {

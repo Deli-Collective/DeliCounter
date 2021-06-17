@@ -35,18 +35,21 @@ namespace DeliCounter.Backend.ModOperation
 
             // Set some things up
             var t = new System.Timers.Timer { AutoReset = false, Interval = 15000 };
-            t.Elapsed += (sender, args) =>
-            {
-                _webClient.CancelAsync();
-            };
-            ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
-            _webClient.DownloadProgressChanged += (sender, args) =>
+
+            void ProgressChangedCallback(object sender, DownloadProgressChangedEventArgs args)
             {
                 t.Interval = 15000;
                 var totalMegabytes = args.BytesReceived / 1000000d;
                 ProgressDialogueCallback(args.ProgressPercentage / 200d,
                     $"Downloading {_version.Name}... ({totalMegabytes:#.##} MB)");
             };
+
+            t.Elapsed += (sender, args) =>
+            {
+                _webClient.CancelAsync();
+            };
+            ProgressDialogueCallback(0, $"Downloading {_version.Name}... (0.00 MB)");
+            _webClient.DownloadProgressChanged += ProgressChangedCallback;
 
 
             // Download the file
@@ -72,6 +75,7 @@ namespace DeliCounter.Backend.ModOperation
             }
             finally
             {
+                _webClient.DownloadProgressChanged -= ProgressChangedCallback;
                 t.Dispose();
             }
 

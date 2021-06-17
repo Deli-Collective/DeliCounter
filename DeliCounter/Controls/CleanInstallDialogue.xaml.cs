@@ -28,7 +28,12 @@ namespace DeliCounter.Controls
 
         private void ContentDialog_SecondaryButtonClick(ModernWpf.Controls.ContentDialog sender, ModernWpf.Controls.ContentDialogButtonClickEventArgs args)
         {
-            App.Current.DiagnosticInfoCollector.CleanInstallFolder(App.Current.Settings.GameLocation);
+            bool success = App.Current.DiagnosticInfoCollector.CleanInstallFolder(App.Current.Settings.GameLocation);
+            if (!success)
+            {
+                App.Current.QueueDialog(new AlertDialogue("Whoops", "Looks like I wasn't able to delete some files, please make sure you have the game closed before running this. You can try again in the settings page."));
+            }
+
         }
 
         private void ContentDialog_PrimaryButtonClick(ModernWpf.Controls.ContentDialog sender, ModernWpf.Controls.ContentDialogButtonClickEventArgs args)

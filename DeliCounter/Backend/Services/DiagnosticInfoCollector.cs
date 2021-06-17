@@ -170,23 +170,38 @@ namespace DeliCounter.Backend
             "steam_api64\\.dll",
             "DeliCounter\\.cfg"
         };
-        public void CleanInstallFolder(string installFolder)
+        public bool CleanInstallFolder(string installFolder)
         {
+            bool partial = false;
             string[] files = Directory.EnumerateFileSystemEntries(installFolder).ToArray();
             foreach (var entry in files)
             {
-                bool matchesAny = false;
-                foreach (var pattern in ToKeep)
+                try
                 {
-                    matchesAny = Regex.IsMatch(entry, pattern) || matchesAny;
-                }
+                    bool matchesAny = false;
+                    foreach (var pattern in ToKeep)
+                    {
+                        matchesAny = Regex.IsMatch(entry, pattern) || matchesAny;
+                    }
 
-                if (!matchesAny)
+                    if (!matchesAny)
+                    {
+                        if (Directory.Exists(entry))
+                        {
+                            // Make sure the directory isn't where we are!
+                            if (!Assembly.GetExecutingAssembly().Location.Contains(entry))
+                                Directory.Delete(entry, true);
+                        }
+                        else File.Delete(entry);
+                    }
+                } catch (IOException)
                 {
-                    if (Directory.Exists(entry)) Directory.Delete(entry, true);
-                    else File.Delete(entry);
+                    // Ignored. Probably left the game open or something and it couldn't delete a file.
+                    partial = true;
                 }
             }
+
+            return !partial;
         }
 
         public bool ContainsAnyModdedFiles(string installFolder)
