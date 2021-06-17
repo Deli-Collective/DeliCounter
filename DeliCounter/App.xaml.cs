@@ -28,10 +28,14 @@ namespace DeliCounter
             SteamAppLocator = new SteamAppLocator(450540, "H3VR", "h3vr.exe");
             DiagnosticInfoCollector = new DiagnosticInfoCollector(SteamAppLocator);
 
-            // Setup the settings file stuff
-            PortableJsonSettingsProvider.SettingsDirectory = SteamAppLocator.AppLocation;
-            PortableJsonSettingsProvider.SettingsFileName = "DeliCounter.cfg";
-            PortableJsonSettingsProvider.ApplyProvider(Settings);
+            // Set the settings file location if we're installed via Steam
+            if (!string.IsNullOrEmpty(SteamAppLocator.AppLocation))
+            {
+                PortableJsonSettingsProvider.SettingsDirectory = SteamAppLocator.AppLocation;
+                PortableJsonSettingsProvider.SettingsFileName = "DeliCounter.cfg";
+                PortableJsonSettingsProvider.ApplyProvider(Settings);
+            }
+
 
             // Initialize Sentry
             DiagnosticInfoCollector.InitSentry();
