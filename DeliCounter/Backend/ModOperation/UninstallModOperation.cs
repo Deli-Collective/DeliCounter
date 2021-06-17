@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace DeliCounter.Backend.ModOperation
 {
-    internal class UninstallModOperation : ModOperation
+    public class UninstallModOperation : ModOperation
     {
         public UninstallModOperation(Mod mod) : base(mod, mod.InstalledVersion)
         {
         }
 
-        internal override async Task Run()
+        public override async Task Run()
         {
             await base.Run();
 

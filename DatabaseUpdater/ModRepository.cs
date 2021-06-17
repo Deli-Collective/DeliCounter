@@ -10,7 +10,7 @@ using JsonException = System.Text.Json.JsonException;
 
 namespace DatabaseUpdater
 {
-    internal class ModRepository
+    public class ModRepository
     {
         public enum State
         {

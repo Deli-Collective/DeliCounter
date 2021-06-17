@@ -11,14 +11,14 @@ using Version = SemVer.Version;
 
 namespace DeliCounter.Backend
 {
-    internal static class ModManagement
+    public static class ModManagement
     {
-        internal static void InstallMod(Mod mod, Version versionNumber)
+        public static void InstallMod(Mod mod, Version versionNumber)
         {
             App.RunInBackgroundThread(() => { ExecuteOperations(EnumerateInstallDependencies(mod, versionNumber).Concat(new[] { new InstallModOperation(mod, versionNumber) })); });
         }
 
-        internal static void InstallMods(IEnumerable<Mod> mods)
+        public static void InstallMods(IEnumerable<Mod> mods)
         {
             App.RunInBackgroundThread(() => {
                 IEnumerable<ModOperation.ModOperation> enumerable = Array.Empty<ModOperation.ModOperation>();
@@ -28,7 +28,7 @@ namespace DeliCounter.Backend
             });
         }
 
-        internal static void UninstallMods(IEnumerable<Mod> mods)
+        public static void UninstallMods(IEnumerable<Mod> mods)
         {
             App.RunInBackgroundThread(() => {
                 IEnumerable <ModOperation.ModOperation> enumerable = Array.Empty<ModOperation.ModOperation>();
@@ -38,7 +38,7 @@ namespace DeliCounter.Backend
             });
         }
 
-        internal static void UpdateMod(Mod mod, Version versionNumber)
+        public static void UpdateMod(Mod mod, Version versionNumber)
         {
             App.RunInBackgroundThread(() =>
             {
@@ -78,12 +78,12 @@ namespace DeliCounter.Backend
             });
         }
 
-        internal static void UpdateMods(IEnumerable<Mod> mods)
+        public static void UpdateMods(IEnumerable<Mod> mods)
         {
             foreach (Mod mod in mods) UpdateMod(mod, mod.LatestVersion);
         }
 
-        internal static void DefaultAction(Mod mod)
+        public static void DefaultAction(Mod mod)
         {
             // If the mod is not installed, install the latest version
             if (!mod.IsInstalled) InstallMod(mod, mod.LatestVersion);

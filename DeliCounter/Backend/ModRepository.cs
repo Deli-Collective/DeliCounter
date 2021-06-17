@@ -14,7 +14,7 @@ using Range = SemVer.Range;
 
 namespace DeliCounter.Backend
 {
-    internal class ModRepository
+    public class ModRepository
     {
         public delegate void RepositoryUpdatedDelegate();
 

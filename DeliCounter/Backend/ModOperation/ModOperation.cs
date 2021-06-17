@@ -8,24 +8,24 @@ namespace DeliCounter.Backend.ModOperation
 {
     public abstract class ModOperation
     {
-        internal Mod Mod { get; }
-        internal Version VersionNumber { get; }
+        public Mod Mod { get; }
+        public Version VersionNumber { get; }
 
-        internal List<string> InstalledFiles { get; } = new();
+        public List<string> InstalledFiles { get; } = new();
 
-        internal Action<double, string> ProgressDialogueCallback { get; set; }
+        public Action<double, string> ProgressDialogueCallback { get; set; }
 
-        protected internal bool Completed { get; protected set; } = true;
+        public bool Completed { get; protected set; } = true;
 
-        protected internal string Message { get; protected set; }
+        public string Message { get; protected set; }
 
-        internal ModOperation(Mod mod, Version versionNumber)
+        public ModOperation(Mod mod, Version versionNumber)
         {
             Mod = mod;
             VersionNumber = versionNumber;
         }
 
-        internal virtual Task Run()
+        public virtual Task Run()
         {
             SentrySdk.ConfigureScope(scope =>
             {

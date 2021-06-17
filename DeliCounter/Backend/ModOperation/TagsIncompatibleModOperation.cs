@@ -14,7 +14,7 @@ namespace DeliCounter.Backend.ModOperation
             _incompatibleMods = incompatible;
         }
 
-        internal override Task Run()
+        public override Task Run()
         {
             Completed = false;
             Message = $"{Mod.Versions[VersionNumber].Name} can't be installed because it is incompatible with one or more of your installed mods:\n" + string.Join('\n', _incompatibleMods.Select(x => x.Installed.Name));

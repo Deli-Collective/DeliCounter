@@ -12,7 +12,7 @@ namespace DeliCounter.Backend.ModOperation
             _depMod = depMod;
         }
 
-        internal override Task Run()
+        public override Task Run()
         {
             Completed = false;
             var requestedVersion = Mod.Versions[VersionNumber].Dependencies[_depMod.Guid].MaxSatisfying(_depMod.Versions.Keys);

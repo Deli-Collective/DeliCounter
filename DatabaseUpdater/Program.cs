@@ -13,7 +13,7 @@ using Signature = LibGit2Sharp.Signature;
 
 namespace DatabaseUpdater
 {
-    internal static class Program
+    public static class Program
     {
         private enum LogLevel
         {

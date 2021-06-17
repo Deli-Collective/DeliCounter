@@ -10,7 +10,7 @@ using Version = SemVer.Version;
 
 namespace DeliCounter.Backend.ModOperation
 {
-    internal class InstallModOperation : ModOperation
+    public class InstallModOperation : ModOperation
     {
         private readonly WebClient _webClient = new();
 
@@ -25,7 +25,7 @@ namespace DeliCounter.Backend.ModOperation
             _version = mod.Versions[versionNumber];
         }
 
-        internal override async Task Run()
+        public override async Task Run()
         {
             await base.Run();
 
