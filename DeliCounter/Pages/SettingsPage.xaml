@@ -27,7 +27,10 @@
                       Checked="ShowModBetas_OnChecked" Unchecked="ShowModBetas_OnChecked"/>
 
             <!-- Tools -->
-            <Button Content="Generate Diagnostic File" Click="GenerateDiagnosticFile" />
+            <ui:SimpleStackPanel Orientation="Horizontal" Spacing="16">
+                <Button Content="Generate Diagnostic File" Click="GenerateDiagnosticFile" />
+                <Button Content="Clean Install Folder" Click="CleanInstallFolder" />
+            </ui:SimpleStackPanel>
         </ui:SimpleStackPanel>
     </ScrollViewer>
 </UserControl>

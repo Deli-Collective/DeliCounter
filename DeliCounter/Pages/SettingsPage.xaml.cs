@@ -5,6 +5,7 @@ using DeliCounter.Properties;
 using ModernWpf;
 using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Data;
 
@@ -61,6 +62,19 @@ namespace DeliCounter.Pages
         private void ComboBox_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             _settings.ListItemType = ComboBoxModListItem.SelectedIndex;
+        }
+
+        private void CleanInstallFolder(object sender, RoutedEventArgs e)
+        {
+            string loc = App.Current.Settings.GameLocation;
+            if (!string.IsNullOrWhiteSpace(loc) && Directory.Exists(loc))
+            {
+                bool success = App.Current.DiagnosticInfoCollector.CleanInstallFolder(loc);
+                if (success)
+                    App.Current.QueueDialog(new AlertDialogue("Done", "Your install folder has been cleaned."));
+                else
+                    App.Current.QueueDialog(new AlertDialogue("Whoops", "Looks like I wasn't able to delete some files, please make sure you have the game closed before running this. You can try again in the settings page."));
+            }
         }
     }
 
