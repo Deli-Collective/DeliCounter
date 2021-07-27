@@ -1,5 +1,5 @@
 # ⚠️ DEPRECATION NOTICE
-Unfortunately as of July 27, 2021, the mod host website which this mod manager used is now permenently offline. What this means is you will be unable to install the majority of mods which are listed. Deli Counter was my stopgap while we waited for something more and now since we are hosting mods on [Thunderstore](https://h3vr.thunderstore.io/) we have that. I highly recommend you switch to using [r2modman](https://h3vr.thunderstore.io/package/ebkr/r2modman/). I'm glad I was able to provide a tool which so many people used.
+Unfortunately as of July 27, 2021, the mod host website which this mod manager used is now permanently offline. What this means is you will be unable to install the majority of mods which are listed. Deli Counter was my stopgap while we waited for something more and now since we are hosting mods on [Thunderstore](https://h3vr.thunderstore.io/) we have that. I highly recommend you switch to using [r2modman](https://h3vr.thunderstore.io/package/ebkr/r2modman/). I'm glad I was able to provide a tool which so many people used.
 
 Cheers.
 
